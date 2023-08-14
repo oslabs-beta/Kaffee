@@ -1,0 +1,176 @@
+@import url('reset.css');
+
+:root {
+  /* ----- colors ----- */
+  --primary-bg: rgb(163 107 44);
+  --secondary-bg: rgb(192 152 106);
+  --ternary-bg: rgb(204 178 155);
+  --quaternary-bg: #ded7d9;
+
+  --border-color: rgb(60 24 0);
+
+  /* ----- generalized elements ----- */
+  --border: 1px solid var(--border-color);
+  --top-nav-height: 4.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-bg: rgb(14 11 9);
+    --secondary-bg: #16110d;
+    --ternary-bg: #211b15;
+    --quaternary-bg: #130d08;
+
+    --text-color: #ded7d9;
+    --border-color: rgb(204 178 155);
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text-color);
+  font-size: 1.25em;
+}
+
+button {
+  background-color: var(--quaternary-bg);
+  color: var(--text-color);
+}
+
+#top-nav {
+  width: 100%;
+  height: var(--top-nav-height);
+  padding: 0.5em;
+  border-bottom: var(--border);
+  background-color: var(--primary-bg);
+}
+
+#top-nav nav {
+  margin: 0.5em 0;
+  padding: auto 0.5em;
+  height: calc(var(--top-nav-height) - 2em);
+}
+
+#top-nav #left {
+  position: absolute;
+  left: 1em;
+}
+
+#left ul li {
+  display: inline-block;
+}
+
+#top-nav #right {
+  position: absolute;
+  right: 1em;
+}
+
+/* ----- taken from https://www.w3schools.com/css/css_dropdowns.asp ----- */
+.drop-button {
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.drop-content {
+  display: none;
+  position: absolute;
+  z-index: 10;
+}
+
+.drop-content a {
+  color: var(--text-color);
+  text-decoration: none;
+  display: block;
+  border: var(--border);
+  background-color: var(--primary-bg);
+}
+
+.dropdown-content a:hover {
+  background-color: var(--primary-bg);
+}
+
+.dropdown:hover .drop-content {
+  display: block;
+}
+
+/* ----- end code snippet ----- */
+
+#main {
+  flex-grow: 1;
+  display: flex;
+  height: calc(100vh - var(--top-nav-height));
+  background-color: var(--ternary-bg);
+}
+
+#main #clusters {
+  height: 100%;
+  min-width: 15em;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-right: var(--border);
+  background-color: var(--secondary-bg);
+}
+
+#clusters ul {
+  flex-grow: 1;
+}
+
+#clusters footer {
+  padding: 1em 0.5em;
+  border-top: var(--border);
+  background-color: var(--primary-bg);
+}
+
+#main #metrics {
+  flex-grow: 1; /* this is the growth inside #main */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#metrics #charts {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 2em;
+  overflow-y: scroll;
+  max-height: calc(100% - 1em);
+}
+
+#charts canvas {
+  height: 450px;
+  width: 600px;
+  margin: 2em;
+  background-color: black;
+  border: var(--border);
+}
+
+#metrics footer {
+  width: 100%;
+  padding: 1em;
+  border-top: var(--border);
+  background-color: var(--secondary-bg);
+}
+
+#metrics footer form {
+  display: flex;
+}
+
+#metrics footer form input {
+  flex-grow: 1;
+  background-color: var(--ternary-bg);
+}
+
+#metrics footer button {
+  margin: 0 2em;
+}
