@@ -12,6 +12,9 @@
   /* ----- generalized elements ----- */
   --border: 1px solid var(--border-color);
   --top-nav-height: 4.5em;
+
+  /* ----- background image ----- */
+  --logo_url: url('../assets/logo.png');
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +26,10 @@
 
     --text-color: #ded7d9;
     --border-color: rgb(204 178 155);
+
+    /* ----- background image ----- */
+    /* I kept this around in case we want to change later */
+    --logo_url: url('../assets/logo.png');
   }
 }
 
@@ -59,8 +66,16 @@ button {
   left: 1em;
 }
 
+#logo {
+  background-image: var(--logo_url);
+  background-size: 3em;
+  height: 3em;
+  width: 3em;
+}
+
 #left ul li {
   display: inline-block;
+  vertical-align: middle;
 }
 
 #top-nav #right {
@@ -164,11 +179,13 @@ button {
 
 #metrics footer form {
   display: flex;
+
 }
 
 #metrics footer form input {
   flex-grow: 1;
   background-color: var(--ternary-bg);
+  color: var(--text-color);
 }
 
 #metrics footer button {
