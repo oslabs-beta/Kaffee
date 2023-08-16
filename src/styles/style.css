@@ -12,6 +12,9 @@
   /* ----- generalized elements ----- */
   --border: 1px solid var(--border-color);
   --top-nav-height: 4.5em;
+
+  /* ----- logo element ----- */
+  --logo_url: url('../assets/logo.png');
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +26,9 @@
 
     --text-color: #ded7d9;
     --border-color: rgb(204 178 155);
+
+    /* ----- logo element ----- */
+    --logo_url: url('/src/assets/logoDark.png');
   }
 }
 
@@ -46,6 +52,10 @@ button {
   padding: 0.5em;
   border-bottom: var(--border);
   background-color: var(--primary-bg);
+}
+
+#logo {
+  background-image: var(--logo_url);
 }
 
 #top-nav nav {
