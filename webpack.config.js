@@ -1,34 +1,40 @@
-const path = require('path');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
+// const path = require('path');
+// const HTMLWebpackPlugin = require('html-webpack-plugin');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
-  entry: './src/index.tsx',
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
+  entry: './src/index.jsx',
 
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
-
+  mode: 'development',
   devServer: {
     static: {
       directory: path.resolve(__dirname, 'dist'),
-      publicPath: '/'
+      publicPath: '/',
     },
     port: 8080,
     proxy: {
-      '/': 'http://localhost:3000/'
+      '/': 'http://localhost:3000/',
     },
     open: true,
-    hot: true
+    hot: true,
   },
 
   plugins: [
-    new HTMLWebpackPlugin({
-      template: path.resolve(__dirname, 'src/template.html')
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src/template.html'),
       // template: './src/template.html'
-    })
+    }),
   ],
-  
+
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
@@ -38,7 +44,7 @@ module.exports = {
         test: /\.jsx?$/i,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader',
         },
       },
       {
