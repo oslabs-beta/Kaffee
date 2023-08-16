@@ -8,7 +8,12 @@ module.exports = {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js'
   },
+
   devServer: {
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+      publicPath: '/'
+    },
     port: 8080,
     proxy: {
       '/': 'http://localhost:3000/'
@@ -16,11 +21,14 @@ module.exports = {
     open: true,
     hot: true
   },
+
   plugins: [
     new HTMLWebpackPlugin({
-      template: './src/template.html'
+      template: path.resolve(__dirname, 'src/template.html')
+      // template: './src/template.html'
     })
   ],
+  
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
@@ -45,11 +53,5 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
-  },
-  devServer: {
-    static: {
-      directory: path.resolve(__dirname, 'dist'),
-      publicPath: '/'
-    },
   },
 };
