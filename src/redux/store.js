@@ -1,14 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import clusterSlice from '../reducers/clusterSlice.ts';
-// const rootReducer = combineReducers({});
-// export type RootState = ReturnType<typeof rootReducer>
+import clusterSlice from '../reducers/clusterSlice.js';
+import chartSlice from '../reducers/chartSlice.js';
 
 export const store = configureStore({
   reducer: {
-    cluster: clusterSlice.reducer,
+    clusters: clusterSlice,
+    charts: chartSlice,
   },
 });
 
-// export type RootState = ReturnType<typeof store.getState>
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
 
 export default store;

@@ -22,6 +22,7 @@
     "target": "ES2020",
     "module": "NodeNext",
     "jsx": "react",
+    "allowJs": true,
     "outDir": "./build",
     "sourceMap": true,
     "rootDir": "./",
@@ -31,17 +32,18 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "types": ["webpack-env"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "ts-server/**/*.ts",
     "ts-server/**/*.tsx",
-    "src/index.jsx",
-    "src/App.tsx",
-    "src/App.jsx",
-    "src/redux/store.js"
+    "src/redux/store.js",
+    "src/containers/Clusters.jsx",
+    "src/containers/Main.jsx",
+    "src/reducers/clusterSlice.js"
   ],
   "exclude": ["node_modules"]
 }
