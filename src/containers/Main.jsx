@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent } from 'react';
-// import { useAppDispatch, useAppSelector } from '../hooks/hooks.js';
+// import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import Cluster from './Clusters.jsx';
 import SearchBar from '../components/SearchBar.jsx';

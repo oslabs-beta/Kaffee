@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-// import { useAppDispatch, useAppSelector } from '../hooks/hooks.js';
+// import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import chartSlice from '../reducers/chartSlice.js';
 
