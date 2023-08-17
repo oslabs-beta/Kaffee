@@ -3,32 +3,47 @@ import React, { useState, MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Cluster from './Clusters.jsx';
 import SearchBar from '../components/SearchBar.jsx';
-import { addChart, removeChart } from '../reducers/chartSlice.js';
+import Chart from '../components/Chart.jsx';
+import { addChart, removeChart, newChart } from '../reducers/chartSlice.js';
 
 // import type { ChartObj } from '../reducers/chartSlice.js';
 
 export default function () {
-  const [search, setSearch] = useState('');
-
   // const charts = useSelector((state: Array<ChartObj> ) => state.charts.list);
   const charts = useSelector((state) => state.charts.list);
+  const status = useSelector((state) => state.charts.status);
+  console.log(charts);
+  console.log(status);
 
   // const dispatch = useAppDispatch();
   const dispatch = useDispatch();
 
+  const handleAddChart = () => {
+    if (status === 'succeeded' || status === 'idle') {
+      dispatch(newChart());
+    }
+  };
+
   return (
     <div id='main'>
-      <Cluster />
+      {/* <Cluster /> */}
       <div id='metrics'>
         <div id='charts'>
-          {charts.length ? (
-            charts.map((chart) => {
-              // do something with chart.js
-            })
-          ) : (
-            <></>
-          )}
-          <div class='canvas'>Add A Chart</div>
+          {charts?.map((chart, i) => {
+            return (
+              <Chart
+                key={`Chart_${i}`}
+                props={chart}
+              />
+            );
+          })}
+          <div
+            className='chartCanvas'
+            onClick={handleAddChart}
+            id='add-chart'
+          >
+            <span>Add A Chart</span>
+          </div>
         </div>
         <SearchBar />
       </div>

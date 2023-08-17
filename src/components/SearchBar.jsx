@@ -24,7 +24,7 @@ export default function () {
       <form method='POST'>
         <input
           type='text'
-          onchange={handleChangedText}
+          onChange={handleChangedText}
           placeholder='Input box: number of messages, size of messages, frequency'
         />
         <button onClick={handleBrew}>Brew</button>
