@@ -1,4 +1,4 @@
-@import url('reset.css');
+@import url('reset.scss');
 
 :root {
   /* ----- colors ----- */
@@ -13,7 +13,7 @@
   --border: 1px solid var(--border-color);
   --top-nav-height: 4.5em;
 
-  /* ----- background image ----- */
+  /* ----- logo element ----- */
   --logo_url: url('../assets/logo.png');
 }
 
@@ -27,9 +27,8 @@
     --text-color: #ded7d9;
     --border-color: rgb(204 178 155);
 
-    /* ----- background image ----- */
-    /* I kept this around in case we want to change later */
-    --logo_url: url('../assets/logo.png');
+    /* ----- logo element ----- */
+    --logo_url: url('/src/assets/logoDark.png');
   }
 }
 
@@ -53,6 +52,10 @@ button {
   padding: 0.5em;
   border-bottom: var(--border);
   background-color: var(--primary-bg);
+}
+
+#logo {
+  background-image: var(--logo_url);
 }
 
 #top-nav nav {
@@ -179,7 +182,6 @@ button {
 
 #metrics footer form {
   display: flex;
-
 }
 
 #metrics footer form input {

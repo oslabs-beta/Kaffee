@@ -1,10 +1,7 @@
 import React from 'react';
 
-interface Props {
-}
+interface Props {}
 
 export default function (props: Props) {
-  return (
-    <></>
-  )
+  return <></>;
 }
