@@ -4,7 +4,7 @@ export const newChart = createAsyncThunk(
   'chart/newChart',
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const count = 10;
+    const count = 50;
     const apiUrl = `http://localhost:8080/dummy/${count}`;
 
     const res = await fetch(apiUrl);

@@ -42,10 +42,21 @@ const metricsController: object = {
         data: [],
       };
 
-      while (count > 0) {
-        const val: number = Math.floor(Math.random() * 1000);
-        returnObj.data.push(val);
-        count--;
+      const MAX_VAL: number = 1000;
+
+      let i: number = 0;
+      while (i < count) {
+        const val: number =
+          MAX_VAL * 0.005 * i * i + MAX_VAL * 0.01 * i + MAX_VAL * 0.1;
+        console.log(`base ${val}`);
+
+        const noise: number = Math.floor(
+          Math.random() * (MAX_VAL * 0.4) - MAX_VAL * 0.2
+        );
+        console.log(`noise ${noise}`);
+
+        returnObj.data.push(val + noise);
+        i++;
       }
 
       return returnObj;
