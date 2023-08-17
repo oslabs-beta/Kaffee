@@ -48,12 +48,10 @@ const metricsController: object = {
       while (i < count) {
         const val: number =
           MAX_VAL * 0.005 * i * i + MAX_VAL * 0.01 * i + MAX_VAL * 0.1;
-        console.log(`base ${val}`);
 
         const noise: number = Math.floor(
           Math.random() * (MAX_VAL * 0.4) - MAX_VAL * 0.2
         );
-        console.log(`noise ${noise}`);
 
         returnObj.data.push(val + noise);
         i++;
