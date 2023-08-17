@@ -15,6 +15,7 @@ export default {
     filename: 'bundle.js',
   },
   mode: 'development',
+  devtool: 'inline-source-map',
   devServer: {
     static: {
       directory: path.resolve(__dirname, 'dist'),
@@ -31,37 +32,33 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/template.html'),
-      // template: './src/template.html'
     }),
   ],
 
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    extensionAlias: {
-      '.js': ['.js', '.ts'],
-    },
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/i,
+        test: /\.[tj]sx?$/i,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
         },
       },
-      {
-        test: /\.tsx?$/,
-        exclude: [/node_modules/],
-        use: {
-          loader: 'ts-loader',
-          options: {
-            compilerOptions: {
-              jsx: 'preserve',
-            },
-          },
-        },
-      },
+      // {
+      //   test: /\.tsx?$/,
+      //   exclude: [/node_modules/],
+      //   use: {
+      //     loader: 'ts-loader',
+      //     options: {
+      //       compilerOptions: {
+      //         jsx: 'preserve',
+      //       },
+      //     },
+      //   },
+      // },
       {
         test: /\.s?[ca]ss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
