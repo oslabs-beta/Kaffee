@@ -12,8 +12,6 @@ export default function () {
   // const charts = useSelector((state: Array<ChartObj> ) => state.charts.list);
   const charts = useSelector((state) => state.charts.list);
   const status = useSelector((state) => state.charts.status);
-  console.log(charts);
-  console.log(status);
 
   // const dispatch = useAppDispatch();
   const dispatch = useDispatch();
