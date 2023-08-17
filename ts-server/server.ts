@@ -21,7 +21,7 @@ app.get('/', (req: Request, res: Response)  => {
 });
 
 app.use('/getMetrics', metricsController['getMetric' as metricKey], (req:Request,res:Response) => {
-  res.status(200).send('works')
+  res.status(200).json(res.locals.data);
 })
 
 app.use('/getCluster', metricsController['getCluster' as metricKey], (req:Request,res:Response) => {

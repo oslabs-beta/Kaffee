@@ -9,11 +9,17 @@ const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
   getMetric: (req:Request,res:Response,next:NextFunction) => {
     try {
-      fetch('localhost:9999', {method: "GET"})
+      fetch('http://localhost:8080/get-metric/bytes-in', {method: "GET"})
       .then((response) => {
-        console.log(response)
+        response.json()
+        .then((result) => {
+          res.locals.data = result
+          console.log(res.locals.data)
+          next()
+        }
+          
+        )
       })
-      next()
     } catch (err) {
       next({errMsg: "An internal server error occured", err: 500})
     }

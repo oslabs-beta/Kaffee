@@ -73,18 +73,18 @@ public class MetricController {
   }
 
   // Producer Metrics - Global Request Metrics
-  @GetMapping("/producer-node-metrics/{clientId}/{nodeId}")
-    public Map<String, Object> getProducerNodeMetrics(
-            @PathVariable String clientId,
-            @PathVariable int nodeId
+  @GetMapping("/producer-metrics/{clientId}")
+    public Map<String, Object> getProducerMetrics(
+            @PathVariable String clientId
     ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
             MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-
+        
         JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
         JMXConnector connector = JMXConnectorFactory.connect(url);
         MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-        String objectNameStr = "kafka.producer:type=producer-node-metrics,client-id=" + clientId + ",node-id=" + nodeId;
+        String objectNameStr = "kafka.producer:type=producer-metrics,client-id=" + clientId;
+        System.out.println(objectNameStr);
         ObjectName producerNodeMetric = new ObjectName(objectNameStr);
 
         Map<String, Object> metrics = new HashMap<>();
@@ -94,7 +94,6 @@ public class MetricController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         connector.close();
 
         return metrics;
