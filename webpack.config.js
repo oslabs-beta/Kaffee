@@ -37,6 +37,9 @@ export default {
 
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensionAlias: {
+      '.js': ['.js', '.ts'],
+    },
   },
   module: {
     rules: [
@@ -49,9 +52,14 @@ export default {
       },
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/],
         use: {
           loader: 'ts-loader',
+          options: {
+            compilerOptions: {
+              jsx: 'preserve',
+            },
+          },
         },
       },
       {
