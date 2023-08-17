@@ -24,6 +24,13 @@ export default function () {
     }
   };
 
+  let spanText = 'Add A Chart';
+  if (status === 'loading') {
+    spanText = 'Loading New Chart';
+  } else if (status === 'failed') {
+    spanText = 'Failed to load chart, please check console';
+  }
+
   return (
     <div id='main'>
       {/* <Cluster /> */}
@@ -42,7 +49,7 @@ export default function () {
             onClick={handleAddChart}
             id='add-chart'
           >
-            <span>Add A Chart</span>
+            <span>{spanText}</span>
           </div>
         </div>
         <SearchBar />
