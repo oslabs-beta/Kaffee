@@ -69,6 +69,10 @@ button {
   left: 1em;
 }
 
+#top-nav #left > *, #top-nav #right > * {
+  margin: 5px;
+}
+
 #logo {
   background-image: var(--logo_url);
   background-size: 3em;
