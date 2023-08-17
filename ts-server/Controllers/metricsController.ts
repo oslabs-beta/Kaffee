@@ -8,8 +8,15 @@ const __dirname = path.dirname(__filename);
 const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
   getMetric: (req:Request,res:Response,next:NextFunction) => {
-    console.log('entered getMetric')
-    next()
+    try {
+      fetch('localhost:9999', {method: "GET"})
+      .then((response) => {
+        console.log(response)
+      })
+      next()
+    } catch (err) {
+      next({errMsg: "An internal server error occured", err: 500})
+    }
   },
   //middleware to connect to current cluster and obtain live data stream
   getCluster: (req:Request,res:Response,next:NextFunction) => {
