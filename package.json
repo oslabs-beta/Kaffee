@@ -21,8 +21,7 @@
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.2",
-    "react-router-dom": "^6.15.0"
+    "react-redux": "^8.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
@@ -45,6 +44,7 @@
     "nodemon": "^3.0.1",
     "react-chartjs-2": "^5.2.0",
     "react-router": "^6.15.0",
+    "react-router-dom": "^6.15.0",
     "redux-toolkit": "^1.1.2",
     "sass": "^1.65.1",
     "sass-loader": "^13.3.2",

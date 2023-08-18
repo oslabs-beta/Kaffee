@@ -23,10 +23,14 @@ export default {
     },
     port: 8080,
     proxy: {
-      '/': 'http://localhost:3030/',
+      '/api': {
+        target: 'http://localhost:3030/',
+        pathRewrite: { '^/api': '' },
+      },
     },
     open: true,
     hot: true,
+    historyApiFallback: true,
   },
 
   plugins: [

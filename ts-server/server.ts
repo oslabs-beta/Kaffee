@@ -2,10 +2,13 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
+
 const app: Express = express();
 const PORT: number = 3030;
+
 type dataKey = keyof typeof dataController;
 type metricKey = keyof typeof metricsController;
+
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,7 +17,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.resolve(__dirname, '../src')));
+app.use(express.static(path.resolve(__dirname, '../src/')));
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
@@ -84,7 +87,7 @@ app.use(
   }
 );
 
-app.use((req: Request, res: Response) => {
+app.use('/', (req: Request, res: Response) => {
   res.status(404).send('What are you doing here?');
 });
 
