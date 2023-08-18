@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent } from 'react';
-// import { useAppDispatch, useAppSelector } from '../hooks/hooks.js';
+// import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterCharts } from '../reducers/chartSlice.js';
 
@@ -24,7 +24,7 @@ export default function () {
       <form method='POST'>
         <input
           type='text'
-          onchange={handleChangedText}
+          onChange={handleChangedText}
           placeholder='Input box: number of messages, size of messages, frequency'
         />
         <button onClick={handleBrew}>Brew</button>
