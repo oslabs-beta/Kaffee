@@ -173,11 +173,13 @@ button {
   min-width: 400px;
   max-width: 1000px;
   margin: 2em;
+  padding: 0.25em;
   background-color: black;
   border: var(--border);
   color: var(--ternary-bg);
   border-radius: 10% / 8%;
-  box-shadow: 0px 0.15em 0.5em 0.1em #322e2e;
+  box-shadow: 0px 0.15em 0.5em 0.1em #322e2e,
+    inset 1px 2px 10px 1px var(--quaternary-bg);
   position: relative;
   aspect-ratio: 16/9;
 }
