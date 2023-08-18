@@ -8,13 +8,16 @@
   --quaternary-bg: #ded7d9;
 
   --border-color: rgb(60 24 0);
+  --text-color: #130d08;
 
   /* ----- generalized elements ----- */
   --border: 1px solid var(--border-color);
-  --top-nav-height: 4.5em;
   // removing .5em twice for the navbar's .5em padding
   // removing 5px twice for each element's 5px margin
-  --top-nav-inner-div-height: calc(var(--top-nav-height) - 1em - 10px);
+  --top-nav-inner-div-height: 3.5em;
+
+  --button-border-radius: 0.25em;
+  --element-border-radius: 0px;
 
   /* ----- logo element ----- */
   --logo_url: url('../assets/logo.png');
@@ -47,21 +50,23 @@ body {
 button {
   background-color: var(--quaternary-bg);
   color: var(--text-color);
+  border-radius: var(--button-border-radius);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
 #top-nav {
   width: 100%;
-  height: var(--top-nav-height);
   padding: 0.5em;
   border-bottom: var(--border);
-  background-color: var(--primary-bg);
+  background: linear-gradient(var(--primary-bg) 85%, var(--secondary-bg));
   display: flex;
   flex-wrap: wrap;
-}
-
-#left,
-#right {
-  height: 100%;
 }
 
 #left {
@@ -86,45 +91,12 @@ button {
   height: var(--top-nav-inner-div-height);
 }
 
-/* ----- taken from https://www.w3schools.com/css/css_dropdowns.asp ----- */
-.drop-button {
-  cursor: pointer;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.drop-content {
-  display: none;
-  position: absolute;
-  z-index: 10;
-}
-
-.drop-content a {
-  color: var(--text-color);
-  text-decoration: none;
-  display: block;
-  border: var(--border);
-  background-color: var(--primary-bg);
-}
-
-.dropdown-content a:hover {
-  background-color: var(--primary-bg);
-}
-
-.dropdown:hover .drop-content {
-  display: block;
-}
-
-/* ----- end code snippet ----- */
-
 #main {
   flex-grow: 1;
   display: flex;
-  height: calc(100vh - var(--top-nav-height));
+  flex-direction: column;
   background-color: var(--ternary-bg);
+  overflow: hidden;
 }
 
 #main #clusters {
@@ -152,28 +124,62 @@ button {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+#metrics::before {
+  content: ' ';
+  background-image: var(--logo_url);
+  background-size: contain;
+  background-position: 50% 0;
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0.06;
 }
 
 #metrics #charts {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1000px));
+  gap: 0.5em;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  margin: 2em;
-  overflow-y: scroll;
-  max-height: calc(100% - 1em);
+  margin: 0 0.25em;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+::-webkit-scrollbar {
+  width: 0.75em;
+  height: 1.5em;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0.5em;
+  background: var(--secondary-bg);
+  box-shadow: inset 0px 0px 3px 1px var(--primary-bg);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ternary-bg);
+  // border-radius: var(--button-border-radius);
+  // box-shadow: inset 0.05em 0px 0.25em 0px var(--primary-bg);
 }
 
 .chartCanvas {
-  min-height: 450px;
-  min-width: 600px;
-  height: calc(80% / 2);
-  width: calc(80% / 2);
+  min-width: 400px;
+  max-width: 1000px;
   margin: 2em;
   background-color: black;
   border: var(--border);
   color: var(--ternary-bg);
+  border-radius: 10% / 8%;
+  box-shadow: 0px 0.15em 0.5em 0.1em #322e2e;
+  position: relative;
+  aspect-ratio: 16/9;
 }
 
 #add-chart {
@@ -182,27 +188,34 @@ button {
 
 .chartCanvas span {
   height: 100%;
+  width: 100%;
   display: grid;
   place-items: center;
+  position: relative;
 }
 
-#metrics footer {
+#main footer {
   width: 100%;
   padding: 1em;
   border-top: var(--border);
-  background-color: var(--secondary-bg);
+  background: linear-gradient(
+    to top,
+    var(--secondary-bg) 90%,
+    var(--ternary-bg)
+  );
 }
 
-#metrics footer form {
+#main footer form {
   display: flex;
 }
 
-#metrics footer form input {
+#main footer form input {
   flex-grow: 1;
   background-color: var(--ternary-bg);
   color: var(--text-color);
+  border-radius: var(--button-border-radius);
 }
 
-#metrics footer button {
+#main footer button {
   margin: 0 2em;
 }
