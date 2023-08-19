@@ -20,7 +20,7 @@ app.get('/', (req: Request, res: Response)  => {
   res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
 });
 
-app.use('/getMetrics', metricsController['getMetric' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {
+app.use('/getBytes', metricsController['getBytes' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {
   console.log(res.locals.data)
   res.status(200).json(res.locals.data);
 })

@@ -26,39 +26,27 @@ public class MetricController {
 
 
   // Server Metrics
-  @GetMapping("/bytes-in")
-  public double getBytesIn() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+  @GetMapping("/bytes")
+  public Object getBytesInOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+    Map<String, Object>object = new HashMap<>();
     JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
     JMXConnector connector = JMXConnectorFactory.connect(url);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     ObjectName bytesInMetric = new ObjectName("kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec");
-
-    double bytesIn = (double) mbsc.getAttribute(bytesInMetric, "OneMinuteRate");
-
-    connector.close();
-    return bytesIn;
-  }
-
-  @GetMapping("/bytes-out")
-  public double getBytesOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-      MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-    JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
-    JMXConnector connector = JMXConnectorFactory.connect(url);
-    MBeanServerConnection mbsc = connector.getMBeanServerConnection();
-
     ObjectName bytesOutMetric = new ObjectName("kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec");
-
+    double bytesIn = (double) mbsc.getAttribute(bytesInMetric, "OneMinuteRate");
     double bytesOut = (double) mbsc.getAttribute(bytesOutMetric, "OneMinuteRate");
-
+    object.put("bytesIn", bytesIn);
+    object.put("bytesOut", bytesOut);
     connector.close();
-    return bytesOut;
+    return object;
   }
 
 
   @GetMapping("/under-replicated-partitions")
-  public double getUnderReplicatedPartitions() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+  public Integer getUnderReplicatedPartitions() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
       MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
     JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
     JMXConnector connector = JMXConnectorFactory.connect(url);
@@ -66,37 +54,37 @@ public class MetricController {
 
     ObjectName underReplicatedPartitionMetric = new ObjectName("kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions");
 
-    double underReplicatedPartitions = (double) mbsc.getAttribute(underReplicatedPartitionMetric, "OneMinuteRate");
+    Integer underReplicatedPartitions = (Integer) mbsc.getAttribute(underReplicatedPartitionMetric, "Value");
 
     connector.close();
     return underReplicatedPartitions;
   }
-
-  // Producer Metrics - Global Request Metrics
-  @GetMapping("/producer-metrics/{clientId}")
-    public Map<String, Object> getProducerMetrics(
-            @PathVariable String clientId
-    ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-            MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+//DOES NOT EXIST
+// Producer Metrics - Global Request Metrics
+//   @GetMapping("/producer-metrics/{clientId}")
+//     public Map<String, Object> getProducerMetrics(
+//             @PathVariable String clientId
+//     ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+//             MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
         
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
-        JMXConnector connector = JMXConnectorFactory.connect(url);
-        MBeanServerConnection mbsc = connector.getMBeanServerConnection();
+//         JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
+//         JMXConnector connector = JMXConnectorFactory.connect(url);
+//         MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-        String objectNameStr = "kafka.producer:type=producer-metrics,client-id=" + clientId;
-        System.out.println(objectNameStr);
-        ObjectName producerNodeMetric = new ObjectName(objectNameStr);
-        Map<String, Object> metrics = new HashMap<>();
-        try {
-            double metricValue = (double) mbsc.getAttribute(producerNodeMetric, "incoming-byte-rate");
-            metrics.put("MetricName", metricValue);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connector.close();
+//         String objectNameStr = "kafka.producer:type=producer-metrics,client-id=" + clientId;
+//         System.out.println(objectNameStr);
+//         ObjectName producerNodeMetric = new ObjectName(objectNameStr);
+//         Map<String, Object> metrics = new HashMap<>();
+//         try {
+//             double metricValue = (double) mbsc.getAttribute(producerNodeMetric, "incoming-byte-rate");
+//             metrics.put("MetricName", metricValue);
+//         } catch (Exception e) {
+//             e.printStackTrace();
+//         }
+//         connector.close();
 
-        return metrics;
-    }
+//         return metrics;
+//     }
 
     // Consumer Metrics - Fetch Metrics
     @GetMapping("/consumer-fetch-manager-metrics/{clientId}")
