@@ -28,7 +28,7 @@ public class MetricController {
   // Server Metrics
   @GetMapping("/bytes-in")
   public double getBytesIn() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-      MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
     JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
     JMXConnector connector = JMXConnectorFactory.connect(url);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
@@ -86,10 +86,9 @@ public class MetricController {
         String objectNameStr = "kafka.producer:type=producer-metrics,client-id=" + clientId;
         System.out.println(objectNameStr);
         ObjectName producerNodeMetric = new ObjectName(objectNameStr);
-
         Map<String, Object> metrics = new HashMap<>();
         try {
-            double metricValue = (double) mbsc.getAttribute(producerNodeMetric, "MetricName");
+            double metricValue = (double) mbsc.getAttribute(producerNodeMetric, "incoming-byte-rate");
             metrics.put("MetricName", metricValue);
         } catch (Exception e) {
             e.printStackTrace();

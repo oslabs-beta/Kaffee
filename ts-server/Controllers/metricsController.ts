@@ -17,7 +17,6 @@ const metricsController: object = {
           console.log(res.locals.data)
           next()
         }
-          
         )
       })
     } catch (err) {
