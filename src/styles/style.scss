@@ -1,4 +1,8 @@
 @import url('reset.scss');
+@font-face {
+  font-family: IAGG;
+  src: url(../assets/fonts/ITC\ Avant\ Garde\ Gothic\ Medium.otf);
+}
 
 :root {
   /* ----- colors ----- */
@@ -45,6 +49,7 @@ body {
   width: 100vw;
   color: rgb(var(--text-color));
   font-size: 1.25em;
+  font-family: IAGG;
 }
 
 button {
