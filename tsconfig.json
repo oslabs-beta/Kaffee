@@ -1,27 +1,12 @@
-// {
-//   "compilerOptions": {
-//     "module": "ESNext",
-//     "noImplicitAny": true,
-//     "removeComments": true,
-//     "preserveConstEnums": true,
-//     "outFile": "../../built/local/tsc.js",
-//     "sourceMap": true
-// },
-// "include": [
-//     "src/**/*",
-//     "ts-server/**/*"
-// ],
-// "exclude": [
-//     "node_modules",
-//     "java-server"
-// ]
-// }
+// Added from the redux template https://github.com/reduxjs/redux-templates/blob/master/packages/cra-template-redux-typescript/tsconfig.json
+// module and moduleResolution may require extra reading at:
+// https://stackoverflow.com/questions/71463698/why-we-need-nodenext-typescript-compiler-option-when-we-have-esnext#:~:text=The%20biggest%2C%20most%20noticeable%20difference,because%20there%20is%20no%20such
 
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "jsx": "react",
+    "target": "ESNext",
+    "module": "esnext",
+    "jsx": "react-jsx",
     "allowJs": true,
     "outDir": "./build",
     "sourceMap": true,
@@ -33,17 +18,17 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "types": ["webpack-env"]
+    "types": ["webpack-env", "nodenext"],
+    "lib": ["dom", "dom.iterable", "ESNext"],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "ts-server/**/*.ts",
-    "ts-server/**/*.tsx",
-    "src/redux/store.js",
-    "src/containers/Clusters.jsx",
-    "src/containers/Main.jsx",
-    "src/reducers/clusterSlice.js"
+    "ts-server/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

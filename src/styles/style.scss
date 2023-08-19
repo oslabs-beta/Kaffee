@@ -12,6 +12,9 @@
   /* ----- generalized elements ----- */
   --border: 1px solid var(--border-color);
   --top-nav-height: 4.5em;
+  // removing .5em twice for the navbar's .5em padding
+  // removing 5px twice for each element's 5px margin
+  --top-nav-inner-div-height: calc(var(--top-nav-height) - 1em - 10px);
 
   /* ----- logo element ----- */
   --logo_url: url('../assets/logo.png');
@@ -52,43 +55,35 @@ button {
   padding: 0.5em;
   border-bottom: var(--border);
   background-color: var(--primary-bg);
+  display: flex;
+  flex-wrap: wrap;
 }
 
-#logo {
-  background-image: var(--logo_url);
+#left,
+#right {
+  height: 100%;
 }
 
-#top-nav nav {
-  margin: 0.5em 0;
-  padding: auto 0.5em;
-  height: calc(var(--top-nav-height) - 2em);
+#left {
+  flex-grow: 1;
 }
 
-#top-nav #left {
-  position: absolute;
-  left: 1em;
-}
-
-#top-nav #left > *, #top-nav #right > * {
+#left > *,
+#right > * {
+  display: inline-block;
+  vertical-align: middle;
   margin: 5px;
 }
 
 #logo {
   background-image: var(--logo_url);
-  background-size: 3em;
-  height: 3em;
-  width: 3em;
-  display: inline;
+  background-size: var(--top-nav-inner-div-height);
+  height: var(--top-nav-inner-div-height);
+  width: var(--top-nav-inner-div-height);
 }
 
-#left ul li {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-#top-nav #right {
-  position: absolute;
-  right: 1em;
+.adjuster {
+  height: var(--top-nav-inner-div-height);
 }
 
 /* ----- taken from https://www.w3schools.com/css/css_dropdowns.asp ----- */
@@ -170,12 +165,25 @@ button {
   max-height: calc(100% - 1em);
 }
 
-#charts canvas {
-  height: 450px;
-  width: 600px;
+.chartCanvas {
+  min-height: 450px;
+  min-width: 600px;
+  height: calc(80% / 2);
+  width: calc(80% / 2);
   margin: 2em;
   background-color: black;
   border: var(--border);
+  color: var(--ternary-bg);
+}
+
+#add-chart {
+  cursor: pointer;
+}
+
+.chartCanvas span {
+  height: 100%;
+  display: grid;
+  place-items: center;
 }
 
 #metrics footer {

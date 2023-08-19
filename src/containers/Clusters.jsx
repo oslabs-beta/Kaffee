@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useAppDispatch, useAppSelector } from '../hooks/hooks.js';
+// import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addCluster,
