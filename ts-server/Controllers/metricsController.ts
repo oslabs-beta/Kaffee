@@ -8,9 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
-  getMetric: (req:Request,res:Response,next:NextFunction) => {
+  getBytes: (req:Request,res:Response,next:NextFunction) => {
     try {
-      fetch('http://localhost:8080/get-metric/bytes-in', {method: "GET"})
+      fetch('http://localhost:8080/get-metric/bytes', {method: "GET"})
       .then((response) => {
         response.json()
         .then((result) => {
