@@ -27,6 +27,10 @@ export default {
         target: 'http://localhost:3030/',
         pathRewrite: { '^/api': '' },
       },
+      '/get-metrics': {
+        target: 'http://localhost:6060/',
+        pathRewrite: { '^get-metrics': '' },
+      },
     },
     open: true,
     hot: true,

@@ -23,13 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/get-metric")
 public class MetricController {
+  private int PORT = 9092;
+  private string SERVER_JMX_STRING
+  private Map<String, String> jmxServerMetrics = this.getServerMetricsStrings();
 
+  private Map<String, String> getServerMetricsStrings() {
+    return new HashMap<String, String>() {{
+      put("bytes-in", "kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec");
+      put("bytes-out", "kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec");
+      put("under-replicated-partitions", "kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions");
+    }};
+  }
+
+  @GetMapping("/available-server-metrics")
+  public Map<String, String> getServerMetrics() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+      return getServerMetricsStrings();
+  }
 
   // Server Metrics
   @GetMapping("/bytes-in")
   public double getBytesIn() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-    JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
+    JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:/jmxrmi");
     JMXConnector connector = JMXConnectorFactory.connect(url);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
