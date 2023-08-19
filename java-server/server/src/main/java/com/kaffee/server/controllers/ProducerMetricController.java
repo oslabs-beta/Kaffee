@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ProducerMetricController {
   @GetMapping("byte-rate")
   public double getByteRate() {
-    double currentRate = 0.6;
+    double currentRate = 0.9;
 
     return currentRate;
   }

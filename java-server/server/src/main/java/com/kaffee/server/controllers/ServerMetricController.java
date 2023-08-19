@@ -2,17 +2,25 @@ package com.kaffee.server.controllers;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
+import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
+import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.AttributeList;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
@@ -32,7 +40,12 @@ public class ServerMetricController {
   ServerMetricController() {
     JMX_PORT = 9092;
     SERVER_JMX_STRING = "service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi";
+    try {
     jmxServerMetrics = this.getServerMetricsStrings();
+    getServerStrings();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private Map<String, String> getServerMetricsStrings() {
@@ -48,39 +61,75 @@ public class ServerMetricController {
     return JMXConnectorFactory.connect(url);
   }
 
+  private Map<String, String> getServerStrings() throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, IntrospectionException {
+    JMXConnector connector = this.connectToJMX();
+    MBeanServerConnection mbsc = connector.getMBeanServerConnection();
+
+    Set<ObjectName> metricSet = mbsc.queryNames(new ObjectName("kafka.server:type=BrokerTopicMetrics,*"), null);
+    Map<String, String> mapNamesToStrings = new HashMap<>();
+
+    Iterator<ObjectName> it = metricSet.iterator();
+    while (it.hasNext()) {
+      ObjectName name = (ObjectName) it.next();
+
+      Hashtable<String, String> keyProperties = name.getKeyPropertyList();
+      System.out.println(keyProperties.toString());
+      mapNamesToStrings.put(keyProperties.get("name"), name.toString());
+      System.out.println(keyProperties.get("name"));
+    }
+
+    return mapNamesToStrings;
+  }
+
+
+  private String[] getMetricAttributes(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException {
+    JMXConnector connector = this.connectToJMX();
+    MBeanServerConnection mbsc = connector.getMBeanServerConnection();
+
+    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(String.format("kafka.server:type=BrokerTopicMetrics,name=%s", metric)), null);
+    Set<String> metricAttributes = new HashSet<String>();
+
+    ObjectName metricName = (ObjectName) attributeSet.iterator().next();
+    MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
+    for (int i = 0; i < attributes.length; i++) {
+      metricAttributes.add(attributes[i].getName());
+    }
+
+    String[] metricArray = new String[metricAttributes.size()];
+    metricArray = metricAttributes.toArray(metricArray);
+    return metricArray;
+  }
+
   @GetMapping("/available-server-metrics")
-  public Set<String> getServerMetrics() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+  public Map<String, String> getServerMetrics() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-      return getServerMetricsStrings().keySet();
+      return jmxServerMetrics;
   }
 
   // Server Metrics
   @GetMapping("/bytes")
-  public HashMap<String, Double> getBytesInOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-    HashMap<String, Double> bytesHash = new HashMap<>();
+  public HashMap<String, AttributeList> getBytesInOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException, javax.management.IntrospectionException {
+    HashMap<String, AttributeList> bytesHash = new HashMap<>();
 
     JMXConnector connector = this.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     ObjectName bytesInMetric = new ObjectName(jmxServerMetrics.get("bytes-in"));
     ObjectName bytesOutMetric = new ObjectName(jmxServerMetrics.get("bytes-out"));
-    double bytesIn = (double) mbsc.getAttribute(bytesInMetric, "OneMinuteRate");
-    double bytesOut = (double) mbsc.getAttribute(bytesOutMetric, "OneMinuteRate");
-    bytesHash.put("bytesIn", bytesIn);
-    bytesHash.put("bytesOut", bytesOut);
+    AttributeList bytesIn = mbsc.getAttributes(bytesInMetric, getMetricAttributes("BytesInPerSec"));
+    AttributeList bytesOut = mbsc.getAttributes(bytesOutMetric, getMetricAttributes("BytesOutPerSec"));
+
     connector.close();
+    bytesHash.put("bytes-in",bytesIn);
+    bytesHash.put("bytes-out", bytesOut);
+
     return bytesHash;
   }
 
-  @GetMapping("/bytes-in")
-  public Object getBytesIn() throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
-    JMXConnector connector = this.connectToJMX();
-    MBeanServerConnection mbsc = connector.getMBeanServerConnection();
-
-    ObjectName bytesInMetric = new ObjectName(jmxServerMetrics.get("bytes-in"));
-    System.out.println(mbsc.getMBeanInfo(bytesInMetric));
-    return mbsc;
+  @GetMapping("/metric-attributes")
+  public String[] getBytesIn() throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+    return getMetricAttributes("BytesInPerSec");
   }
 
 
@@ -97,84 +146,4 @@ public class ServerMetricController {
     connector.close();
     return underReplicatedPartitions;
   }
-//DOES NOT EXIST
-// Producer Metrics - Global Request Metrics
-//   @GetMapping("/producer-metrics/{clientId}")
-//     public Map<String, Object> getProducerMetrics(
-//             @PathVariable String clientId
-//     ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-//             MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-        
-//         JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
-//         JMXConnector connector = JMXConnectorFactory.connect(url);
-//         MBeanServerConnection mbsc = connector.getMBeanServerConnection();
-
-//         String objectNameStr = "kafka.producer:type=producer-metrics,client-id=" + clientId;
-//         System.out.println(objectNameStr);
-//         ObjectName producerNodeMetric = new ObjectName(objectNameStr);
-//         Map<String, Object> metrics = new HashMap<>();
-//         try {
-//             double metricValue = (double) mbsc.getAttribute(producerNodeMetric, "incoming-byte-rate");
-//             metrics.put("MetricName", metricValue);
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//         }
-//         connector.close();
-
-//         return metrics;
-//     }
-
-    // Consumer Metrics - Fetch Metrics
-    @GetMapping("/consumer-fetch-manager-metrics/{clientId}")
-    public Map<String, Object> getConsumerFetchManagerMetrics(
-            @PathVariable String clientId
-    ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-            MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
-        JMXConnector connector = JMXConnectorFactory.connect(url);
-        MBeanServerConnection mbsc = connector.getMBeanServerConnection();
-
-        String objectNameStr = "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=" + clientId;
-        ObjectName consumerFetchManagerMetric = new ObjectName(objectNameStr);
-
-        Map<String, Object> metrics = new HashMap<>();
-        try {
-            double metricValue = (double) mbsc.getAttribute(consumerFetchManagerMetric, "MetricName");
-            metrics.put("MetricName", metricValue);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        connector.close();
-
-        return metrics;
-    }
-
-    // Consumer Metrics - Global Request Metrics
-    @GetMapping("/consumer-metrics/{clientId}")
-    public Map<String, Object> getConsumerMetrics(
-            @PathVariable String clientId
-    ) throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-            MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi");
-        JMXConnector connector = JMXConnectorFactory.connect(url);
-        MBeanServerConnection mbsc = connector.getMBeanServerConnection();
-
-        String objectNameStr = "kafka.consumer:type=consumer-metrics,client-id=" + clientId;
-        ObjectName consumerMetrics = new ObjectName(objectNameStr);
-
-        Map<String, Object> metrics = new HashMap<>();
-        try {
-            double metricValue = (double) mbsc.getAttribute(consumerMetrics, "MetricName");
-            metrics.put("MetricName", metricValue);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        connector.close();
-
-        return metrics;
-    }
 }
