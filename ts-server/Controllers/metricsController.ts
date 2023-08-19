@@ -8,10 +8,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
-  getMetric: (req: Request, res: Response, next: NextFunction) => {
-    console.log('entered getMetric');
-    next();
+  getMetric: (req:Request,res:Response,next:NextFunction) => {
+    try {
+      fetch('http://localhost:8080/get-metric/bytes-in', {method: "GET"})
+      .then((response) => {
+        response.json()
+        .then((result) => {
+          res.locals.data = result
+          console.log(res.locals.data)
+          next()
+        }
+        )
+      })
+    } catch (err) {
+      next({errMsg: "An internal server error occured", err: 500})
+    }
+
   },
+  
   //middleware to connect to current cluster and obtain live data stream
   getCluster: (req: Request, res: Response, next: NextFunction) => {
     console.log('entered getCluster');
