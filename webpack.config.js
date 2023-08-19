@@ -21,7 +21,7 @@ export default {
       directory: path.resolve(__dirname, 'dist'),
       publicPath: '/',
     },
-    port: 8080,
+    port: 6060,
     proxy: {
       '/api': {
         target: 'http://localhost:3030/',
