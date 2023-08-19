@@ -48,7 +48,7 @@ app.use('/deleteData', dataController['deleteData' as dataKey], (req:Request,res
   res.sendStatus(200);
 })
 
-app.use((req:Request, res:Response) => {
+app.use('/', (req:Request, res:Response) => {
   res.status(404).send('What are you doing here?')
 })
 

@@ -78,6 +78,7 @@ button {
   background-size: 3em;
   height: 3em;
   width: 3em;
+  display: inline;
 }
 
 #left ul li {
@@ -196,4 +197,9 @@ button {
 
 #metrics footer button {
   margin: 0 2em;
+}
+
+
+header nav a.active button {
+  background-color: blue;
 }

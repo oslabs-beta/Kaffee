@@ -18,6 +18,7 @@ export default function () {
 
   return (
     <div id='main'>
+
       <Cluster />
       <div id='metrics'>
         <div id='charts'>
