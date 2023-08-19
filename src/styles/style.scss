@@ -1,20 +1,27 @@
 @import url('reset.scss');
+@font-face {
+  font-family: IAGG;
+  src: url(../assets/fonts/ITC\ Avant\ Garde\ Gothic\ Medium.otf);
+}
 
 :root {
   /* ----- colors ----- */
-  --primary-bg: rgb(163 107 44);
-  --secondary-bg: rgb(192 152 106);
-  --ternary-bg: rgb(204 178 155);
-  --quaternary-bg: #ded7d9;
+  --primary-bg: 163, 107, 44;
+  --secondary-bg: 192, 152, 106;
+  --ternary-bg: 204, 178, 155;
+  --quaternary-bg: 222, 215, 217;
 
-  --border-color: rgb(60 24 0);
+  --border-color: 60, 24, 0;
+  --text-color: 19, 13, 8;
 
   /* ----- generalized elements ----- */
-  --border: 1px solid var(--border-color);
-  --top-nav-height: 4.5em;
+  --border: 1px solid rgb(var(--border-color));
   // removing .5em twice for the navbar's .5em padding
   // removing 5px twice for each element's 5px margin
-  --top-nav-inner-div-height: calc(var(--top-nav-height) - 1em - 10px);
+  --top-nav-inner-div-height: 3.5em;
+
+  --button-border-radius: 0.25em;
+  --element-border-radius: 0px;
 
   /* ----- logo element ----- */
   --logo_url: url('../assets/logo.png');
@@ -22,13 +29,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-bg: rgb(14 11 9);
-    --secondary-bg: #16110d;
-    --ternary-bg: #211b15;
-    --quaternary-bg: #130d08;
+    --primary-bg: 14, 11, 9;
+    --secondary-bg: 22, 17, 13;
+    --ternary-bg: 33, 27, 21;
+    --quaternary-bg: 49, 37, 27;
 
-    --text-color: #ded7d9;
-    --border-color: rgb(204 178 155);
+    --text-color: 222, 215, 217;
+    --border-color: 204 178 155;
 
     /* ----- logo element ----- */
     --logo_url: url('/src/assets/logoDark.png');
@@ -40,28 +47,34 @@ body {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  color: var(--text-color);
+  color: rgb(var(--text-color));
   font-size: 1.25em;
+  font-family: IAGG;
 }
 
 button {
-  background-color: var(--quaternary-bg);
-  color: var(--text-color);
+  background-color: rgb(var(--quaternary-bg));
+  color: rgb(var(--text-color));
+  border-radius: var(--button-border-radius);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
 #top-nav {
   width: 100%;
-  height: var(--top-nav-height);
   padding: 0.5em;
   border-bottom: var(--border);
-  background-color: var(--primary-bg);
+  background: linear-gradient(
+    rgb(var(--primary-bg)) 85%,
+    rgb(var(--secondary-bg))
+  );
   display: flex;
   flex-wrap: wrap;
-}
-
-#left,
-#right {
-  height: 100%;
 }
 
 #left {
@@ -86,45 +99,12 @@ button {
   height: var(--top-nav-inner-div-height);
 }
 
-/* ----- taken from https://www.w3schools.com/css/css_dropdowns.asp ----- */
-.drop-button {
-  cursor: pointer;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.drop-content {
-  display: none;
-  position: absolute;
-  z-index: 10;
-}
-
-.drop-content a {
-  color: var(--text-color);
-  text-decoration: none;
-  display: block;
-  border: var(--border);
-  background-color: var(--primary-bg);
-}
-
-.dropdown-content a:hover {
-  background-color: var(--primary-bg);
-}
-
-.dropdown:hover .drop-content {
-  display: block;
-}
-
-/* ----- end code snippet ----- */
-
 #main {
   flex-grow: 1;
   display: flex;
-  height: calc(100vh - var(--top-nav-height));
-  background-color: var(--ternary-bg);
+  flex-direction: column;
+  background-color: rgb(var(--ternary-bg));
+  overflow: hidden;
 }
 
 #main #clusters {
@@ -134,7 +114,7 @@ button {
   flex-direction: column;
   text-align: center;
   border-right: var(--border);
-  background-color: var(--secondary-bg);
+  background-color: rgb(var(--secondary-bg));
 }
 
 #clusters ul {
@@ -144,7 +124,7 @@ button {
 #clusters footer {
   padding: 1em 0.5em;
   border-top: var(--border);
-  background-color: var(--primary-bg);
+  background-color: rgb(var(--primary-bg));
 }
 
 #main #metrics {
@@ -152,28 +132,64 @@ button {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+#metrics::before {
+  content: ' ';
+  background-image: var(--logo_url);
+  background-size: contain;
+  background-position: 50% 0;
+  background-repeat: no-repeat;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0.06;
 }
 
 #metrics #charts {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1000px));
+  gap: 0.5em;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  margin: 2em;
-  overflow-y: scroll;
-  max-height: calc(100% - 1em);
+  margin: 0 0.25em;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+::-webkit-scrollbar {
+  width: 0.75em;
+  height: 1.5em;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0.5em;
+  background: rgb(var(--secondary-bg));
+  box-shadow: inset 0px 0px 3px 1px rgb(var(--primary-bg));
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--ternary-bg));
+  // border-radius: var(--button-border-radius);
+  // box-shadow: inset 0.05em 0px 0.25em 0px rgb(var(--primary-bg));
 }
 
 .chartCanvas {
-  min-height: 450px;
-  min-width: 600px;
-  height: calc(80% / 2);
-  width: calc(80% / 2);
+  min-width: 400px;
+  max-width: 1000px;
   margin: 2em;
+  padding: 0.25em;
   background-color: black;
   border: var(--border);
-  color: var(--ternary-bg);
+  color: rgb(var(--ternary-bg));
+  border-radius: 10% / 8%;
+  box-shadow: 0px 0.15em 0.5em 0.1em rgba(var(--text-color), 0.2),
+    inset 1px 2px 10px 1px rgba(var(--quaternary-bg), 0.9);
+  position: relative;
+  aspect-ratio: 16/9;
 }
 
 #add-chart {
@@ -182,27 +198,34 @@ button {
 
 .chartCanvas span {
   height: 100%;
+  width: 100%;
   display: grid;
   place-items: center;
+  position: relative;
 }
 
-#metrics footer {
+#main footer {
   width: 100%;
   padding: 1em;
   border-top: var(--border);
-  background-color: var(--secondary-bg);
+  background: linear-gradient(
+    to top,
+    rgb(var(--secondary-bg)) 90%,
+    rgb(var(--ternary-bg))
+  );
 }
 
-#metrics footer form {
+#main footer form {
   display: flex;
 }
 
-#metrics footer form input {
+#main footer form input {
   flex-grow: 1;
-  background-color: var(--ternary-bg);
-  color: var(--text-color);
+  background-color: rgb(var(--ternary-bg));
+  color: rgb(var(--text-color));
+  border-radius: var(--button-border-radius);
 }
 
-#metrics footer button {
+#main footer button {
   margin: 0 2em;
 }

@@ -50,8 +50,8 @@ export default function () {
             <span>{spanText}</span>
           </div>
         </div>
-        <SearchBar />
       </div>
+      <SearchBar />
     </div>
   );
 }
