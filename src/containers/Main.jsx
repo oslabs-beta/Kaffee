@@ -30,9 +30,8 @@ export default function () {
   }
 
   return (
-    <div id='main'>
-
-      <Cluster />
+    <>
+      {/* <Cluster /> */}
       <div id='metrics'>
         <div id='charts'>
           {charts?.map((chart, i) => {
@@ -53,6 +52,6 @@ export default function () {
         </div>
       </div>
       <SearchBar />
-    </div>
+    </>
   );
 }

@@ -65,7 +65,7 @@ button {
   width: 100vw;
 }
 
-#top-nav {
+.nav-bar header {
   width: 100%;
   padding: 0.5em;
   border-bottom: var(--border);
@@ -229,7 +229,6 @@ button {
 #main footer button {
   margin: 0 2em;
 }
-
 
 header nav a.active button {
   background-color: blue;

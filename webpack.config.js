@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  // entry: './src/index.tsx',
-  entry: './src/index.jsx',
+  entry: './src/index.tsx',
+  // entry: './src/index.jsx',
 
   output: {
     path: path.join(__dirname, '/dist'),
