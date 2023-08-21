@@ -1,0 +1,6 @@
+{
+  "kafka-port": 9092,
+  "zookeeper-port": 2181,
+  "JMX-port": 9999,
+  "log-filepath": "Desktop"
+}

@@ -1,6 +1,11 @@
 import React from 'react';
 
+
+
+
+
 const NavBar = () => {
+
   return (
     <nav id='top-nav'>
       <div id='left'>
