@@ -35,6 +35,7 @@ public class ServerMetricController {
   private String SERVER_JMX_STRING;
   private Map<String, String> jmxServerMetrics;
 
+  // Set defaults in the constructor
   ServerMetricController() {
     JMX_PORT = 9092;
     SERVER_JMX_STRING = "service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi";
@@ -46,6 +47,7 @@ public class ServerMetricController {
     }
   }
 
+  // A list of server strings so we can expose only a few endpoints
   private Map<String, String> getServerMetricsStrings() {
     return new HashMap<String, String>() {{
       put("under-replicated-partitions", "kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions");
@@ -83,6 +85,9 @@ public class ServerMetricController {
     }};
   }
 
+  // a generic connector, connecting to the exposed JMX endpoints
+  // ideally we should set the server string and port number programatically,
+  // and perhaps even make this take in arguments so we can handle multiple connections
   private JMXConnector connectToJMX() throws IOException {
     JMXServiceURL url = new JMXServiceURL(String.format(SERVER_JMX_STRING, JMX_PORT));
     return JMXConnectorFactory.connect(url);
@@ -92,9 +97,13 @@ public class ServerMetricController {
   // and therefore we can use it to search for everything with a given "topic" key
   // this was adapted from here: http://www.dba-oracle.com/t_weblogic_list_mbeans_jmx.htm
   private Map<String, String> getServerStrings() throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, IntrospectionException {
+    // connect to the JMX port
     JMXConnector connector = this.connectToJMX();
+
+    // create a connector to the MBeans exposed at the port
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
+    // create a set of the 
     Set<ObjectName> metricSet = mbsc.queryNames(new ObjectName("kafka.server:type=BrokerTopicMetrics,*"), null);
     Map<String, String> mapNamesToStrings = new HashMap<>();
 
@@ -111,7 +120,7 @@ public class ServerMetricController {
     return mapNamesToStrings;
   }
 
-
+  // This returns a list of metrics for a given attribute
   private String[] getMetricAttributes(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException {
     JMXConnector connector = this.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
