@@ -137,14 +137,14 @@ button {
   overflow: hidden;
 }
 
-#metrics::before {
+#main::before {
   content: ' ';
   background-image: var(--logo_url);
   background-size: contain;
   background-position: 50% 0;
   background-repeat: no-repeat;
   position: absolute;
-  height: 100%;
+  height: 80%;
   width: 100%;
   opacity: 0.06;
 }
