@@ -2,9 +2,11 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
+import cors from 'cors';
 
 const app: Express = express();
 const PORT: number = 3030;
+app.use(cors());
 
 type dataKey = keyof typeof dataController;
 type metricKey = keyof typeof metricsController;
@@ -85,6 +87,29 @@ app.use(
     res.sendStatus(200);
   }
 );
+
+app.use(
+  '/updateSettings',
+  dataController['updateSettings' as dataKey],
+  (req: Request, res: Response) => {
+    console.log('route hit')
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.status(200).json();
+  }
+);
+
+app.use(
+  '/getSettings',
+  dataController['getSettings' as dataKey],
+  (req: Request, res: Response) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.status(200).json(res.locals.settings);
+  }
+)
 
 app.use('/', (req: Request, res: Response) => {
   res.status(404).send('What are you doing here?');
