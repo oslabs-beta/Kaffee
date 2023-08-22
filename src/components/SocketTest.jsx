@@ -51,7 +51,7 @@ export default function SocketTest() {
   }
 
   return (
-    <>
+    <div id='charts'>
       <button onClick={handleClick}>Send Message</button>
       <ul>
         {events?.map((event, i) => {
@@ -59,6 +59,6 @@ export default function SocketTest() {
           return <li key={i}>{event.content}</li>;
         })}
       </ul>
-    </>
+    </div>
   );
 }

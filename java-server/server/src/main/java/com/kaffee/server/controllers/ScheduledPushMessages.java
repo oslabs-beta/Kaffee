@@ -22,11 +22,11 @@ public class ScheduledPushMessages {
     return (new Faker()).chuckNorris();
   }
 
-  @Scheduled(fixedRate = 5000)
-  public void sendMessage() {
-    String time = new SimpleDateFormat("HH:mm").format(new Date());
-    String fact = chuckNorris().fact();
-    System.out.println(time + ": " + fact);
-    simpMessagingTemplate.convertAndSend("/metric/messages", new MessageData(fact, time));
-  }
+  // @Scheduled(fixedRate = 50)
+  // public void sendMessage() {
+  //   String time = new SimpleDateFormat("HH:mm").format(new Date());
+  //   String fact = chuckNorris().fact();
+  //   System.out.println(time + ": " + fact);
+  //   simpMessagingTemplate.convertAndSend("/metric/messages", new MessageData(fact, time));
+  // }
 }

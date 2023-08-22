@@ -104,7 +104,7 @@ button {
   display: flex;
   flex-direction: column;
   background-color: rgb(var(--ternary-bg));
-  overflow-y: scroll;
+  overflow: hidden;
   z-index: 1;
 }
 
@@ -152,7 +152,7 @@ button {
   pointer-events: none;
 }
 
-#metrics #charts {
+#charts {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1000px));
   gap: 0.5em;
