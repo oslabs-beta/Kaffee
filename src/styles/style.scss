@@ -233,6 +233,37 @@ button {
   margin: 0 2em;
 }
 
+<<<<<<< HEAD
+.settings-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setting {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.setting label {
+  width: 150px; 
+  padding-right: 10px; 
+}
+
+.setting input[type="text"] {
+
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.setting input[type="submit"] {
+
+=======
 header nav a.active button {
   background-color: blue;
+>>>>>>> dev
 }
