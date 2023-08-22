@@ -1,6 +1,7 @@
 // const path = require('path');
 // const HTMLWebpackPlugin = require('html-webpack-plugin');
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -42,6 +43,7 @@ export default {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/template.html'),
     }),
+    new NodePolyfillPlugin(),
   ],
 
   resolve: {

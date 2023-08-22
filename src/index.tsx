@@ -16,6 +16,7 @@ import Main from './containers/Main.jsx';
 import NavBar from './containers/NavBar.jsx';
 import Settings from './containers/Settings.jsx';
 import History from './containers/History.jsx';
+import SocketTest from './components/SocketTest.jsx';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: 'history',
         element: <History />,
+      },
+      {
+        path: 'socket',
+        element: <SocketTest />,
       },
     ],
   },
