@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from './containers/NavBar';
 
-function App() {
+export default function App() {
   return (
     <>
       <NavBar />
@@ -13,5 +13,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -1,16 +1,23 @@
-package com.kaffee.server;
+package com.kaffee.server.controllers;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import com.github.javafaker.ChuckNorris;
+import com.github.javafaker.Faker;
+
 @Configuration
+@EnableScheduling
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   // I was going to use this to validate CORS issues
-  private String client = "ws://localhost:6060/";
+  private String client = "http://localhost:6060/";
   
   @Override
   public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -24,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     // this is endpoint for websocket connections
-    registry.addEndpoint("/socket").setAllowedOrigins("*");
-    registry.addEndpoint("/socket").setAllowedOrigins("*").withSockJS();
+    registry.addEndpoint("/socket").setAllowedOrigins(client);
+    registry.addEndpoint("/socket").setAllowedOrigins(client).withSockJS();
   }
 }

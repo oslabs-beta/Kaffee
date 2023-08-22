@@ -104,7 +104,8 @@ button {
   display: flex;
   flex-direction: column;
   background-color: rgb(var(--ternary-bg));
-  overflow: hidden;
+  overflow-y: scroll;
+  z-index: 1;
 }
 
 #main #clusters {
@@ -137,7 +138,7 @@ button {
   overflow: hidden;
 }
 
-#main::before {
+#main::after {
   content: ' ';
   background-image: var(--logo_url);
   background-size: contain;
@@ -147,6 +148,8 @@ button {
   height: 80%;
   width: 100%;
   opacity: 0.06;
+  z-index: 0;
+  pointer-events: none;
 }
 
 #metrics #charts {
