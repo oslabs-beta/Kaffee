@@ -2,12 +2,14 @@ package com.kaffee.server.controllers;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -28,19 +30,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.classic.Logger;
+
 @RestController
 @RequestMapping("/")
 public class ServerMetricController {
   private int JMX_PORT;
   private String SERVER_JMX_STRING;
   private Map<String, String> jmxServerMetrics;
+  private Set<String> subscribedMetrics;
 
   // Set defaults in the constructor
   ServerMetricController() {
     JMX_PORT = 9092;
     SERVER_JMX_STRING = "service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi";
     try {
-    jmxServerMetrics = getServerMetricsStrings();
+      jmxServerMetrics = getServerMetricsStrings();
 
     } catch (Exception e) {
       System.out.println(e.getMessage());
@@ -121,12 +126,12 @@ public class ServerMetricController {
   }
 
   // This returns a list of metrics for a given attribute
-  private String[] getMetricAttributes(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException {
+  private List<String> getMetricAttributes(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException {
     JMXConnector connector = this.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(String.format(metric)), null);
-    Set<String> metricAttributes = new HashSet<String>();
+    List<String> metricAttributes = new ArrayList<String>();
 
     ObjectName metricName = (ObjectName) attributeSet.iterator().next();
     MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
@@ -134,9 +139,7 @@ public class ServerMetricController {
       metricAttributes.add(attributes[i].getName());
     }
 
-    String[] metricArray = new String[metricAttributes.size()];
-    metricArray = metricAttributes.toArray(metricArray);
-    return metricArray;
+    return metricAttributes;
   }
 
   private JSONObject getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
@@ -156,16 +159,38 @@ public class ServerMetricController {
     return metricsObject;
   }
 
+  public void addSubscription(String metric) {
+    String metricString = jmxServerMetrics.get(metric);
+
+    subscribedMetrics.add(metricString);
+  }
+
+  public void removeSubscription(String metric) {
+    String metricString = jmxServerMetrics.get(metric);
+
+    subscribedMetrics.remove(metricString);
+  }
+
   @GetMapping("/available-server-metrics")
   public Set<String> getServerMetrics() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
       return jmxServerMetrics.keySet();
   }
 
+  private String[] metricsList(String metricString) throws IOException, InstanceNotFoundException, MalformedObjectNameException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+
+    List<String> metricAttributesList = getMetricAttributes(metricString);
+    int listSize = metricAttributesList.size();
+    String[] listArray = new String[listSize];
+    listArray = metricAttributesList.toArray(listArray);
+
+    return listArray;
+  }
+
   // Server Metrics
   @GetMapping("/bytes")
   public HashMap<String, AttributeList> getBytesInOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException, javax.management.IntrospectionException {
+    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException, javax.management.IntrospectionException, IntrospectionException {
     HashMap<String, AttributeList> bytesHash = new HashMap<>();
 
     JMXConnector connector = this.connectToJMX();
@@ -176,8 +201,10 @@ public class ServerMetricController {
 
     ObjectName bytesInMetric = new ObjectName(bytesInString);
     ObjectName bytesOutMetric = new ObjectName(bytesOutString);
-    AttributeList bytesIn = mbsc.getAttributes(bytesInMetric, getMetricAttributes(bytesInString));
-    AttributeList bytesOut = mbsc.getAttributes(bytesOutMetric, getMetricAttributes(bytesOutString));
+
+
+    AttributeList bytesIn = mbsc.getAttributes(bytesInMetric, metricsList(bytesInString));
+    AttributeList bytesOut = mbsc.getAttributes(bytesOutMetric, metricsList(bytesOutString));
 
     connector.close();
     bytesHash.put("bytes-in",bytesIn);
@@ -187,9 +214,17 @@ public class ServerMetricController {
   }
 
   @GetMapping("/metric-attributes/{metric}")
-  public String[] metricAttributes(@PathVariable("metric")String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
-    String metricString = this.jmxServerMetrics.get(metric);
-    return getMetricAttributes(metricString);
+  public List<String> metricAttributes(@PathVariable("metric")String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+    List<String> metrics = new ArrayList<String>();
+    try {
+      String metricString = this.jmxServerMetrics.get(metric);
+
+      metrics = getMetricAttributes(metricString);
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      return metrics;
+    }
   }
 
   @GetMapping("/metrics/{metric}")

@@ -7,7 +7,6 @@ export default function App() {
     <>
       <NavBar />
       <div id='main'>
-        <div id='background'></div>
         <Outlet />
       </div>
     </>

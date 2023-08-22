@@ -10,6 +10,7 @@ export default function SocketTest() {
 
   const [subs, setSubs] = useState([]);
   const [events, setEvents] = useState([]);
+  const [subId, setSubId] = useState(null);
 
   const dispatch = useDispatch();
   const subStr = '/metric/messages';
@@ -17,7 +18,7 @@ export default function SocketTest() {
   useEffect(() => {
     client.activate();
     client.onConnect = () => {
-      handleSubscription();
+      handleSubscription('/metric/messages');
     };
   }, []);
 
@@ -34,9 +35,7 @@ export default function SocketTest() {
     setEvents([...events]);
   }
 
-  function handleSubscription() {
-    const subStr = '/metric/messages';
-
+  function handleSubscription(subStr = '/metric/messages') {
     for (const sub of subs) {
       if (sub.destination == subStr) {
         return;
@@ -45,17 +44,28 @@ export default function SocketTest() {
 
     const subId = client.subscribe(subStr, (message) => addEvent(message));
 
-    const currSubs = subs.slice();
-    currSubs.push({ id: subId, destination: subStr });
-    setSubs(currSubs);
+    subs.push(subId);
+    setSubs([...subs]);
+  }
+
+  function handleSub() {
+    if (!subId) {
+      handleSubscription('/metric/chuck');
+      const currSub = subs[subs.length - 1].id;
+      setSubId(currSub);
+    } else {
+      setEvents([]);
+      client.unsubscribe(subId);
+      setSubId(null);
+    }
   }
 
   return (
     <div id='charts'>
       <button onClick={handleClick}>Send Message</button>
+      <button onClick={handleSub}>Subscribe</button>
       <ul>
         {events?.map((event, i) => {
-          console.log(event);
           return <li key={i}>{event.content}</li>;
         })}
       </ul>

@@ -1,6 +1,14 @@
 package com.kaffee.server.controllers;
 
 import java.util.Date;
+
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.github.javafaker.ChuckNorris;
 import com.github.javafaker.Faker;
@@ -17,8 +26,16 @@ import com.github.javafaker.Faker;
 @Controller
 public class SocketController {
 
+
+  @MessageMapping("app/subscribe/")
+  public void subscribeToMetric(String metric)  throws IOException, MalformedObjectNameException, AttributeNotFoundException,
+    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+      ServerMetricController serverMetric = new ServerMetricController();
+      serverMetric.addSubscription(metric);
+    }
+
   @SendTo("/metric/test2")
-  public MessageData sendData() throws Exception {
+  public MessageData sendData() {
     Faker faker = new Faker();
     ChuckNorris chuckNorris = faker.chuckNorris();
 
@@ -29,7 +46,7 @@ public class SocketController {
 
   @MessageMapping("app/test")
   @SendTo("/metric/facts")
-  public MessageData sendFact() throws Exception {
+  public MessageData sendFact() {
     Faker faker = new Faker();
     ChuckNorris chuckNorris = faker.chuckNorris();
     String time = new SimpleDateFormat("HH:mm").format(new Date());
@@ -40,7 +57,7 @@ public class SocketController {
 
   @MessageMapping("/sendTest")
   @SendTo("/metric/messages")
-  public MessageData getData() throws Exception {
+  public MessageData getData() {
     System.out.println("In the getData function");
     String time = new SimpleDateFormat("HH:mm").format(new Date());
     return new MessageData("Hello, World!", time);
