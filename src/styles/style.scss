@@ -77,12 +77,12 @@ button {
   flex-wrap: wrap;
 }
 
-#left {
+.left {
   flex-grow: 1;
 }
 
-#left > *,
-#right > * {
+.left > *,
+.right > * {
   display: inline-block;
   vertical-align: middle;
   margin: 5px;
@@ -105,6 +105,7 @@ button {
   flex-direction: column;
   background-color: rgb(var(--ternary-bg));
   overflow: hidden;
+  z-index: 1;
 }
 
 #main #clusters {
@@ -147,9 +148,11 @@ button {
   height: 80%;
   width: 100%;
   opacity: 0.06;
+  z-index: 0;
+  pointer-events: none;
 }
 
-#metrics #charts {
+#charts {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1000px));
   gap: 0.5em;
@@ -230,13 +233,13 @@ button {
   margin: 0 2em;
 }
 
-<<<<<<< HEAD
 .settings-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 10px;
+  z-index: 1;
 }
 
 .setting {
@@ -246,21 +249,16 @@ button {
 }
 
 .setting label {
-  width: 150px; 
-  padding-right: 10px; 
+  width: 150px;
+  padding-right: 10px;
 }
 
-.setting input[type="text"] {
-
+.setting input[type='text'] {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.setting input[type="submit"] {
-
-=======
 header nav a.active button {
-  background-color: blue;
->>>>>>> dev
+  background-color: rgb(var(--ternary-bg));
 }
