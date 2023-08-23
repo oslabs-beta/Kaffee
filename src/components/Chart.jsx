@@ -79,7 +79,7 @@ export default function ({ props }) {
 
     setTitle(body.metric);
     console.log(body);
-    const event = body.snapshot.MeanRate;
+    const event = body.snapshot.OneMinuteRate;
     events.push(event);
 
     labels.push(body.time - beginTime);
