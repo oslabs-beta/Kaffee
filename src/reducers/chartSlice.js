@@ -32,8 +32,8 @@ const chartSlice = createSlice({
   name: 'chart',
   initialState,
   reducers: {
-    addChart: (state) => {
-      state.list.push();
+    addChart: (state, action) => {
+      state.list.push({ metric: action.payload });
     },
     // removeChart: (state, action: PayloadAction<number>) => {
     removeChart: (state, action) => {

@@ -37,7 +37,7 @@ import ch.qos.logback.classic.Logger;
 public class ServerMetricController {
   private int JMX_PORT;
   private String SERVER_JMX_STRING;
-  private Map<String, String> jmxServerMetrics;
+  public Map<String, String> jmxServerMetrics;
   private Set<String> subscribedMetrics;
 
   // Set defaults in the constructor
@@ -142,18 +142,21 @@ public class ServerMetricController {
     return metricAttributes;
   }
 
-  private JSONObject getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
+  public Map<String, String> getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
+    // private JSONObject getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
     JMXConnector connector = this.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-    JSONObject metricsObject = new JSONObject();
-
-    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(String.format(metric)), null);
+    // JSONObject metricsObject = new JSONObject();
+    Map<String, String> metricsObject = new HashMap<String, String>();
+ 
+    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(metric), null);
 
     ObjectName metricName = (ObjectName) attributeSet.iterator().next();
     MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
     for (int i = 0; i < attributes.length; i++) {
-      metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()));
+      metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()).toString());
+      // metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()));
     }
 
     return metricsObject;
@@ -230,6 +233,7 @@ public class ServerMetricController {
   @GetMapping("/metrics/{metric}")
   public String formattedMetrics(@PathVariable("metric")String metric) throws IOException, MalformedObjectNameException, MBeanException, AttributeNotFoundException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
     String metricString = this.jmxServerMetrics.get(metric);
+    System.out.println(metricString);
     return getFormattedMetrics(metricString).toString();
   }
 

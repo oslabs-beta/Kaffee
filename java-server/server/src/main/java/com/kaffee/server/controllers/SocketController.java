@@ -39,9 +39,10 @@ public class SocketController {
     Faker faker = new Faker();
     ChuckNorris chuckNorris = faker.chuckNorris();
 
-    MessageData message = new MessageData(chuckNorris.fact(), new SimpleDateFormat("HH:mm").format(new Date()));
+    // MessageData message = new MessageData(chuckNorris.fact(), new SimpleDateFormat("HH:mm").format(new Date()));
 
-    return message;
+    // return message;
+    return new MessageData();
   }
 
   @MessageMapping("app/test")
@@ -51,15 +52,16 @@ public class SocketController {
     ChuckNorris chuckNorris = faker.chuckNorris();
     String time = new SimpleDateFormat("HH:mm").format(new Date());
     
-    return new MessageData(chuckNorris.fact(), time);
+    // return new MessageData(chuckNorris.fact(), time);
+    return new MessageData();
   }
 
 
-  @MessageMapping("/sendTest")
-  @SendTo("/metric/messages")
-  public MessageData getData() {
-    System.out.println("In the getData function");
-    String time = new SimpleDateFormat("HH:mm").format(new Date());
-    return new MessageData("Hello, World!", time);
-  }
+  // @MessageMapping("/sendTest")
+  // @SendTo("/metric/messages")
+  // public MessageData getData() {
+  //   System.out.println("In the getData function");
+  //   String time = new SimpleDateFormat("HH:mm").format(new Date());
+  //   // return new MessageData("Hello, World!", time);
+  // }
 }

@@ -18,7 +18,7 @@ export default function () {
 
   const handleAddChart = () => {
     if (status === 'succeeded' || status === 'idle') {
-      dispatch(newChart());
+      dispatch(addChart('bytes-in'));
     }
   };
 

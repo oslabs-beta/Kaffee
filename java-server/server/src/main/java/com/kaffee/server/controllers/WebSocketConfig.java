@@ -31,7 +31,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     // this is endpoint for websocket connections
-    registry.addEndpoint("/socket").setAllowedOrigins(client);
-    registry.addEndpoint("/socket").setAllowedOrigins(client).withSockJS();
+    registry.addEndpoint("/socket").setAllowedOrigins("*");
+    registry.addEndpoint("/socket").setAllowedOrigins("*").withSockJS();
   }
+  
+  @Bean
+  public MessageData messageData() {
+    return new MessageData();
+  }
+
 }
