@@ -10,7 +10,7 @@ const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
   getBytes: (req:Request,res:Response,next:NextFunction) => {
     try {
-      fetch('http://localhost:8080/get-metric/bytes', {method: "GET"})
+      fetch('http://localhost:8080/bytes', {method: "GET"})
       .then((response) => {
         response.json()
         .then((result) => {

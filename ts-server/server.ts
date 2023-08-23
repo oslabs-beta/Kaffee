@@ -2,12 +2,15 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
+import testController from './Controllers/testController.ts';
+
 
 const app: Express = express();
 const PORT: number = 3030;
 
 type dataKey = keyof typeof dataController;
 type metricKey = keyof typeof metricsController;
+type testKey = keyof typeof testController;
 
 import { fileURLToPath } from 'url';
 
@@ -23,6 +26,9 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
 });
 
+app.use('/test', testController['runTest' as testKey],(req:Request, res:Response) => {
+  res.status(200).json(res.locals.data);
+})
 
 app.use('/getBytes', metricsController['getBytes' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {
   console.log(res.locals.data)
