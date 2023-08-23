@@ -55,4 +55,4 @@ const socketSlice = createSlice({
 });
 
 export default socketSlice.reducer;
-export const { connected, disconnected } = socketSlice.actions;
+export const { connected, disconnected, setClient } = socketSlice.actions;

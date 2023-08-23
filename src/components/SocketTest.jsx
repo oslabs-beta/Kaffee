@@ -18,7 +18,7 @@ export default function SocketTest() {
   useEffect(() => {
     client.activate();
     client.onConnect = () => {
-      handleSubscription('/metric/messages');
+      handleSubscription('/metric/chuck');
     };
   }, []);
 
@@ -30,7 +30,9 @@ export default function SocketTest() {
   }
 
   function addEvent(message) {
+    console.log(message.body);
     const body = JSON.parse(message.body);
+    console.log(body);
     events.push(body);
     setEvents([...events]);
   }
@@ -66,7 +68,7 @@ export default function SocketTest() {
       <button onClick={handleSub}>Subscribe</button>
       <ul>
         {events?.map((event, i) => {
-          return <li key={i}>{event.content}</li>;
+          return <li key={i}>{event.snapshot.OneMinuteRate}</li>;
         })}
       </ul>
     </div>

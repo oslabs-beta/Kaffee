@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -13,42 +13,7 @@ import {
 // import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import chartSlice from '../reducers/chartSlice.js';
-
-/*
-const DATA_LENGTH = 100;
-const labels = Array.from({ length: DATA_LENGTH }, (_, i) => (i + 1) * 100);
-
-const generateData = () => {
-  return Math.floor(Math.random() * 1000);
-};
-
-const mockData = {
-  labels,
-  datasets: [
-    {
-      id: 1,
-      label: 'Metric 1',
-      data: labels.map(generateData),
-      borderColor: 'rgb(255, 0, 0)',
-      backgroundColor: 'rgba(255, 0, 0)',
-    },
-    {
-      id: 2,
-      label: 'Metric 2',
-      data: labels.map(generateData),
-      borderColor: 'rgb(0, 255, 0)',
-      backgroundColor: 'rgb(0, 255, 0)',
-    },
-    {
-      id: 3,
-      label: 'Metric 3',
-      data: labels.map(generateData),
-      borderColor: 'rgb(0, 0, 255)',
-      backgroundColor: 'rgb(0, 0, 255)',
-    },
-  ],
-};
-*/
+import client from '../socket.js';
 
 Chart.register(
   CategoryScale,
@@ -68,7 +33,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Mock Data',
+      text: '',
     },
   },
   updateMode: 'active',
@@ -77,12 +42,59 @@ export const options = {
 export const loader = () => {};
 
 export default function ({ props }) {
+  const [events, setEvents] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [title, setTitle] = useState('');
+  const [startTime, setStartTime] = useState(0);
+  let beginTime;
+
+  useEffect(() => {
+    console.log(props);
+    client.onConnect = () => {
+      // let path = '/metric/chuck';
+      let path = '/metric/' + props.metric;
+      console.log(path);
+      console.log(client);
+      client.subscribe(path, (message) => addEvent(message))
+    };
+    client.activate();
+    
+    return () => {
+      client.deactivate();
+    }
+  }, []);
+
   const dataSet = {
-    labels: Array.from({ length: props.data.length }, (_, i) => (i + 1) * 100),
+    labels: labels,
     datasets: [
-      { label: props.name, data: props.data, borderColor: 'rgb(255, 0, 0)' },
+      { label: title, data: events, borderColor: 'rgb(255, 0, 0)' },
     ],
   };
+
+  function addEvent(message) {
+    const body = JSON.parse(message.body);
+    if (!beginTime) {
+      beginTime = body.time;
+    }
+
+    setTitle(body.metric);
+    console.log(body);
+    const event = body.snapshot.MeanRate;
+    events.push(event);
+
+    labels.push(body.time - beginTime);
+
+    while (events.length > 30) {
+      events.shift();
+      labels.shift();
+    }
+
+    setEvents([...events]);
+    setLabels([...labels]);
+  }
+
+
+  options.plugins.title.text = title;
 
   return (
     <div className='chartCanvas'>
