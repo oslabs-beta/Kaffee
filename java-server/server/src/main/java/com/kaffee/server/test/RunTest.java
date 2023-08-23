@@ -1,5 +1,6 @@
 package com.kaffee.server.test;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ public class RunTest{
   
   @GetMapping("/runTest")
   public HashMap<String, AttributeList> multipleTests() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException, javax.management.IntrospectionException{
+    MBeanException, ReflectionException, InstanceNotFoundException, IntrospectionException, InterruptedException, javax.management.IntrospectionException{
 
     for(int i = 0; i <= 4; i++){
       System.out.println(i);

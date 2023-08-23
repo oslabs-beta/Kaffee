@@ -5,7 +5,7 @@ export default function NavBar() {
   return (
     <div className='nav-bar'>
       <header>
-        <nav>
+        <nav className='left'>
           <NavLink to='/'>
             <button>Home</button>
           </NavLink>
@@ -26,6 +26,11 @@ export default function NavBar() {
             <option value='messages'>Messages in/out</option>
             <option value='else'>Else</option>
           </select>
+        </nav>
+        <nav className='right'>
+          <NavLink to='/socket'>
+            <button>Socket Example</button>
+          </NavLink>
         </nav>
       </header>
     </div>

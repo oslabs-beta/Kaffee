@@ -25,39 +25,34 @@ export const newChart = createAsyncThunk(
 // const initialState: chartState = {
 const initialState = {
   list: [],
-  status: 'idle',
+  client: null,
+  status: 'disconnected',
 };
 
-const chartSlice = createSlice({
-  name: 'chart',
+const socketSlice = createSlice({
+  name: 'sockets',
   initialState,
   reducers: {
-    addChart: (state, action) => {
-      state.list.push({ metric: action.payload });
+    connected: (state) => {
+      state.status = 'connected';
     },
     // removeChart: (state, action: PayloadAction<number>) => {
-    removeChart: (state, action) => {
-      const index = action.payload;
-      state.list = state.list.splice(index, 1);
+    disconnected: (state, action) => {
+      state.status = 'disconnected';
+    },
+    setClient: (state, action) => {
+      state.client = action.payload;
     },
     filterCharts: (state, action) => {
       // how do we do this without blowing up all the charts from before?
     },
   },
   extraReducers: {
-    [newChart.pending]: (state, action) => {
-      state.status = 'loading';
-    },
-    [newChart.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
-      // if we are getting chunks of data repeatedly, we will need to handle this differently
-      state.list.push(action.payload);
-    },
-    [newChart.rejected]: (state, action) => {
-      state.status = 'failed';
-    },
+    [newChart.pending]: (state, action) => {},
+    [newChart.fulfilled]: (state, action) => {},
+    [newChart.rejected]: (state, action) => {},
   },
 });
 
-export default chartSlice.reducer;
-export const { addChart, removeChart, filterCharts } = chartSlice.actions;
+export default socketSlice.reducer;
+export const { connected, disconnected, setClient } = socketSlice.actions;
