@@ -93,13 +93,15 @@ export default function NavBar() {
             <form>
               {metrics?.map((metric) => {
                 return (
-                  <label className='chart-selector'>
+                  <label
+                    className='chart-selector'
+                    key={metric.name}
+                  >
                     <input
                       type='checkbox'
                       id={metric.name}
                       name={metric.name}
                       defaultValue={chartList[metric]}
-                      key={metric.name}
                       onClick={() => handleToggleChart(metric.name)}
                     />
                     {metric.display}
