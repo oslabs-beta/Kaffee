@@ -38,7 +38,7 @@ public class ServerMetricController {
   private int JMX_PORT;
   private String SERVER_JMX_STRING;
   public Map<String, String> jmxServerMetrics;
-  private Set<String> subscribedMetrics;
+  public Set<String> subscribedMetrics;
 
   // Set defaults in the constructor
   public ServerMetricController() {

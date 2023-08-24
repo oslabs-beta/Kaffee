@@ -1,7 +1,6 @@
 package com.kaffee.server.controllers;
 
 import java.util.Map;
-import org.json.JSONObject;
 
 public class MessageData {
   private String metric;
@@ -13,7 +12,14 @@ public class MessageData {
 
   }
 
-// MessageData bytesIn = new MessageData("bytesIn", 123352435, SnapshotMap)
+  public MessageData(String metric, Map<String, String> snapshot) {
+    this.metric = metric;
+    this.snapshot = snapshot;
+
+    this.time = System.currentTimeMillis();
+  }
+
+  // MessageData bytesIn = new MessageData("bytesIn", 123352435, SnapshotMap)
   public MessageData(String metric, Number time, Map<String, String> snapshot) {
     this.metric = metric;
     this.time = time;

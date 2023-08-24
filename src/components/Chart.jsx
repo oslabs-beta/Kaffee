@@ -55,20 +55,18 @@ export default function ({ props }) {
       let path = '/metric/' + props.metric;
       console.log(path);
       console.log(client);
-      client.subscribe(path, (message) => addEvent(message))
+      client.subscribe(path, (message) => addEvent(message));
     };
     client.activate();
-    
+
     return () => {
       client.deactivate();
-    }
+    };
   }, []);
 
   const dataSet = {
     labels: labels,
-    datasets: [
-      { label: title, data: events, borderColor: 'rgb(255, 0, 0)' },
-    ],
+    datasets: [{ label: title, data: events, borderColor: 'rgb(255, 0, 0)' }],
   };
 
   function addEvent(message) {
@@ -92,7 +90,6 @@ export default function ({ props }) {
     setEvents([...events]);
     setLabels([...labels]);
   }
-
 
   options.plugins.title.text = title;
 
