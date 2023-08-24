@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import client from '../socket.js';
+import client from '../utils/socket.js';
 import { StompSocketState } from '@stomp/stompjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { connected, disconnected, setClient } from '../reducers/socketSlice.js';

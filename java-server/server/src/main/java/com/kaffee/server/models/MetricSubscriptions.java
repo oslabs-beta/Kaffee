@@ -87,5 +87,6 @@ public class MetricSubscriptions {
 
   public void removeSubscription(String metric) {
     subscribedServerMetrics.remove(metric);
+    System.out.println("Unsubscribed from " + metric);
   }
 }
