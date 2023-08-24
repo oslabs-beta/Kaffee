@@ -3,6 +3,7 @@ package com.kaffee.server.controllers;
 import java.util.Map;
 import java.util.Set;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,16 +30,18 @@ public class ScheduledMessagesController {
 
   @Scheduled(fixedRate = 1000)
   public void sendMessage() throws Exception {
-    Set<String> metrics = ms.subscribedServerMetrics;
+    Map<String, String> metrics = ms.subscribedServerMetrics;
 
-    for (String metric : metrics) {
-      Map<String, String> data = smc.getFormattedMetrics(smc.jmxServerMetrics.get(metric));
+    for (Map.Entry<String, String> metric : metrics.entrySet()) {
+      if (metric != null) {
+        Map<String, String> data = smc.getFormattedMetrics(metric.getValue());
 
-      MessageData message = new MessageData(metric, data);
-      String outputPath = "/metric/" + metric;
-      
-      simpMessagingTemplate.convertAndSend(outputPath, message);
-      message = null;
+        MessageData message = new MessageData(metric.getKey(), data);
+        String outputPath = "/metric/" + metric.getKey();
+        System.out.println(outputPath);
+        simpMessagingTemplate.convertAndSend(outputPath, message);
+        message = null;
+      }
     }
   }
   

@@ -39,25 +39,41 @@ export const options = {
   updateMode: 'active',
 };
 
-export const loader = () => {};
+// handle different data values
+function getValues(snapshot) {
+  const dataObj = {
+    metric: '',
+    value: null,
+  };
+
+  // loop through everything the server gives us
+  // display only values that are numeric
+  for (const [metric, value] of snapshot) {
+    // check typeof json.parse(value)
+    // add it to the events array at the appropriate place
+  }
+}
 
 export default function ({ props }) {
   const [events, setEvents] = useState([]);
   const [labels, setLabels] = useState([]);
   const [title, setTitle] = useState('');
-  const [startTime, setStartTime] = useState(0);
   let beginTime;
 
   useEffect(() => {
     console.log(props);
     client.onConnect = () => {
-      // let path = '/metric/chuck';
       let path = '/metric/' + props.metric;
-      console.log(path);
-      console.log(client);
       client.subscribe(path, (message) => addEvent(message));
+
+      client.publish({
+        destination: '/app/subscribe',
+        body: JSON.stringify({ metric: props.metric }),
+      });
     };
     client.activate();
+
+    // on initialization, determine the number of charts to draw
 
     return () => {
       client.deactivate();
@@ -78,7 +94,6 @@ export default function ({ props }) {
     setTitle(body.metric);
     console.log(body);
     const event = body.snapshot.OneMinuteRate;
-    events.push(event);
 
     labels.push(body.time - beginTime);
 

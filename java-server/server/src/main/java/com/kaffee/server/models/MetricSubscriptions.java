@@ -17,7 +17,7 @@ public class MetricSubscriptions {
   private int CONSUMER_JMX_PORT;
   private String KAFKA_URL;
   private String RESOLVED_URL;
-  public Set<String> subscribedServerMetrics;
+  public Map<String, String> subscribedServerMetrics;
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
@@ -28,7 +28,7 @@ public class MetricSubscriptions {
     RESOLVED_URL = String.format(baseUrl, KAFKA_URL, SERVER_JMX_PORT);
     serverMetrics = getServerMetricsStrings();
 
-    subscribedServerMetrics = new HashSet<>();
+    subscribedServerMetrics = new HashMap<>();
   }
 
   public Map<String, String> getServerMetricsStrings() {
@@ -78,7 +78,7 @@ public class MetricSubscriptions {
     try {    
       String metricString = serverMetrics.get(metric);
       if (metricString != null) {
-        subscribedServerMetrics.add(metricString);
+        subscribedServerMetrics.put(metric, metricString);
       }
     } catch (NullPointerException npe) {
       System.out.println(String.format("No metric found for string: %s", metric));
@@ -86,8 +86,6 @@ public class MetricSubscriptions {
   }
 
   public void removeSubscription(String metric) {
-    String metricString = serverMetrics.get(metric);
-
-    subscribedServerMetrics.remove(metricString);
+    subscribedServerMetrics.remove(metric);
   }
 }

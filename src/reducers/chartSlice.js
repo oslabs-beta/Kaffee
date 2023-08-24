@@ -20,6 +20,7 @@ export const newChart = createAsyncThunk(
 // };
 
 // export type chartObj = {
+//  metric: string,
 // };
 
 // const initialState: chartState = {
@@ -37,8 +38,8 @@ const chartSlice = createSlice({
     },
     // removeChart: (state, action: PayloadAction<number>) => {
     removeChart: (state, action) => {
-      const index = action.payload;
-      state.list = state.list.splice(index, 1);
+      const index = state.list.indexOf(action.payload);
+      state.list.splice(index, 1);
     },
     filterCharts: (state, action) => {
       // how do we do this without blowing up all the charts from before?

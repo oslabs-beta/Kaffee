@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
@@ -15,11 +18,9 @@ import com.kaffee.server.models.MetricSubscriptions;
 @ComponentScan
 @Import({ WebSocketConfig.class })
 public class ServerApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ServerApplication.class, args);
 	}
-
 
   @Bean
   public MessageData messageData() {
