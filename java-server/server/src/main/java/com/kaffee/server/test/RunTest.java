@@ -27,7 +27,6 @@ public class RunTest{
     MBeanException, ReflectionException, InstanceNotFoundException, IntrospectionException, InterruptedException, javax.management.IntrospectionException{
 
     for(int i = 0; i <= 4; i++){
-      System.out.println(i);
       String testNum = Integer.toString(i);
       String name = "test".concat(testNum);
       TestProducer newProducer = new TestProducer(name);
