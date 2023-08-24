@@ -11,6 +11,7 @@ import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ReflectionException;
 
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Server;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,11 @@ import com.kaffee.server.controllers.ServerMetricController;
 @RestController
 @RequestMapping("/test")
 public class RunTest{
+  private final ServerMetricController smc;
+
+  public RunTest(ServerMetricController smc) {
+    this.smc = smc;
+  }
   
   @GetMapping("/runTest")
   public HashMap<String, AttributeList> multipleTests() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
@@ -33,7 +39,7 @@ public class RunTest{
       TestProducer newProducer = new TestProducer(name);
       newProducer.start();
     }
-    ServerMetricController bytes = new ServerMetricController();
-    return bytes.getBytesInOut();
+    
+    return smc.getBytesInOut();
   }
 }
