@@ -1,5 +1,6 @@
 package com.kaffee.server.controllers;
 
+import java.lang.Integer;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,8 +26,12 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,11 +51,21 @@ public class ServerMetricController {
     SERVER_JMX_STRING = "service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi";
     try {
       jmxServerMetrics = getServerMetricsStrings();
-
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
   }
+
+  //settings receiver and setter
+  @PostMapping("/setJMXPort")
+  public int postController
+  (@RequestBody String body) {
+    Integer PORT = java.lang.Integer.parseInt(body);
+    System.out.println("Before: " + JMX_PORT);
+    JMX_PORT = PORT;
+    System.out.println("After: " + JMX_PORT);
+    return JMX_PORT;
+}
 
   // A list of server strings so we can expose only a few endpoints
   private Map<String, String> getServerMetricsStrings() {
