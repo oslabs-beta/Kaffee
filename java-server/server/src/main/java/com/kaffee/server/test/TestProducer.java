@@ -23,6 +23,7 @@ public class TestProducer extends Thread{
                 String value = "value-" + i;
                 ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
                 producer.send(record);
+                record = null;
                 try {
                     Thread.sleep(1000);
                 } catch (Exception e) {

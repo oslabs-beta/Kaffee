@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 const desktopPath = path.join(os.homedir(), 'Desktop');
 const filePath = path.join(desktopPath, 'kaffee_log.json');
-const content = JSON.stringify('fuck');
+const content = JSON.stringify('test');
 
 // fs.writeFile(filePath, content, (err) => {
 //   if (err) {
