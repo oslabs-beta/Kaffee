@@ -28,9 +28,9 @@ export default function NavBar() {
           </select>
         </nav>
         <nav className='right'>
-          <NavLink to='/socket'>
+          {/* <NavLink to='/socket'>
             <button>Socket Example</button>
-          </NavLink>
+          </NavLink> */}
         </nav>
       </header>
     </div>

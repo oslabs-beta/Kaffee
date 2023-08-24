@@ -1,4 +1,4 @@
-package com.kaffee.server.controllers;
+package com.kaffee.server.models;
 
 import java.util.Map;
 
