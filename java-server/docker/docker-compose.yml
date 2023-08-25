@@ -1,7 +1,6 @@
 version: '2'
 
 services:
-
   zookeeper:
     image: docker.io/bitnami/zookeeper:3.8
     ports:
@@ -10,6 +9,7 @@ services:
       - 'zookeeper_data:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+      - JVM_OPTS=-Xmx512m -Xms512m -XX:MaxPermSize=256m
 
   kafka:
     image: docker.io/bitnami/kafka:3.4
@@ -24,6 +24,7 @@ services:
       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.rmi.port=9999
       - JMX_PORT=9999
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9094
+      - JVM_OPTS=-Xmx1g -Xms1g -XX:MaxPermSize=1024m
     depends_on:
       - zookeeper
 
