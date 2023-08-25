@@ -9,10 +9,9 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 // import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
-import { useSelector, useDispatch } from 'react-redux';
-import chartSlice from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import {
   friendlyList,
@@ -30,130 +29,132 @@ Chart.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: '',
-    },
-  },
-  updateMode: 'active',
-};
-
 function parseMetricName(metricName) {
-  return metricName.replace('/([A-Z])/g', ' $1');
+  console.log(metricName);
+  console.log(typeof metricName);
+  let parsed = metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
+  console.log(parsed);
+  return parsed;
 }
 
 export default function ({ props }) {
-  const [events, setEvents] = useState([]);
-  const [labels, setLabels] = useState([]);
-  const [title, setTitle] = useState('');
+  let colorInd = 0;
   let beginTime;
 
-  let data = {
-    labels: labels,
-    datasets: [],
-    colorInd: 0,
+  const optionsInit = {
+    responsive: true,
+    type: 'line',
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      title: {
+        display: true,
+        text: '',
+      },
+    },
+    updateMode: 'active',
   };
 
-  useEffect(() => {
-    client.onConnect = () => {
-      let path = '/metric/' + props.metric;
-      client.subscribe(path, (message) => (data = addEvent(message)));
+  const [data, setData] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [options, setOptions] = useState(optionsInit);
 
-      options.plugins.title.text = friendlyList[title];
+  useEffect(() => {
+    const whenConnected = () => {
+      let path = '/metric/' + props.metric;
+      client.subscribe(path, (message) => addEvents(message));
+
+      const newOptions = Object.assign({}, options);
+      newOptions.plugins.title.text = friendlyList[props.metric];
+      setOptions(newOptions);
 
       client.publish({
         destination: '/app/subscribe',
         body: JSON.stringify({ metric: props.metric }),
       });
     };
-    client.activate();
 
-    // on initialization, determine the number of charts to draw
-
-    return () => {
-      client.deactivate();
-    };
+    if (client.active) {
+      whenConnected();
+    } else {
+      client.onConnect(whenConnected);
+      client.activate();
+    }
   }, []);
 
   // handle different data values
   function addEvents(message) {
     const body = JSON.parse(message.body);
+    console.log(data);
+    // const data = data.slice();
+    // const labels = labels.slice();
+
+    if (!beginTime) {
+      beginTime = body.time;
+    }
+    labels.push(body.time - beginTime);
+    console.log(body);
+
     // loop through everything the server gives us
     // display only values that are numeric
     for (const metric in body.snapshot) {
       // check typeof json.parse(value)
-      const evalValue = Number(body.snapshot[metric]);
-      if (typeof evalValue === 'NaN' || typeof evalValue === NaN) {
+      const evalValue = parseInt(body.snapshot[metric]);
+      if (isNaN(evalValue)) {
         continue;
       }
 
-      // this is horrible, and we still have NaN returns
-      console.log(`Metric: ${metric} | Value: ${evalValue}`);
-      const inData = false;
-      for (const set in data.datasets) {
-        if (set.metric === metric) {
+      // this is horribly messy
+      let inData = false;
+      console.log(metric);
+      let metricLabel = parseMetricName(metric);
+      console.log(data);
+      for (const set of data) {
+        if (!set.label || set.label === metricLabel) {
           inData = true;
-          set.events.push(evalValue);
+          set.data.push(evalValue);
 
-          while (events.length > 30) {
-            events.shift();
+          while (set.length > 30) {
+            set.shift();
             labels.shift();
           }
           break;
         }
       }
       if (!inData) {
-        data.datasets.push({
-          metric: metric,
+        const newMetric = {
           data: [evalValue],
-          label: parseMetricName(metric),
-          borderColor: metricColors[data.colorInd++],
-        });
-      }
-
-      // add it to the events array at the appropriate place
-      for (const set in data.datasets) {
+          label: metricLabel,
+          borderColor: metricColors[colorInd++],
+        };
+        data.push(newMetric);
+        console.log(data);
       }
     }
-    return data;
-  }
-
-  function addEvent(message) {
-    const body = JSON.parse(message.body);
-    if (!beginTime) {
-      beginTime = body.time;
-    }
-
-    setTitle(parseMetricName(body.metric));
-    console.log(body);
-    const metric = preferredMetrics[body.metric];
-    const event = body.snapshot.metric;
-
-    labels.push(body.time - beginTime);
-
-    while (events.length > 30) {
-      events.shift();
-      labels.shift();
-    }
-
-    setEvents([...events]);
     setLabels([...labels]);
+    setData([...data]);
   }
+
   console.log(data);
+  console.log(labels);
+  // console.log(options);
 
   return (
     <div className='chartCanvas'>
-      <Line
-        datasetIdKey='id'
-        options={options}
-        data={data}
-      />
+      {labels.length ? (
+        <Line
+          datasetIdKey={props.metric}
+          options={options}
+          data={{
+            labels: labels,
+            datasets: data,
+          }}
+          id={props.metric}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

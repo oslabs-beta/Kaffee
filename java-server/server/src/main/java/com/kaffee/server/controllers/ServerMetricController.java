@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
@@ -60,15 +61,14 @@ public class ServerMetricController {
   }
 
   //settings receiver and setter
-//   @PostMapping("/setJMXPort")
-//   public int postController
-//   (@RequestBody String body) {
-//     Integer PORT = java.lang.Integer.parseInt(body);
-//     System.out.println("Before: " + JMX_PORT);
-//     JMX_PORT = PORT;
-//     System.out.println("After: " + JMX_PORT);
-//     return JMX_PORT;
-// }
+  @PostMapping("/setJMXPort")
+  public void postController
+  (@RequestBody String body) {
+    Integer PORT = java.lang.Integer.parseInt(body);
+    System.out.println("Before: " + ms.getJmxPort());
+    ms.setJmxPort(PORT);
+    System.out.println("After: " + ms.getJmxPort());
+}
 
 
   // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types
@@ -125,11 +125,15 @@ public class ServerMetricController {
  
     Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(metric), null);
 
-    ObjectName metricName = (ObjectName) attributeSet.iterator().next();
-    MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
-    for (int i = 0; i < attributes.length; i++) {
-      metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()).toString());
-      // metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()));
+    try {
+      ObjectName metricName = (ObjectName) attributeSet.iterator().next();
+      MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
+      for (int i = 0; i < attributes.length; i++) {
+        metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()).toString());
+        // metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()));
+      }
+    } catch (NoSuchElementException nsee) {
+      System.out.println("Error in ServerMetricController:getFormattedMetrics: " + nsee.toString());
     }
 
     return metricsObject;

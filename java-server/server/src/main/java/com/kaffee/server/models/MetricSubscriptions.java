@@ -21,7 +21,7 @@ public class MetricSubscriptions {
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
-    SERVER_JMX_PORT = 9092;
+    SERVER_JMX_PORT = 9999;
     KAFKA_URL = "localhost";
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
@@ -88,5 +88,13 @@ public class MetricSubscriptions {
   public void removeSubscription(String metric) {
     subscribedServerMetrics.remove(metric);
     System.out.println("Unsubscribed from " + metric);
+  }
+
+  public int getJmxPort() {
+    return this.SERVER_JMX_PORT;
+  }
+
+  public void setJmxPort(int port) {
+    this.SERVER_JMX_PORT = port;
   }
 }
