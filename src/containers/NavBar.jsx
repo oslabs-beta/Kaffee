@@ -54,6 +54,12 @@ export default function NavBar() {
     }
   }
 
+  function showMetrics() {
+    const metricsBox = document.querySelector('#metric-list');
+    const currDisplay = metricsBox.style.display;
+    metricsBox.style.display = currDisplay === 'none' ? 'block' : 'none';
+  }
+
   return (
     <div className='nav-bar'>
       <header>
@@ -67,9 +73,14 @@ export default function NavBar() {
           <NavLink to='/settings'>
             <button>Settings</button>
           </NavLink>
-          <button>Choose Metrics</button>
           <div id='metric-picker'>
-            <form>
+            <div>
+              <button onClick={showMetrics}>Choose Metrics</button>
+            </div>
+            <nav
+              id='metric-list'
+              onMouseLeave={showMetrics}
+            >
               {metrics?.map((metric) => {
                 return (
                   <label
@@ -87,7 +98,7 @@ export default function NavBar() {
                   </label>
                 );
               })}
-            </form>
+            </nav>
           </div>
         </nav>
         <nav className='right'>

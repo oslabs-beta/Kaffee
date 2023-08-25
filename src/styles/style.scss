@@ -77,6 +77,28 @@ button {
   flex-wrap: wrap;
 }
 
+#metric-picker {
+  position: relative;
+}
+
+#metric-list {
+  border: var(--border);
+  position: absolute;
+  left: 0;
+  top: 1.8em;
+  width: 40em;
+  z-index: 5;
+  background-color: rgb(var(--quaternary-bg));
+  display: block;
+  border-radius: var(--button-border-radius);
+  display: none;
+}
+#metric-list > label {
+  display: list-item;
+  list-style: none;
+  padding: 0.25em 0.5em;
+}
+
 .left {
   flex-grow: 1;
 }
