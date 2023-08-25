@@ -30,11 +30,7 @@ Chart.register(
 );
 
 function parseMetricName(metricName) {
-  console.log(metricName);
-  console.log(typeof metricName);
-  let parsed = metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
-  console.log(parsed);
-  return parsed;
+  return metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
 export default function ({ props }) {
@@ -84,9 +80,10 @@ export default function ({ props }) {
   }, []);
 
   // handle different data values
+  // TODO: Refactor and clean this up
   function addEvents(message) {
     const body = JSON.parse(message.body);
-    console.log(data);
+    // console.log(data);
     // const data = data.slice();
     // const labels = labels.slice();
 
@@ -94,7 +91,7 @@ export default function ({ props }) {
       beginTime = body.time;
     }
     labels.push(body.time - beginTime);
-    console.log(body);
+    // console.log(body);
 
     // loop through everything the server gives us
     // display only values that are numeric
@@ -107,9 +104,9 @@ export default function ({ props }) {
 
       // this is horribly messy
       let inData = false;
-      console.log(metric);
+      // console.log(metric);
       let metricLabel = parseMetricName(metric);
-      console.log(data);
+      // console.log(data);
       for (const set of data) {
         if (!set.label || set.label === metricLabel) {
           inData = true;
@@ -129,15 +126,15 @@ export default function ({ props }) {
           borderColor: metricColors[colorInd++],
         };
         data.push(newMetric);
-        console.log(data);
+        // console.log(data);
       }
     }
     setLabels([...labels]);
     setData([...data]);
   }
 
-  console.log(data);
-  console.log(labels);
+  // console.log(data);
+  // console.log(labels);
   // console.log(options);
 
   return (
