@@ -47,7 +47,7 @@ public class ServerMetricController {
 
   // Set defaults in the constructor
   public ServerMetricController() {
-    JMX_PORT = 9092;
+    JMX_PORT = 9999;
     SERVER_JMX_STRING = "service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi";
     try {
       jmxServerMetrics = getServerMetricsStrings();
