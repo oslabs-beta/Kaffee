@@ -35,7 +35,7 @@ export default function () {
       <div id='metrics'>
         <div id='charts'>
           {charts?.map((chart, i) => {
-            console.log(chart);
+            // console.log(chart);
             return (
               <Chart
                 key={chart.metric}
