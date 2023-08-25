@@ -1,5 +1,6 @@
 package com.kaffee.server.controllers;
 
+import java.lang.Integer;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,8 +27,12 @@ import javax.management.remote.JMXServiceURL;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +58,17 @@ public class ServerMetricController {
       System.out.println(e.getMessage());
     }
   }
+
+  //settings receiver and setter
+//   @PostMapping("/setJMXPort")
+//   public int postController
+//   (@RequestBody String body) {
+//     Integer PORT = java.lang.Integer.parseInt(body);
+//     System.out.println("Before: " + JMX_PORT);
+//     JMX_PORT = PORT;
+//     System.out.println("After: " + JMX_PORT);
+//     return JMX_PORT;
+// }
 
 
   // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types

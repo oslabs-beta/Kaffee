@@ -3,6 +3,7 @@ import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
 import testController from './Controllers/testController.ts';
+import settingsController from './Controllers/settingsController.ts';
 import cors from 'cors';
 
 const app: Express = express();
@@ -12,6 +13,7 @@ app.use(cors());
 type dataKey = keyof typeof dataController;
 type metricKey = keyof typeof metricsController;
 type testKey = keyof typeof testController;
+type settingKey = keyof typeof settingsController;
 
 import { fileURLToPath } from 'url';
 
@@ -29,6 +31,14 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/test', testController['runTest' as testKey],(req:Request, res:Response) => {
   res.status(200).json(res.locals.data);
+})
+
+app.use('/stopTest', testController['stopTest' as testKey],(req:Request,res:Response) => {
+  res.status(200).json(res.locals.data);
+})
+
+app.use('/setJMX', settingsController['postSettings' as settingKey], (req:Request, res:Response) => {
+  res.sendStatus(200);
 })
 
 app.use('/getBytes', metricsController['getBytes' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {

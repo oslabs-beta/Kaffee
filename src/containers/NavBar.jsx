@@ -43,6 +43,17 @@ export default function NavBar() {
     }
   }
 
+  const [run, setRun] = useState(false);
+  function startProducers() {
+    if (!run) {
+      fetch('http://localhost:3030/test', { mode: 'no-cors' });
+      setRun(true);
+    } else {
+      fetch('http://localhost:3030/stopTest', { mode: 'no-cors' });
+      setRun(false);
+    }
+  }
+
   return (
     <div className='nav-bar'>
       <header>
@@ -80,9 +91,9 @@ export default function NavBar() {
           </div>
         </nav>
         <nav className='right'>
-          {/* <NavLink to='/socket'>
-            <button>Socket Example</button>
-          </NavLink> */}
+          <button onClick={startProducers}>
+            {run ? 'Stop' : 'Start'} Producers
+          </button>
         </nav>
       </header>
     </div>
