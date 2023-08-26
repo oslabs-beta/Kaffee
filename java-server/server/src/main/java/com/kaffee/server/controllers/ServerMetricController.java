@@ -39,6 +39,7 @@ import ch.qos.logback.classic.Logger;
 
 @RestController
 @RequestMapping("/")
+
 public class ServerMetricController {
   private int JMX_PORT;
   private String SERVER_JMX_STRING;
@@ -56,7 +57,7 @@ public class ServerMetricController {
     }
   }
 
-  //settings receiver and setter
+  //JMX settings receiver and setter
   @PostMapping("/setJMXPort")
   public int postController
   (@RequestBody String body) {
