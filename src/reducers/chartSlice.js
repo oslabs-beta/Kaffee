@@ -27,6 +27,7 @@ export const newChart = createAsyncThunk(
 const initialState = {
   list: [],
   status: 'idle',
+  metricCount: 10,
 };
 
 const chartSlice = createSlice({
@@ -46,6 +47,21 @@ const chartSlice = createSlice({
     filterCharts: (state, action) => {
       // How do we do this without blowing up all the charts from before?
       // ANSWER: We don't do this in this state, we do it in the page!
+    },
+    changeMetricCount: (state, action) => {
+      // set maximum and minimum counts here as well as on the front end
+      // this serves as some way of ensuring that data is displayed reasonably
+      let MIN_COUNT = 10;
+      let MAX_COUNT = 500;
+
+      let desiredCount = action.payload;
+      if (desiredCount < MIN_COUNT) {
+        desiredCount = MIN_COUNT;
+      } else if (desiredCount > MAX_COUNT) {
+        desiredCount = MAX_COUNT;
+      }
+
+      state.metricCount = desiredCount;
     },
   },
   extraReducers: {

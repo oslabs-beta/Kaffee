@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useEffect } from 'react';
+import React, { useState, MouseEvent, useEffect, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -18,6 +18,7 @@ import {
   metricColors,
   preferredMetrics,
 } from '../utils/metrics.js';
+import { useSelector } from 'react-redux';
 
 Chart.register(
   CategoryScale,
@@ -76,22 +77,28 @@ const optionsInit = {
 };
 
 export default function ({ props }) {
-  let colorInd = 0;
   let beginTime;
 
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [options, setOptions] = useState(optionsInit);
 
+  // this is the number of data points to display per map
+  const metricCount = useSelector((state) => state.charts.metricCount);
+
   useEffect(() => {
     const whenConnected = () => {
+      // subscribe to the socket route for this particular metric
       let path = '/metric/' + props.metric;
       client.subscribe(path, (message) => addEvents(message));
 
-      const newOptions = Object.assign({}, options);
-      newOptions.plugins.title.text = friendlyList[props.metric];
-      setOptions(newOptions);
+      // Set the title based upon the list of friendly metric names
+      // stored in '../utils/metrics
+      options.plugins.title.text = friendlyList[props.metric];
+      setOptions(options);
 
+      // send a message to app/subscribe across the socket
+      // to begin the scheduled tasks transmitting data for this metric
       client.publish({
         destination: '/app/subscribe',
         body: JSON.stringify({ metric: props.metric }),
@@ -99,53 +106,75 @@ export default function ({ props }) {
     };
 
     if (client.active) {
+      // if there is already an active connection
+      // invoke the above function
       whenConnected();
     } else {
+      // if there is no active connection, we add the above function
+      // to the callback to occur after connecting
+      // and then connect
       client.onConnect(whenConnected);
       client.activate();
     }
   }, []);
 
   // handle different data values
-  // TODO: Refactor and clean this up
-  function addEvents(message) {
-    const body = JSON.parse(message.body);
-    // console.log(data);
-    // const data = data.slice();
-    // const labels = labels.slice();
 
+  // this should be doable with a pointer
+  // while we don't have keys to check, I believe the data will come in
+  // in the same order every time. We should verify this
+  function addEvents(message) {
+    let colorInd = 0;
+    const body = JSON.parse(message.body);
+
+    // if the chart doesn't have a starting time,
+    // set the time to the first time seen
+    // using useState wasn't working for some reason
+    // so that's why this is just a variable
     if (!beginTime) {
       beginTime = body.time;
     }
+    // Add the current time offset to the labels
     labels.push(body.time - beginTime);
-    // console.log(body);
 
     // loop through everything the server gives us
     // display only values that are numeric
     for (const metric in body.snapshot) {
-      // check typeof json.parse(value)
+      // Parse the value into an integer
       const evalValue = parseInt(body.snapshot[metric]);
       if (isNaN(evalValue)) {
+        // if the value is not numeric, move to the next metric
         continue;
       }
 
-      // this is horribly messy
+      // a flag to see if this metric is already being tracked
       let inData = false;
-      // console.log(metric);
+
+      // convert the Pascal cased metric name from Java to a more
+      // user friendly variale. At this time, this function just adds
+      // a space between lower and upper case adjacent letters
       let metricLabel = parseMetricName(metric);
-      // console.log(data);
+
+      // look through the data as it currently exists
       for (const set of data) {
-        if (!set.label || set.label === metricLabel) {
+        console.log(set);
+        // if the data has an object without a label (which should only be when data is first streaming)
+        // or if this object has a label matching the metric we are seeing
+        if (set.label === metricLabel) {
+          // mark that we have this data
           inData = true;
+          // add a new value to the data
           set.data.push(evalValue);
 
-          while (set.length > 30) {
-            set.shift();
-            labels.shift();
+          while (set.data.length > metricCount) {
+            set.data.shift();
           }
           break;
         }
       }
+
+      // if we didn't find matching data
+      // add a new data metric object
       if (!inData) {
         const newMetric = {
           data: [evalValue],
@@ -154,9 +183,13 @@ export default function ({ props }) {
           backgroundColor: `rgba(${metricColors[colorInd++]}, 0.8)`,
         };
         data.push(newMetric);
-        // console.log(data);
       }
     }
+
+    while (labels.length > metricCount) {
+      labels.shift();
+    }
+
     setLabels([...labels]);
     setData([...data]);
   }

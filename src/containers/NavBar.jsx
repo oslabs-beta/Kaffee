@@ -15,8 +15,10 @@ async function getMetricsList() {
 
 export default function NavBar() {
   const [metrics, setMetrics] = useState([]);
+  const [run, setRun] = useState(false);
 
   const chartList = useSelector((state) => state.charts.list);
+  const metricCount = useSelector((state) => state.charts.metricCount);
 
   const dispatch = useDispatch();
 
@@ -43,7 +45,6 @@ export default function NavBar() {
     }
   }
 
-  const [run, setRun] = useState(false);
   function startProducers() {
     if (!run) {
       fetch('http://localhost:3030/test', { mode: 'no-cors' });
@@ -55,8 +56,11 @@ export default function NavBar() {
   }
 
   function showMetrics() {
-    const metricsBox = document.querySelector('#metric-list');
-    const currDisplay = metricsBox.style.display;
+    const metricsBox = document.getElementById('metric-list');
+    let currDisplay = metricsBox.style.display;
+    if (!currDisplay) {
+      currDisplay = 'none';
+    }
     metricsBox.style.display = currDisplay === 'none' ? 'block' : 'none';
   }
 

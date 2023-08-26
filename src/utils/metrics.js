@@ -32,6 +32,8 @@ export const friendlyList = {
   'unclean-leader-selection': 'Number of Unclean Leader Elections per Second',
 };
 
+// the idea here is to create an object that pairs a preferred metric to track
+// based upon the selected metric
 export const preferredMetrics = {
   'bytes-in': 'OneMinuteRate',
   'isr-shrinks': 'Rate of In Sync Replica Shrinking',
