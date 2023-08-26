@@ -15,4 +15,6 @@ public class KafkaConsumerConfig {
         property.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
     return property;
   }
+
+  
 }

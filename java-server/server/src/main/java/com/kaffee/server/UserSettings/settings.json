@@ -1,8 +1,8 @@
 {
-  "kafka-port": 9092,
-  "zookeeper-port": 2181,
+  "KAFKA_PORT": 9092,
   "JMX_PORT": 9999,
   "log-filepath": "Desktop",
+  "KAFKA_URL": "Kafka_url",
   "producers": 1,
   "testTime": 5
 }

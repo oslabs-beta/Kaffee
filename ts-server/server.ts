@@ -37,7 +37,11 @@ app.use('/stopTest', testController['stopTest' as testKey],(req:Request,res:Resp
   res.status(200).json(res.locals.data);
 })
 
-app.use('/setJMX', settingsController['postSettings' as settingKey], (req:Request, res:Response) => {
+app.use('/setJMX', settingsController['postJMXPort' as settingKey], (req:Request, res:Response) => {
+  res.sendStatus(200);
+})
+
+app.use('/setKafkaUrl', settingsController['postKafkaUrl' as settingKey], (req:Request, res:Response) => {
   res.sendStatus(200);
 })
 

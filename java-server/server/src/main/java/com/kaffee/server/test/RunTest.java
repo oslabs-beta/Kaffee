@@ -39,9 +39,9 @@ public class RunTest{
       String name = "test".concat(testNum);
       TestProducer newProducer = new TestProducer(name);
       newProducer.start();
+      TestConsumer consumer = new TestConsumer();
+      consumer.start();
     }
-    TestConsumer consumer = new TestConsumer();
-    consumer.start();
     return smc.getBytesInOut();
   }
   @GetMapping("/stopTest")

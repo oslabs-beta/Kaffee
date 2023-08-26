@@ -11,6 +11,8 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
+import com.kaffee.server.UserSettings.ReadSettings;
+
 public class MetricSubscriptions {
   private int SERVER_JMX_PORT;
   private int PRODUCER_JMX_PORT;
@@ -69,6 +71,7 @@ public class MetricSubscriptions {
   }
 
   public JMXConnector connectToJMX() throws IOException {
+    ReadSettings.main(null);
     JMXServiceURL url = new JMXServiceURL(RESOLVED_URL);
     return JMXConnectorFactory.connect(url);
   }
@@ -96,5 +99,14 @@ public class MetricSubscriptions {
 
   public void setJmxPort(int port) {
     this.SERVER_JMX_PORT = port;
+  }
+
+  //kafka url
+  public String getKafkaUrl() {
+    return this.KAFKA_URL;
+  }
+
+  public void setKafkaUrl(String url) {
+    this.KAFKA_URL = url;
   }
 }
