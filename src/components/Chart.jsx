@@ -9,11 +9,15 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 // import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
-import { useSelector, useDispatch } from 'react-redux';
-import chartSlice from '../reducers/chartSlice.js';
-import client from '../socket.js';
+import client from '../utils/socket.js';
+import {
+  friendlyList,
+  metricColors,
+  preferredMetrics,
+} from '../utils/metrics.js';
 
 Chart.register(
   CategoryScale,
@@ -25,81 +29,129 @@ Chart.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: '',
-    },
-  },
-  updateMode: 'active',
-};
-
-export const loader = () => {};
+function parseMetricName(metricName) {
+  return metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
 
 export default function ({ props }) {
-  const [events, setEvents] = useState([]);
-  const [labels, setLabels] = useState([]);
-  const [title, setTitle] = useState('');
-  const [startTime, setStartTime] = useState(0);
+  let colorInd = 0;
   let beginTime;
 
-  useEffect(() => {
-    console.log(props);
-    client.onConnect = () => {
-      // let path = '/metric/chuck';
-      let path = '/metric/' + props.metric;
-      console.log(path);
-      console.log(client);
-      client.subscribe(path, (message) => addEvent(message));
-    };
-    client.activate();
-
-    return () => {
-      client.deactivate();
-    };
-  }, []);
-
-  const dataSet = {
-    labels: labels,
-    datasets: [{ label: title, data: events, borderColor: 'rgb(255, 0, 0)' }],
+  const optionsInit = {
+    responsive: true,
+    type: 'line',
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      title: {
+        display: true,
+        text: '',
+      },
+    },
+    updateMode: 'active',
   };
 
-  function addEvent(message) {
+  const [data, setData] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [options, setOptions] = useState(optionsInit);
+
+  useEffect(() => {
+    const whenConnected = () => {
+      let path = '/metric/' + props.metric;
+      client.subscribe(path, (message) => addEvents(message));
+
+      const newOptions = Object.assign({}, options);
+      newOptions.plugins.title.text = friendlyList[props.metric];
+      setOptions(newOptions);
+
+      client.publish({
+        destination: '/app/subscribe',
+        body: JSON.stringify({ metric: props.metric }),
+      });
+    };
+
+    if (client.active) {
+      whenConnected();
+    } else {
+      client.onConnect(whenConnected);
+      client.activate();
+    }
+  }, []);
+
+  // handle different data values
+  // TODO: Refactor and clean this up
+  function addEvents(message) {
     const body = JSON.parse(message.body);
+    // console.log(data);
+    // const data = data.slice();
+    // const labels = labels.slice();
+
     if (!beginTime) {
       beginTime = body.time;
     }
-
-    setTitle(body.metric);
-    console.log(body);
-    const event = body.snapshot.OneMinuteRate;
-    events.push(event);
-
     labels.push(body.time - beginTime);
+    // console.log(body);
 
-    while (events.length > 30) {
-      events.shift();
-      labels.shift();
+    // loop through everything the server gives us
+    // display only values that are numeric
+    for (const metric in body.snapshot) {
+      // check typeof json.parse(value)
+      const evalValue = parseInt(body.snapshot[metric]);
+      if (isNaN(evalValue)) {
+        continue;
+      }
+
+      // this is horribly messy
+      let inData = false;
+      // console.log(metric);
+      let metricLabel = parseMetricName(metric);
+      // console.log(data);
+      for (const set of data) {
+        if (!set.label || set.label === metricLabel) {
+          inData = true;
+          set.data.push(evalValue);
+
+          while (set.length > 30) {
+            set.shift();
+            labels.shift();
+          }
+          break;
+        }
+      }
+      if (!inData) {
+        const newMetric = {
+          data: [evalValue],
+          label: metricLabel,
+          borderColor: metricColors[colorInd++],
+        };
+        data.push(newMetric);
+        // console.log(data);
+      }
     }
-
-    setEvents([...events]);
     setLabels([...labels]);
+    setData([...data]);
   }
 
-  options.plugins.title.text = title;
+  // console.log(data);
+  // console.log(labels);
+  // console.log(options);
 
   return (
     <div className='chartCanvas'>
-      <Line
-        datasetIdKey='id'
-        options={options}
-        data={dataSet}
-      />
+      {labels.length ? (
+        <Line
+          datasetIdKey={props.metric}
+          options={options}
+          data={{
+            labels: labels,
+            datasets: data,
+          }}
+          id={props.metric}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

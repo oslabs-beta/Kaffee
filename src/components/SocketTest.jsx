@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import client from '../socket.js';
+import client from '../utils/socket.js';
 import { StompSocketState } from '@stomp/stompjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { connected, disconnected, setClient } from '../reducers/socketSlice.js';
@@ -18,14 +18,15 @@ export default function SocketTest() {
   useEffect(() => {
     client.activate();
     client.onConnect = () => {
-      handleSubscription('/metric/chuck');
+      handleSubscription('/metric/subscriptions');
     };
   }, []);
 
   function handleClick() {
+    const input = document.querySelector('#metricName');
     client.publish({
-      destination: '/app/sendTest',
-      body: JSON.stringify({ name: 'Darren' }),
+      destination: '/app/subscribe',
+      body: JSON.stringify({ metric: input.value }),
     });
   }
 
@@ -64,11 +65,16 @@ export default function SocketTest() {
 
   return (
     <div id='charts'>
+      <input
+        type='text'
+        id='metricName'
+        name='metricName'
+      ></input>
       <button onClick={handleClick}>Send Message</button>
-      <button onClick={handleSub}>Subscribe</button>
+      {/* <button onClick={handleSub}>Subscribe</button> */}
       <ul>
         {events?.map((event, i) => {
-          return <li key={i}>{event.snapshot.OneMinuteRate}</li>;
+          return <li key={i}>{event.body}</li>;
         })}
       </ul>
     </div>

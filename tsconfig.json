@@ -28,7 +28,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "ts-server/**/*.ts",
-    "ts-server/**/*.tsx"
-, "src/socket.js"  ],
+    "ts-server/**/*.tsx",
+    "src/utils/socket.js"
+  ],
   "exclude": ["node_modules"]
 }

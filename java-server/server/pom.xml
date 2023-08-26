@@ -76,7 +76,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <jvmArguments>
-            -Xms2G -Xmx3G -XX:+UseZGC -XX:MaxMetaspaceSize=2G
+            -Xms2G -Xmx2G -XX:+UseZGC -XX:MaxMetaspaceSize=2G
           </jvmArguments>
         </configuration>
 			</plugin>

@@ -1,16 +1,14 @@
-package com.kaffee.server.controllers;
+package com.kaffee.server;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.stereotype.Service;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.github.javafaker.ChuckNorris;
-import com.github.javafaker.Faker;
+import com.kaffee.server.models.MessageData;
 
 @Configuration
 @EnableScheduling
@@ -35,9 +33,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     registry.addEndpoint("/socket").setAllowedOrigins("*").withSockJS();
   }
   
-  @Bean
-  public MessageData messageData() {
-    return new MessageData();
-  }
-
 }
