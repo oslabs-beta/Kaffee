@@ -33,24 +33,51 @@ function parseMetricName(metricName) {
   return metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
+// since I can't seem to assign these in the CSS file
+// these are colors imported from the CSS. If they change there,
+// we probably want to update these
+const gridColor = '192, 152, 106, .6';
+const toolTipColor = `222, 215, 217`;
+const optionsInit = {
+  responsive: true,
+  type: 'line',
+  plugins: {
+    legend: {
+      position: 'bottom',
+    },
+    title: {
+      display: true,
+      text: '',
+    },
+    tooltip: {
+      titleColor: `rgba(${toolTipColor}, .8)`,
+      bodyColor: `rgba(${toolTipColor}, .6)`,
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        color: `rgba(${gridColor})`,
+      },
+      border: {
+        color: `rgba(${gridColor})`,
+      },
+    },
+    y: {
+      grid: {
+        color: `rgba(${gridColor})`,
+      },
+      border: {
+        color: `rgba(${gridColor})`,
+      },
+    },
+  },
+  updateMode: 'active',
+};
+
 export default function ({ props }) {
   let colorInd = 0;
   let beginTime;
-
-  const optionsInit = {
-    responsive: true,
-    type: 'line',
-    plugins: {
-      legend: {
-        position: 'bottom',
-      },
-      title: {
-        display: true,
-        text: '',
-      },
-    },
-    updateMode: 'active',
-  };
 
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
@@ -123,7 +150,8 @@ export default function ({ props }) {
         const newMetric = {
           data: [evalValue],
           label: metricLabel,
-          borderColor: metricColors[colorInd++],
+          borderColor: `rgba(${metricColors[colorInd++]}, 0.6)`,
+          backgroundColor: `rgba(${metricColors[colorInd++]}, 0.8)`,
         };
         data.push(newMetric);
         // console.log(data);
