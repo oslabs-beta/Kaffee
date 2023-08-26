@@ -44,13 +44,13 @@ export default function () {
               />
             );
           })}
-          <div
+          {/* <div
             className='chartCanvas'
             onClick={handleAddChart}
             id='add-chart'
           >
             <span>{spanText}</span>
-          </div>
+          </div> */}
         </div>
       </div>
       <SearchBar />
