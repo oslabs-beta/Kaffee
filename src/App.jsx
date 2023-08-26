@@ -1,22 +1,21 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from './containers/NavBar';
 import { setClient } from './reducers/socketSlice';
-import client from './socket.js';
-import { useDispatch, useSelector} from 'react-redux';
+import client from './utils/socket.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function App() {
-  const socketClient = useSelector(state => state.sockets.client);
+  const socketClient = useSelector((state) => state.sockets.client);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {  
-
+  useEffect(() => {
     client.activate();
 
     return () => {
       client.deactivate();
-    }
+    };
   }, []);
 
   return (

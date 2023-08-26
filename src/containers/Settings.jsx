@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import path from 'path';
+
+async function getDirectory() {
+  const directory = await window.showDirectoryPicker();
+  return directory;
+}
 
 const History = () => {
   const [kafka, setKafka] = useState();
@@ -68,6 +74,26 @@ const History = () => {
     }
   };
 
+  const handleDirectorySelector = async () => {
+    const directory = await getDirectory();
+    if (!directory) {
+      // user closed the window or otherwise failed to open the file
+      return;
+    }
+
+    // See: https://developer.chrome.com/articles/file-system-access/
+    const sep = path.sep;
+    const dirArray = [];
+    for await (const entry of directory.values()) {
+      console.log(entry.kind, entry.name);
+    }
+    // console.log(dirArray);
+    // const resolvedPath = dirArray.join(sep);
+
+    // const field = document.querySelector('#log-filepath');
+    // field.value = directory;
+  };
+
   return (
     <div className='settings-container'>
       <div className='setting'>
@@ -115,6 +141,7 @@ const History = () => {
           defaultValue={fInput}
           onKeyDown={(e) => handleEnterPress(e, 'log-filepath', fInput)}
           onChange={(e) => setfInput(e.target.value)}
+          // onClick={handleDirectorySelector}
         />
         <label htmlFor='kafka-port'>{filepath} </label>
       </div>

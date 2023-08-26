@@ -21,6 +21,20 @@ const testController: object = {
       console.log('error!')
       next({err:500, errMsg: "Somethin fucky"})
     }
+  },
+  stopTest: (req:Request, res:Response, next:NextFunction) => {
+    try {
+      fetch("http://localhost:8080/test/stopTest", {method:"GET"})
+      .then((response) => {
+        response.json()
+        .then((result) => {
+          res.locals.data=result;
+          next();
+        })
+      })
+    } catch (error) {
+      
+    }
   }
 }
 

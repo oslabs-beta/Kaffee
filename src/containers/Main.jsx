@@ -35,20 +35,22 @@ export default function () {
       <div id='metrics'>
         <div id='charts'>
           {charts?.map((chart, i) => {
+            // console.log(chart);
             return (
               <Chart
-                key={`Chart_${i}`}
+                key={chart.metric}
                 props={chart}
+                id={chart.metric}
               />
             );
           })}
-          <div
+          {/* <div
             className='chartCanvas'
             onClick={handleAddChart}
             id='add-chart'
           >
             <span>{spanText}</span>
-          </div>
+          </div> */}
         </div>
       </div>
       <SearchBar />
