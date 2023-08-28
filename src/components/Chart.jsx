@@ -111,13 +111,15 @@ export default function ({ props }) {
         if (!set.label || set.label === metricLabel) {
           inData = true;
           set.data.push(evalValue);
-
-          while (set.length > 30) {
-            set.shift();
-            labels.shift();
+          console.log(set)
+          while (set.data.length > 10) {
+            set.data.shift();
           }
           break;
         }
+      }
+      while (labels.length > 10) {
+        labels.shift()
       }
       if (!inData) {
         const newMetric = {

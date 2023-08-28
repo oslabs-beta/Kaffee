@@ -1,14 +1,11 @@
 import React from 'react';
-
+import HistoryItem from '../components/HistoryItem.jsx'
 
 
 const History = () => {
   return (
-    <div>
-      <button>Report #1</button>
-      <button>Report #2</button>
-      <button>Report #3</button>
-      <button>Report #4</button>
+    <div className='history'>
+      <HistoryItem/>
     </div>
   )
 };
