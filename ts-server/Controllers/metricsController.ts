@@ -8,24 +8,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const metricsController: object = {
   //middleware to request, receive, and parse metric data from JMX
-  getBytes: (req:Request,res:Response,next:NextFunction) => {
+  getBytes: (req: Request, res: Response, next: NextFunction) => {
     try {
-      fetch('http://localhost:8080/bytes', {method: "GET"})
-      .then((response) => {
-        response.json()
-        .then((result) => {
-          res.locals.data = result
-          console.log(res.locals.data)
-          next()
+      fetch('http://localhost:8080/bytes', { method: 'GET' }).then(
+        (response) => {
+          response.json().then((result) => {
+            res.locals.data = result;
+            console.log(res.locals.data);
+            next();
+          });
         }
-        )
-      })
+      );
     } catch (err) {
-      next({errMsg: "An internal server error occured", err: 500})
+      next({ errMsg: 'An internal server error occured', err: 500 });
     }
-
   },
-  
+
   //middleware to connect to current cluster and obtain live data stream
   getCluster: (req: Request, res: Response, next: NextFunction) => {
     console.log('entered getCluster');
@@ -44,15 +42,15 @@ const metricsController: object = {
 
   dummy: (req: Request, res: Response, next: NextFunction) => {
     type DataObject = {
-      name: string;
+      label: string;
       data: Array<number>;
     };
 
     const quantity: number = Number(req.params.count);
 
-    function generateData(count: number, name = 'Test Data') {
+    function generateData(count: number, name = 'Test This') {
       const returnObj: DataObject = {
-        name: name,
+        label: name,
         data: [],
       };
 
@@ -75,7 +73,7 @@ const metricsController: object = {
     }
 
     res.locals.data = generateData(quantity);
-    next();
+    return next();
   },
 };
 

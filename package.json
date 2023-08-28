@@ -11,7 +11,7 @@
     "start": "node --loader ts-node/esm ./ts-server/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "node --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js"
+    "dev": "nodemon --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js"
   },
   "keywords": [],
   "author": "",

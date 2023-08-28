@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import path from 'path';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeMetricCount } from '../reducers/chartSlice.js';
 
 async function getDirectory() {
   const directory = await window.showDirectoryPicker();
@@ -15,7 +17,10 @@ const Settings = () => {
   const [zInput, setzInput] = useState('');
   const [jInput, setjInput] = useState('');
   const [fInput, setfInput] = useState('');
-  const [update, setUpdate] = useState(false);
+
+  const metricCount = useSelector((state) => state.charts.metricCount);
+
+  const dispatch = useDispatch();
 
   const fetchSettings = () => {
     fetch('http://localhost:3030/getSettings')
@@ -26,12 +31,12 @@ const Settings = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data, 'this is the fetch call');
+        // console.log(data, 'this is the fetch call');
         setKafka(data['kafka-port']);
         setZookeeper(data['zookeeper-port']);
         setJMX(data['JMX-port']);
         setFilepath(data['log-filepath']);
-        console.log(filepath);
+        // console.log(filepath);
       })
       .catch((error) => {
         console.error('Fetch error:', error);
@@ -42,7 +47,8 @@ const Settings = () => {
     if (
       param === 'kafka-port' ||
       param === 'zookeeper-port' ||
-      param === 'JMX-port'
+      param === 'JMX-port' ||
+      param === 'metric-count'
     ) {
       val = Number(val);
     }
@@ -74,6 +80,8 @@ const Settings = () => {
     }
   };
 
+  // I'm leaving this here in case we can use something similar when we
+  // are integrating with some JS -> App program, like Electron
   const handleDirectorySelector = async () => {
     const directory = await getDirectory();
     if (!directory) {
@@ -93,6 +101,12 @@ const Settings = () => {
     // const field = document.querySelector('#log-filepath');
     // field.value = directory;
   };
+
+  function setInput(e) {
+    // console.log(e);
+    dispatch(changeMetricCount(e.target.value));
+    updateSettings(e.target.id, e.target.value);
+  }
 
   return (
     <div className='settings-container'>
@@ -144,6 +158,20 @@ const Settings = () => {
           // onClick={handleDirectorySelector}
         />
         <label htmlFor='kafka-port'>{filepath} </label>
+      </div>
+      <div className='setting'>
+        <label htmlFor='metric-count'>Metric Count</label>
+        <input
+          id='metric-count'
+          name='metric-count'
+          type='range'
+          min='10'
+          max='500'
+          step='10'
+          defaultValue={metricCount}
+          onChange={(e) => setInput(e)}
+        ></input>
+        <label htmlFor='kafka-port'>{metricCount}</label>
       </div>
     </div>
   );

@@ -32,6 +32,8 @@ export const friendlyList = {
   'unclean-leader-selection': 'Number of Unclean Leader Elections per Second',
 };
 
+// the idea here is to create an object that pairs a preferred metric to track
+// based upon the selected metric
 export const preferredMetrics = {
   'bytes-in': 'OneMinuteRate',
   'isr-shrinks': 'Rate of In Sync Replica Shrinking',
@@ -44,11 +46,14 @@ export const preferredMetrics = {
   'unclean-leader-selection': 'Number of Unclean Leader Elections per Second',
 };
 
+// These are RGB color strings, but without the wrapper
+// We do this so we can use them in rgba() functions and adjust
+// the alpha channel as wanted
 export const metricColors = [
-  'rgba(255, 0, 0, 0.6)',
-  'rgba(0, 255, 0, 0.6)',
-  'rgba(0, 0, 255, 0.6)',
-  'rgba(255, 255, 0, 0.6)',
-  'rgba(255, 0, 255, 0.6)',
-  'rgba(0, 255, 255, 0.6)',
+  '255, 0, 0',
+  '0, 255, 0',
+  '0, 0, 255',
+  '255, 255, 0',
+  '255, 0, 255',
+  '0, 255, 255',
 ];
