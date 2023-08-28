@@ -21,7 +21,7 @@ public class MetricSubscriptions {
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
-    SERVER_JMX_PORT = 9999;
+    SERVER_JMX_PORT = 9092;
     KAFKA_URL = "localhost";
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";

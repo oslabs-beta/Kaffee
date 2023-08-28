@@ -20,6 +20,11 @@ import {
 } from '../utils/metrics.js';
 import { useSelector } from 'react-redux';
 
+
+import path from 'path';
+
+
+
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -82,10 +87,21 @@ export default function ({ props }) {
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [options, setOptions] = useState(optionsInit);
+<<<<<<< HEAD
+  const [numCalls, setNumCalls] = useState(0);
+
+  const [dataToSend, setDataToSend] = useState([]);
+  const [labelsToSend, setLabelsToSend] = useState([]);
+  let updating = false;
+  // let dataToSend = [];
+  // let labelsToSend = [];
+  let lastSentTime = 0;
+=======
   const [status, setStatus] = useState('loading');
 
   // this is the number of data points to display per map
   const metricCount = useSelector((state) => state.charts.metricCount);
+>>>>>>> dev
 
   useEffect(() => {
     const whenConnected = () => {
@@ -134,6 +150,7 @@ export default function ({ props }) {
     // so that's why this is just a variable
     if (!beginTime) {
       beginTime = body.time;
+      lastSentTime = Date.now();
     }
     // Add the current time offset to the labels
     labels.push(body.time - beginTime);
@@ -141,8 +158,13 @@ export default function ({ props }) {
     // loop through everything the server gives us
     // display only values that are numeric
     for (const metric in body.snapshot) {
+<<<<<<< HEAD
+      // check typeof json.parse(value)
+      const evalValue = Number(body.snapshot[metric]);
+=======
       // Parse the value into an integer
       const evalValue = parseInt(body.snapshot[metric]);
+>>>>>>> dev
       if (isNaN(evalValue)) {
         // if the value is not numeric, move to the next metric
         continue;
@@ -166,16 +188,27 @@ export default function ({ props }) {
           inData = true;
           // add a new value to the data
           set.data.push(evalValue);
+<<<<<<< HEAD
+          // console.log(set)
+          while (set.data.length > 10) {
+=======
 
           while (set.data.length > metricCount) {
+>>>>>>> dev
             set.data.shift();
           }
           break;
         }
       }
+<<<<<<< HEAD
+      while (labels.length > 10) {
+        labels.shift()
+      }
+=======
 
       // if we didn't find matching data
       // add a new data metric object
+>>>>>>> dev
       if (!inData) {
         const newMetric = {
           data: [evalValue],
@@ -194,6 +227,127 @@ export default function ({ props }) {
     if (status !== 'succeeded') setStatus('succeeded');
     setLabels([...labels]);
     setData([...data]);
+    // TODO: set count, every 10 calls, call pushToLog
+
+    if (!updating) {
+      addDataToSend(body);
+    }
+    if (Date.now() - lastSentTime > 1000) {
+      pushToLog()
+    }
+  }
+
+  function addDataToSend(data) {
+    updating = true;
+    labelsToSend.push(data.time);
+    setLabelsToSend([...labelsToSend]);
+
+    for (const metric in data.snapshot) {
+      // check typeof json.parse(value)
+      const evalValue = Number(data.snapshot[metric]);
+      if (isNaN(evalValue)) {
+        continue;
+      }
+
+      // this is horribly messy
+      let inData = false;
+      // console.log(metric);
+      let metricLabel = parseMetricName(metric);
+      // console.log(data);
+      for (const set of dataToSend) {
+        if (!set.label || set.label === metricLabel) {
+          inData = true;
+          set.data.push(evalValue);
+          // console.log(set)
+          break;
+        }
+      }
+      if (!inData) {
+        const newMetric = {
+          data: [evalValue],
+          label: metricLabel,
+        };
+        // console.log(data);
+        dataToSend.push(newMetric);
+      }
+    }
+    // console.log(dataToSend);
+    setDataToSend([...dataToSend]);
+    
+    updating = false;
+  }
+
+  /*
+  data object argument in addDataToSend
+  {
+    "metric": "bytes-in",
+    "time": 1693251471538,
+    "snapshot": {
+      "RateUnit": "SECONDS",
+      "OneMinuteRate": "5.646250107634674E-43",
+      "EventType": "bytes",
+      "FifteenMinuteRate": "0.035843277946316754",
+      "Count": "32300",
+      "FiveMinuteRate": "1.0746448344638806E-7",
+      "MeanRate": "4.6865081791319945"
+    }
+  }
+  
+  we want to send it looking like:
+  {
+    "bytes-in": {
+      labels: [time1, time2, time3 ]
+      datasets: [
+        {
+          label: OneMinuteRate,
+          data[data1, data2, data3]
+        }
+      ]
+    }
+  }
+
+  chartjs dataset object looks like:
+  data={
+    labels: [timestamps],
+    datasets: [
+      {
+        data: Array<Numbers>,
+        label: "metric",
+        borderColor: something
+      }
+    ]      
+  }
+  
+  */
+  // console.log(data);
+  function pushToLog() {
+    const objToSend = {};
+    objToSend[props.metric] = {
+      labels: labelsToSend,
+      datasets: dataToSend      
+    }
+    console.log(objToSend);
+
+    if (!updating) {
+      updating = true;
+      lastSentTime = Date.now();
+    fetch('http://localhost:3030/addData',
+    { 
+      method: 'POST',
+      body: JSON.stringify(objToSend),
+      headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },})
+    .then(response => {
+      response.json();
+      setDataToSend([]);
+      setLabelsToSend([]);
+    })
+    .then(data => {
+      console.log(data);
+      updating = false;
+    })
+  }
   }
 
   // console.log(data);

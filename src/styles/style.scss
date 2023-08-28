@@ -283,3 +283,32 @@ button {
 header nav a.active button {
   background-color: rgb(var(--ternary-bg));
 }
+
+.history {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.history-item-container {
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1vh;
+  background-color: white;
+  width: 30vh;
+  border-radius: 1vh;
+}
+
+
+
+.expanded-metrics {
+
+  margin-top: 1vh; /* Add margin to separate expanded metrics */
+}
+

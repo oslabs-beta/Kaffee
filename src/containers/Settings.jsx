@@ -8,7 +8,7 @@ async function getDirectory() {
   return directory;
 }
 
-const History = () => {
+const Settings = () => {
   const [kafka, setKafka] = useState();
   const [zookeeper, setZookeeper] = useState();
   const [JMX, setJMX] = useState();
@@ -177,4 +177,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default Settings;

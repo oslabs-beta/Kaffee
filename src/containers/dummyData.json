@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "Date": "8-26-2023",
+      "Metrics": {
+        "Bytes": {
+          "data": 23456
+        },
+        "Partitions": {
+          "data": 34567
+        }
+      }
+    },
+    {
+      "Date": 9865,
+      "Metrics": {
+        "Bytes": {
+          "data": 87654
+        },
+        "Partitions": {
+          "data": 76543
+        }
+      }
+    }
+  ]
+}
