@@ -111,10 +111,17 @@ public class MetricSubscriptions {
   }
 
   public String setKafkaUrl() {
-    String newUrl = ReadSettings.main("KAFKA_URL").toString();
-    this.KAFKA_URL = newUrl;
-    return newUrl;
+    String url = ReadSettings.main("KAFKA_URL").toString();
+    this.KAFKA_URL = url;
+    return url;
   }
 
-  
+  public int getKafkaPort() {
+    return this.KAFKA_PORT;
+  }
+
+  public void setKafkaPort () {
+    Integer port = Integer.parseInt(ReadSettings.main("KAFKA_URL").toString());
+    this.KAFKA_PORT = port;
+  }
 }

@@ -29,14 +29,32 @@ const settingsController: object = {
         "content-type":"application/json"
       }})
       .then((response) => response.json()
-      .then((result) => {
-        console.log(result);
-        next();
+        .then((result) => {
+          console.log(result);
+          next();
       }))
     } catch (error) {
       next({err:500, errMsg: "An error occurred in settingsController/setKafkaUrl"})
     }
+  },
+
+  postKafkaPort: (req:Request, res:Response, next:NextFunction) => {
+    try {
+      fetch("http://localhost:8080/postKafkaPort", {
+        method: "POST",
+        body: JSON.stringify(settings.KAFKA_PORT),
+        headers: {"content-type":"application/json"}
+      })
+      .then(response => response.json() // not needed and will be removed later
+        .then( (response) => {
+          console.log(response)
+          return next();
+      }))
+    } catch (error) {
+      next({err:500, errMsg: "An error occurred in settingsController/postKafkaPort"})
+    }
   }
+  
 }
 
 export default settingsController;

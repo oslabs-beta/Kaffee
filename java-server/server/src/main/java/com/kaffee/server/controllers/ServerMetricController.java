@@ -81,10 +81,17 @@ public class ServerMetricController {
     System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
   }
 
-  public String getKafkaUrl(){
-    String url = this.getKafkaUrl();
-    return url;
+  //KAKFKA_PORT receiver and setter
+  @PostMapping("/postKafkaPort")
+  public void postKafkaPort
+  (@RequestBody String body) {
+    Integer PORT = java.lang.Integer.parseInt(body);
+    System.out.println(("Before: " + ms.getKafkaPort()));
+    ms.setKafkaPort();
+    System.out.println(("After: " + ms.getKafkaPort()));
   }
+
+
 
   // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types
   // and therefore we can use it to search for everything with a given "topic" key
