@@ -7,22 +7,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.VariableElement;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+
+import com.kaffee.server.UserSettings.ReadSettings;
 
 public class MetricSubscriptions {
   private int SERVER_JMX_PORT;
   private int PRODUCER_JMX_PORT;
   private int CONSUMER_JMX_PORT;
+  private int KAFKA_PORT;
   private String KAFKA_URL;
   private String RESOLVED_URL;
   public Map<String, String> subscribedServerMetrics;
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
-    SERVER_JMX_PORT = 9092;
-    KAFKA_URL = "localhost";
+    SERVER_JMX_PORT = setJmxPort();
+    KAFKA_URL = setKafkaUrl();
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
     RESOLVED_URL = String.format(baseUrl, KAFKA_URL, SERVER_JMX_PORT);
@@ -94,7 +98,30 @@ public class MetricSubscriptions {
     return this.SERVER_JMX_PORT;
   }
 
-  public void setJmxPort(int port) {
-    this.SERVER_JMX_PORT = port;
+  public Integer setJmxPort() {
+    Integer newPort = Integer.parseInt(ReadSettings.main("JMX_PORT").toString());
+    System.out.println(newPort);
+    this.SERVER_JMX_PORT = newPort;
+    return newPort;
+  }
+
+  //kafka url
+  public String getKafkaUrl() {
+    return this.KAFKA_URL;
+  }
+
+  public String setKafkaUrl() {
+    String url = ReadSettings.main("KAFKA_URL").toString();
+    this.KAFKA_URL = url;
+    return url;
+  }
+
+  public int getKafkaPort() {
+    return this.KAFKA_PORT;
+  }
+
+  public void setKafkaPort () {
+    Integer port = Integer.parseInt(ReadSettings.main("KAFKA_URL").toString());
+    this.KAFKA_PORT = port;
   }
 }

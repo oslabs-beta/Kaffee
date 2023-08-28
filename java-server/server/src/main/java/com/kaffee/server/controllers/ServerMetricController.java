@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kaffee.server.UserSettings.ReadSettings;
 import com.kaffee.server.models.MetricSubscriptions;
 
 import ch.qos.logback.classic.Logger;
@@ -44,6 +45,7 @@ import ch.qos.logback.classic.Logger;
 @Controller
 @RestController
 @RequestMapping("/")
+
 public class ServerMetricController {
   private MetricSubscriptions ms;
   public Map<String, String> jmxServerMetrics;
@@ -60,15 +62,35 @@ public class ServerMetricController {
     }
   }
 
-  //settings receiver and setter
+
+  //JMX settings receiver and setter
   @PostMapping("/setJMXPort")
-  public void postController
+  public void postJMXPort
+  (@RequestBody String body) {
+    System.out.println("Before: " + ms.getJmxPort());
+    ms.setJmxPort();
+    System.out.println("After: " + ms.getJmxPort());
+  }
+
+  //KAFKA_URL settings receiver and setter
+  @PostMapping("/setKafkaUrl")
+  public void postKafkaUrl
+  (@RequestBody String url) {
+    System.out.println("Before (Kafka_url): " + ms.getKafkaUrl());
+    ms.setKafkaUrl();
+    System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
+  }
+
+  //KAKFKA_PORT receiver and setter
+  @PostMapping("/postKafkaPort")
+  public void postKafkaPort
   (@RequestBody String body) {
     Integer PORT = java.lang.Integer.parseInt(body);
-    System.out.println("Before: " + ms.getJmxPort());
-    ms.setJmxPort(PORT);
-    System.out.println("After: " + ms.getJmxPort());
-}
+    System.out.println(("Before: " + ms.getKafkaPort()));
+    ms.setKafkaPort();
+    System.out.println(("After: " + ms.getKafkaPort()));
+  }
+
 
 
   // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types

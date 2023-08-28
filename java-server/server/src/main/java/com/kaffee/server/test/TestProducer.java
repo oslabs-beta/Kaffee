@@ -11,7 +11,7 @@ public class TestProducer extends Thread{
     public TestProducer(String name){
         this.name = name;
     }
-
+    
     @Override
     public void run(){
         Properties producerProps = KafkaProducerConfig.getProducerProperties();
@@ -20,16 +20,17 @@ public class TestProducer extends Thread{
             Integer count = 0;
             while (RunTest.run == true) {
                 count++;
-                String key = "key-" + count;
+                String key = "key-" + name;
                 String value = "value-" + count;
-                System.out.println(value + " from " + name);
+                // System.out.println(value + " from " + name);
                 ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
                 producer.send(record);
                 record = null;
                 try {
                     Thread.sleep(1000);
                 } 
-                    catch(Exception e) {
+                catch(Exception e) {
+                    System.out.println(e);
                 }
             }
             producer.flush();
