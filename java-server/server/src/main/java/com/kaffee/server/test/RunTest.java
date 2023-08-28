@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaffee.server.controllers.ServerMetricController;
+import com.kaffee.server.UserSettings.ReadSettings;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.Scanner; // Import the Scanner class to read text files
@@ -33,12 +34,17 @@ public class RunTest{
   @GetMapping("/runTest")
   public HashMap<String, AttributeList> multipleTests() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, IntrospectionException, InterruptedException, javax.management.IntrospectionException{
-      run = true;
-    for(int i = 0; i <= 4; i++){
+    run = true;
+    int producers = java.lang.Integer.parseInt(ReadSettings.main("producers").toString());
+    int consumers = java.lang.Integer.parseInt(ReadSettings.main("consumers").toString());
+
+    for(int i = 0; i < producers; i++){
       String testNum = Integer.toString(i);
       String name = "test".concat(testNum);
       TestProducer newProducer = new TestProducer(name);
       newProducer.start();
+    }
+    for(int i = 0; i < consumers; i++){
       TestConsumer consumer = new TestConsumer();
       consumer.start();
     }

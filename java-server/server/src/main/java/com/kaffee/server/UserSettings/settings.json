@@ -4,5 +4,6 @@
   "log-filepath": "Desktop",
   "KAFKA_URL": "localhost",
   "producers": 1,
-  "testTime": 5
+  "consumers": 1,
+  "metric-count": 150
 }
