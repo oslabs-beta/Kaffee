@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import dummyData from './dummyData.json';
+import History from '../containers/History.jsx';
 
 
-export default function () {
+// TODO:
+// import history folder
+// parse names of json files by date
+// create chartjs from data on expand
+
+
+
+
+
+
+export default function ({data}) {
 
   const items = [];
-  dummyData["data"].forEach(el => {
+  data.forEach(el => {
     const [expanded, setExpanded] = useState(false);
   
     const clickHandler = () => {
