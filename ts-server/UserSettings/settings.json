@@ -4,5 +4,6 @@
   "JMX_PORT": 9999,
   "log-filepath": "Desktop",
   "producers": 1,
-  "testTime": 5
+  "testTime": 5,
+  "metric-count": 130
 }
