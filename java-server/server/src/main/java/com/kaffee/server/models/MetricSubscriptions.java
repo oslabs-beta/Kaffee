@@ -110,4 +110,12 @@ public class MetricSubscriptions {
   public void setKafkaUrl(String url) {
     this.KAFKA_URL = url;
   }
+
+  public int getKafkaPort() {
+    return this.KAFKA_PORT;
+  }
+
+  public void setKafkaPort (int port) {
+    this.KAFKA_PORT = port;
+  }
 }

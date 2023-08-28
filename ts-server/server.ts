@@ -37,6 +37,8 @@ app.use('/stopTest', testController['stopTest' as testKey],(req:Request,res:Resp
   res.status(200).json(res.locals.data);
 })
 
+
+// post requests to java server to update from settings.json
 app.use('/setJMX', settingsController['postJMXPort' as settingKey], (req:Request, res:Response) => {
   res.sendStatus(200);
 })
@@ -44,6 +46,14 @@ app.use('/setJMX', settingsController['postJMXPort' as settingKey], (req:Request
 app.use('/setKafkaUrl', settingsController['postKafkaUrl' as settingKey], (req:Request, res:Response) => {
   res.sendStatus(200);
 })
+
+app.use('/setKafkaPort', 
+  settingsController['postKafkaPort' as settingKey], 
+  (req:Request, res:Response) => {
+    res.sendStatus(200);
+})
+
+
 
 app.use('/getBytes', metricsController['getBytes' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {
   console.log(res.locals.data)
