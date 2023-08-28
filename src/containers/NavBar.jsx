@@ -13,7 +13,7 @@ async function getMetricsList() {
   return metricList;
 }
 
-export default function NavBar({ props }) {
+export default function NavBar() {
   const [metrics, setMetrics] = useState([]);
   const [run, setRun] = useState(false);
 
