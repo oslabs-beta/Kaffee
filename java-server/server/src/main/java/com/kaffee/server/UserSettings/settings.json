@@ -2,7 +2,7 @@
   "KAFKA_PORT": 9094,
   "JMX_PORT": 9999,
   "log-filepath": "Desktop",
-  "KAFKA_URL": "Kafka_url",
+  "KAFKA_URL": "localhost",
   "producers": 1,
   "testTime": 5
 }

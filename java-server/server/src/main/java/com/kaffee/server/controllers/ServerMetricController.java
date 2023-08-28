@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kaffee.server.UserSettings.ReadSettings;
 import com.kaffee.server.models.MetricSubscriptions;
 
 import ch.qos.logback.classic.Logger;
@@ -61,13 +62,13 @@ public class ServerMetricController {
     }
   }
 
+
   //JMX settings receiver and setter
   @PostMapping("/setJMXPort")
   public void postJMXPort
   (@RequestBody String body) {
-    Integer PORT = java.lang.Integer.parseInt(body);
     System.out.println("Before: " + ms.getJmxPort());
-    ms.setJmxPort(PORT);
+    ms.setJmxPort();
     System.out.println("After: " + ms.getJmxPort());
   }
 
@@ -76,10 +77,14 @@ public class ServerMetricController {
   public void postKafkaUrl
   (@RequestBody String url) {
     System.out.println("Before (Kafka_url): " + ms.getKafkaUrl());
-    ms.setKafkaUrl(url);
+    ms.setKafkaUrl();
     System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
   }
 
+  public String getKafkaUrl(){
+    String url = this.getKafkaUrl();
+    return url;
+  }
 
   // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types
   // and therefore we can use it to search for everything with a given "topic" key

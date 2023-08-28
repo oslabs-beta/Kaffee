@@ -1,13 +1,14 @@
 package com.kaffee.server.UserSettings;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.InputStream;
+import java.util.Map;
+
 
 public record ReadSettings(){
-  public static void main(String[] args) {
+  public static Object main(String key) {
     String resourceName = "./settings.json";
     InputStream is = ReadSettings.class.getResourceAsStream(resourceName);
     if (is == null) {
@@ -15,6 +16,6 @@ public record ReadSettings(){
     }
     JSONTokener tokener = new JSONTokener(is);
     JSONObject object = new JSONObject(tokener);
-    System.out.println("object: " + object);
+    return object.get(key);
   }
 }

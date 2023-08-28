@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.VariableElement;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
@@ -24,8 +25,8 @@ public class MetricSubscriptions {
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
-    SERVER_JMX_PORT = 9999;
-    KAFKA_URL = "localhost";
+    SERVER_JMX_PORT = setJmxPort();
+    KAFKA_URL = setKafkaUrl();
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
     RESOLVED_URL = String.format(baseUrl, KAFKA_URL, SERVER_JMX_PORT);
@@ -72,7 +73,6 @@ public class MetricSubscriptions {
   }
 
   public JMXConnector connectToJMX() throws IOException {
-    ReadSettings.main(null);
     JMXServiceURL url = new JMXServiceURL(RESOLVED_URL);
     return JMXConnectorFactory.connect(url);
   }
@@ -98,8 +98,11 @@ public class MetricSubscriptions {
     return this.SERVER_JMX_PORT;
   }
 
-  public void setJmxPort(int port) {
-    this.SERVER_JMX_PORT = port;
+  public Integer setJmxPort() {
+    Integer newPort = Integer.parseInt(ReadSettings.main("JMX_PORT").toString());
+    System.out.println(newPort);
+    this.SERVER_JMX_PORT = newPort;
+    return newPort;
   }
 
   //kafka url
@@ -107,7 +110,11 @@ public class MetricSubscriptions {
     return this.KAFKA_URL;
   }
 
-  public void setKafkaUrl(String url) {
-    this.KAFKA_URL = url;
+  public String setKafkaUrl() {
+    String newUrl = ReadSettings.main("KAFKA_URL").toString();
+    this.KAFKA_URL = newUrl;
+    return newUrl;
   }
+
+  
 }
