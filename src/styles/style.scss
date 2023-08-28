@@ -86,10 +86,9 @@ button {
   position: absolute;
   left: 0;
   top: 1.8em;
-  width: 40em;
+  width: 30em;
   z-index: 5;
   background-color: rgb(var(--quaternary-bg));
-  display: block;
   border-radius: var(--button-border-radius);
   display: none;
 }
@@ -206,7 +205,7 @@ button {
   min-width: 400px;
   max-width: 1000px;
   margin: 2em;
-  padding: 0.25em;
+  padding: 0.5em 0.75em;
   background-color: rgb(0, 0, 0);
   border: var(--border);
   color: rgb(var(--ternary-bg));
@@ -284,3 +283,32 @@ button {
 header nav a.active button {
   background-color: rgb(var(--ternary-bg));
 }
+
+.history {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.history-item-container {
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1vh;
+  background-color: white;
+  width: 30vh;
+  border-radius: 1vh;
+}
+
+
+
+.expanded-metrics {
+
+  margin-top: 1vh; /* Add margin to separate expanded metrics */
+}
+

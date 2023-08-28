@@ -10,8 +10,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const desktopPath = path.join(os.homedir(), 'Desktop');
-const filePath = path.join(desktopPath, 'kaffee_log.json');
+let filePath = path.join(desktopPath, 'kaffee_log.json');
 const content = JSON.stringify('test');
+
+function formatDate(): string {
+  const date = new Date();
+
+  // Extract year, month, and day
+  const year = date.getFullYear().toString().slice(-2); // Extract last 2 digits of year
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+  const day = String(date.getDate()).padStart(2, '0');
+
+  // Format the date as YY-mm-dd
+  return `${year}-${month}-${day}`; 
+}
 
 // fs.writeFile(filePath, content, (err) => {
 //   if (err) {
@@ -44,7 +56,12 @@ const dataController: object = {
   //middleware to write data to the local json file
   addData: (req: Request,res:Response, next: NextFunction) => {
     try {
-      fs.appendFile(filePath, JSON.stringify(res.locals.data), (err) => {
+      console.log(req.body);
+      const filename = formatDate() + '_log.json';
+      console.log(filename);
+      filePath = path.resolve(__dirname, `../History/${filename}`)
+      console.log(filePath);
+      fs.appendFile(filePath, JSON.stringify(req.body, null, 2), (err) => {
         if (err) {
           console.log(err)
         } else {
@@ -52,9 +69,11 @@ const dataController: object = {
           next()
         }
       })
+
+
     } catch (error) {
       console.log(error)
-      next({errMsg: "Fucked", err: 500})
+      next({errMsg: "err", err: 500})
     }
   },
   //middleware to delete data from the local json file
@@ -75,7 +94,7 @@ const dataController: object = {
       const settings = JSON.parse(data);
       settings[settingName] = newValue;
       console.log(newValue)
-      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), 'utf-8', (writeErr) => {
+      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2) + ',', 'utf-8', (writeErr) => {
         if (writeErr) {
           console.error('Error writing settings:', writeErr);
           return res.status(500).json({ error: 'Error updating settings' });

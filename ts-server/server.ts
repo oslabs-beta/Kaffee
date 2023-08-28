@@ -105,6 +105,7 @@ app.use(
   '/addData',
   dataController['addData' as dataKey],
   (req: Request, res: Response) => {
+    console.log('addData')
     res.sendStatus(200);
   }
 );
