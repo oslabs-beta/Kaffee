@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Cluster from './Clusters.jsx';
 import SearchBar from '../components/SearchBar.jsx';
 import Chart from '../components/Chart.jsx';
-import { addChart, removeChart, newChart } from '../reducers/chartSlice.js';
 
+// used in creating a test chart
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -27,6 +27,7 @@ export default function () {
   const charts = useSelector((state) => state.charts.list);
   const status = useSelector((state) => state.charts.status);
 
+  // used in creating a test chart
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
 
@@ -76,26 +77,25 @@ export default function () {
     updateMode: 'active',
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      const defaultData = {
-        backgroundColor: 'rgba(255, 0, 0, .8)',
-        borderColor: 'rgba(255, 0, 0, .6)',
-        fill: true,
-      };
+  // used in creating a test chart
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const defaultData = {
+  //       backgroundColor: 'rgba(255, 0, 0, .8)',
+  //       borderColor: 'rgba(255, 0, 0, .6)',
+  //       fill: true,
+  //     };
 
-      const res = await fetch('http://localhost:3030/dummy/10');
-      const data = await res.json();
-      console.log(data);
-      setData(Object.assign(defaultData, data));
+  //     const res = await fetch('http://localhost:3030/dummy/10');
+  //     const data = await res.json();
+  //     setData(Object.assign(defaultData, data));
 
-      const labels = data.data?.map((_, i) => (i + 1) * 100);
-      setLabels(labels);
-    };
-    getData();
-  }, []);
+  //     const labels = data.data?.map((_, i) => (i + 1) * 100);
+  //     setLabels(labels);
+  //   };
+  //   getData();
+  // }, []);
 
-  console.log(data);
   return (
     <>
       {/* <Cluster /> */}
@@ -111,7 +111,7 @@ export default function () {
               />
             );
           })}
-          <div className='chartCanvas'>
+          {/* <div className='chartCanvas'>
             <Line
               options={options}
               data={{
@@ -119,7 +119,7 @@ export default function () {
                 datasets: [data],
               }}
             />
-          </div>
+          </div> */}
         </div>
       </div>
       <SearchBar />

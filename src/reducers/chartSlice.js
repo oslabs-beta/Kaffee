@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
+// used when importing a test chart
 export const newChart = createAsyncThunk(
   'chart/newChart',
   async (_, thunkAPI) => {
@@ -80,4 +81,5 @@ const chartSlice = createSlice({
 });
 
 export default chartSlice.reducer;
-export const { addChart, removeChart, filterCharts } = chartSlice.actions;
+export const { addChart, removeChart, filterCharts, changeMetricCount } =
+  chartSlice.actions;

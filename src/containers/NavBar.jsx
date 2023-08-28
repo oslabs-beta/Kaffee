@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import { metricListFriendly } from '../utils/metrics.js';
@@ -13,12 +13,13 @@ async function getMetricsList() {
   return metricList;
 }
 
-export default function NavBar() {
+export default function NavBar({ props }) {
   const [metrics, setMetrics] = useState([]);
   const [run, setRun] = useState(false);
 
   const chartList = useSelector((state) => state.charts.list);
   const metricCount = useSelector((state) => state.charts.metricCount);
+  const location = useLocation();
 
   const dispatch = useDispatch();
 
@@ -77,33 +78,37 @@ export default function NavBar() {
           <NavLink to='/settings'>
             <button>Settings</button>
           </NavLink>
-          <div id='metric-picker'>
-            <div>
-              <button onClick={showMetrics}>Choose Metrics</button>
+          {location.pathname === '/' ? (
+            <div id='metric-picker'>
+              <div>
+                <button onClick={showMetrics}>Choose Metrics</button>
+              </div>
+              <nav
+                id='metric-list'
+                onMouseLeave={showMetrics}
+              >
+                {metrics?.map((metric) => {
+                  return (
+                    <label
+                      className='chart-selector'
+                      key={metric.name}
+                    >
+                      <input
+                        type='checkbox'
+                        id={metric.name}
+                        name={metric.name}
+                        defaultValue={chartList[metric]}
+                        onClick={() => handleToggleChart(metric.name)}
+                      />
+                      {metric.display}
+                    </label>
+                  );
+                })}
+              </nav>
             </div>
-            <nav
-              id='metric-list'
-              onMouseLeave={showMetrics}
-            >
-              {metrics?.map((metric) => {
-                return (
-                  <label
-                    className='chart-selector'
-                    key={metric.name}
-                  >
-                    <input
-                      type='checkbox'
-                      id={metric.name}
-                      name={metric.name}
-                      defaultValue={chartList[metric]}
-                      onClick={() => handleToggleChart(metric.name)}
-                    />
-                    {metric.display}
-                  </label>
-                );
-              })}
-            </nav>
-          </div>
+          ) : (
+            <></>
+          )}
         </nav>
         <nav className='right'>
           <button onClick={startProducers}>

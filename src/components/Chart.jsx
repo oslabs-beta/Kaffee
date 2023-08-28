@@ -82,6 +82,7 @@ export default function ({ props }) {
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [options, setOptions] = useState(optionsInit);
+  const [status, setStatus] = useState('loading');
 
   // this is the number of data points to display per map
   const metricCount = useSelector((state) => state.charts.metricCount);
@@ -157,7 +158,7 @@ export default function ({ props }) {
 
       // look through the data as it currently exists
       for (const set of data) {
-        console.log(set);
+        // console.log(set);
         // if the data has an object without a label (which should only be when data is first streaming)
         // or if this object has a label matching the metric we are seeing
         if (set.label === metricLabel) {
@@ -190,6 +191,7 @@ export default function ({ props }) {
       labels.shift();
     }
 
+    if (status !== 'succeeded') setStatus('succeeded');
     setLabels([...labels]);
     setData([...data]);
   }
@@ -200,7 +202,9 @@ export default function ({ props }) {
 
   return (
     <div className='chartCanvas'>
-      {labels.length ? (
+      {status === 'loading' ? (
+        <span>Loading Chart</span>
+      ) : (
         <Line
           datasetIdKey={props.metric}
           options={options}
@@ -210,8 +214,6 @@ export default function ({ props }) {
           }}
           id={props.metric}
         />
-      ) : (
-        <></>
       )}
     </div>
   );
