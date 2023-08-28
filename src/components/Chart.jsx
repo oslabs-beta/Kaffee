@@ -87,7 +87,6 @@ export default function ({ props }) {
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [options, setOptions] = useState(optionsInit);
-<<<<<<< HEAD
   const [numCalls, setNumCalls] = useState(0);
 
   const [dataToSend, setDataToSend] = useState([]);
@@ -96,12 +95,10 @@ export default function ({ props }) {
   // let dataToSend = [];
   // let labelsToSend = [];
   let lastSentTime = 0;
-=======
   const [status, setStatus] = useState('loading');
 
   // this is the number of data points to display per map
   const metricCount = useSelector((state) => state.charts.metricCount);
->>>>>>> dev
 
   useEffect(() => {
     const whenConnected = () => {
@@ -158,13 +155,8 @@ export default function ({ props }) {
     // loop through everything the server gives us
     // display only values that are numeric
     for (const metric in body.snapshot) {
-<<<<<<< HEAD
       // check typeof json.parse(value)
       const evalValue = Number(body.snapshot[metric]);
-=======
-      // Parse the value into an integer
-      const evalValue = parseInt(body.snapshot[metric]);
->>>>>>> dev
       if (isNaN(evalValue)) {
         // if the value is not numeric, move to the next metric
         continue;
@@ -188,27 +180,16 @@ export default function ({ props }) {
           inData = true;
           // add a new value to the data
           set.data.push(evalValue);
-<<<<<<< HEAD
           // console.log(set)
           while (set.data.length > 10) {
-=======
-
-          while (set.data.length > metricCount) {
->>>>>>> dev
             set.data.shift();
           }
           break;
         }
       }
-<<<<<<< HEAD
       while (labels.length > 10) {
         labels.shift()
       }
-=======
-
-      // if we didn't find matching data
-      // add a new data metric object
->>>>>>> dev
       if (!inData) {
         const newMetric = {
           data: [evalValue],
