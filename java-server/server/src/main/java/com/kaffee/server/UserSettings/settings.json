@@ -1,5 +1,5 @@
 {
-  "KAFKA_PORT": 9092,
+  "KAFKA_PORT": 9094,
   "JMX_PORT": 9999,
   "log-filepath": "Desktop",
   "KAFKA_URL": "Kafka_url",

@@ -17,6 +17,7 @@ public class MetricSubscriptions {
   private int SERVER_JMX_PORT;
   private int PRODUCER_JMX_PORT;
   private int CONSUMER_JMX_PORT;
+  private int KAFKA_PORT;
   private String KAFKA_URL;
   private String RESOLVED_URL;
   public Map<String, String> subscribedServerMetrics;
