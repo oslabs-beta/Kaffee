@@ -292,8 +292,6 @@ header nav a.active button {
   align-items: center;
 }
 
-
-
 .history-item-container {
   display: flex;
   flex-direction: column; /* Change to column layout */
@@ -305,10 +303,17 @@ header nav a.active button {
   border-radius: 1vh;
 }
 
-
-
 .expanded-metrics {
-
   margin-top: 1vh; /* Add margin to separate expanded metrics */
 }
 
+.error {
+  width: 50%;
+  margin: 3em auto;
+  padding: 1em;
+  background-color: rgb(var(--quaternary-bg));
+  display: block;
+  border-radius: var(--button-border-radius);
+  border: var(--border);
+  z-index: 1;
+}

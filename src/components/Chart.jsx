@@ -20,10 +20,7 @@ import {
 } from '../utils/metrics.js';
 import { useSelector } from 'react-redux';
 
-
 import path from 'path';
-
-
 
 Chart.register(
   CategoryScale,
@@ -150,6 +147,7 @@ export default function ({ props }) {
       lastSentTime = Date.now();
     }
     // Add the current time offset to the labels
+    console.log(metricCount);
     labels.push(body.time - beginTime);
 
     // loop through everything the server gives us
@@ -181,15 +179,13 @@ export default function ({ props }) {
           // add a new value to the data
           set.data.push(evalValue);
           // console.log(set)
-          while (set.data.length > 10) {
+          while (set.data.length > metricCount) {
             set.data.shift();
           }
           break;
         }
       }
-      while (labels.length > 10) {
-        labels.shift()
-      }
+
       if (!inData) {
         const newMetric = {
           data: [evalValue],
@@ -214,7 +210,7 @@ export default function ({ props }) {
       addDataToSend(body);
     }
     if (Date.now() - lastSentTime > 1000) {
-      pushToLog()
+      pushToLog();
     }
   }
 
@@ -254,7 +250,7 @@ export default function ({ props }) {
     }
     // console.log(dataToSend);
     setDataToSend([...dataToSend]);
-    
+
     updating = false;
   }
 
@@ -305,30 +301,30 @@ export default function ({ props }) {
     const objToSend = {};
     objToSend[props.metric] = {
       labels: labelsToSend,
-      datasets: dataToSend      
-    }
+      datasets: dataToSend,
+    };
     console.log(objToSend);
 
     if (!updating) {
       updating = true;
       lastSentTime = Date.now();
-    fetch('http://localhost:3030/addData',
-    { 
-      method: 'POST',
-      body: JSON.stringify(objToSend),
-      headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },})
-    .then(response => {
-      response.json();
-      setDataToSend([]);
-      setLabelsToSend([]);
-    })
-    .then(data => {
-      console.log(data);
-      updating = false;
-    })
-  }
+      fetch('http://localhost:3030/addData', {
+        method: 'POST',
+        body: JSON.stringify(objToSend),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => {
+          response.json();
+          setDataToSend([]);
+          setLabelsToSend([]);
+        })
+        .then((data) => {
+          console.log(data);
+          updating = false;
+        });
+    }
   }
 
   // console.log(data);

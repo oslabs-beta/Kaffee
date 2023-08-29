@@ -2,10 +2,22 @@ import React, { useEffect, useState } from 'react';
 import path from 'path';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeMetricCount } from '../reducers/chartSlice.js';
+import { useLoaderData } from 'react-router';
 
 async function getDirectory() {
   const directory = await window.showDirectoryPicker();
   return directory;
+}
+
+export async function loader() {
+  try {
+    const res = await fetch('http://localhost:3030/getSettings');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error fetching settings', { cause: error });
+  }
 }
 
 const Settings = () => {
@@ -17,31 +29,20 @@ const Settings = () => {
   const [zInput, setzInput] = useState('');
   const [jInput, setjInput] = useState('');
   const [fInput, setfInput] = useState('');
+  const [metricTimeout, setMetricTimeout] = useState(null);
 
   const metricCount = useSelector((state) => state.charts.metricCount);
 
   const dispatch = useDispatch();
+  const data = useLoaderData();
 
-  const fetchSettings = () => {
-    fetch('http://localhost:3030/getSettings')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // console.log(data, 'this is the fetch call');
-        setKafka(data['kafka-port']);
-        setZookeeper(data['zookeeper-port']);
-        setJMX(data['JMX-port']);
-        setFilepath(data['log-filepath']);
-        // console.log(filepath);
-      })
-      .catch((error) => {
-        console.error('Fetch error:', error);
-      });
-  };
+  useEffect(() => {
+    setKafka(data['kafka-port']);
+    setZookeeper(data['zookeeper-port']);
+    setJMX(data['JMX-port']);
+    setFilepath(data['log-filepath']);
+    dispatch(changeMetricCount(data['metric-count']));
+  }, []);
 
   const updateSettings = (param, val) => {
     if (
@@ -64,11 +65,11 @@ const Settings = () => {
     })
       .then((response) => response.json())
       .then((data) => console.log(data))
-      .then(fetchSettings)
-      .catch((error) => console.error('Error:', error));
+      .then(loader)
+      .catch((error) => {
+        throw new Error('Error saving updated settings.', { cause: error });
+      });
   };
-
-  fetchSettings();
 
   const handleEnterPress = (e, param, val) => {
     if (e.key === 'Enter') {
@@ -103,9 +104,14 @@ const Settings = () => {
   };
 
   function setInput(e) {
-    // console.log(e);
     dispatch(changeMetricCount(e.target.value));
-    updateSettings(e.target.id, e.target.value);
+
+    if (metricTimeout) {
+      clearTimeout(metricTimeout);
+    }
+    setMetricTimeout(
+      setTimeout(() => updateSettings(e.target.id, e.target.value), 500)
+    );
   }
 
   return (
@@ -168,7 +174,7 @@ const Settings = () => {
           min='10'
           max='500'
           step='10'
-          defaultValue={metricCount}
+          value={metricCount}
           onChange={(e) => setInput(e)}
         ></input>
         <label htmlFor='kafka-port'>{metricCount}</label>

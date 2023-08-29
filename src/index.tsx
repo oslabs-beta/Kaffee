@@ -11,17 +11,24 @@ import {
 
 import './styles/style.scss';
 
-import App from './App.tsx';
+import App, { loader as appLoader } from './App.tsx';
 import ErrorPage from './containers/ErrorPage.tsx';
 import Main from './containers/Main.jsx';
-import Settings from './containers/Settings.jsx';
+import Settings, { loader as settingLoader } from './containers/Settings.jsx';
 import History from './containers/History.jsx';
 import SocketTest from './components/SocketTest.jsx';
+import { loader as navLoader } from './containers/NavBar.jsx';
+import { json } from 'stream/consumers';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    loader: async () => {
+      const settings = await appLoader();
+      const metrics = await navLoader();
+      return { metrics, settings };
+    },
     errorElement: <ErrorPage />,
     children: [
       {
@@ -30,6 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/settings',
+        loader: settingLoader,
         element: <Settings />,
       },
       {

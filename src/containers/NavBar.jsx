@@ -1,20 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import { metricListFriendly } from '../utils/metrics.js';
 
-async function getMetricsList() {
-  const res = await fetch('http://localhost:8080/available-server-metrics');
-  const metricListRaw = await res.json();
+async function getMetricsList() {}
 
-  const metricList = metricListFriendly(metricListRaw);
-  return metricList;
+export async function loader() {
+  try {
+    const res = await fetch('http://localhost:8080/available-server-metrics');
+
+    const metricListRaw = await res.json();
+
+    const metricList = metricListFriendly(metricListRaw);
+    return metricList;
+  } catch (err) {
+    throw new Error(
+      `Could not connect to the Java server. 
+      Please verify that the Java server is running.`,
+      // @ts-ignore
+      {
+        cause: err,
+      }
+    );
+  }
 }
 
 export default function NavBar() {
-  const [metrics, setMetrics] = useState([]);
   const [run, setRun] = useState(false);
 
   const chartList = useSelector((state) => state.charts.list);
@@ -22,15 +35,7 @@ export default function NavBar() {
   const location = useLocation();
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function getMetrics() {
-      const metrics = await getMetricsList();
-      setMetrics(metrics);
-    }
-
-    getMetrics();
-  }, []);
+  const { metrics } = useLoaderData();
 
   function handleToggleChart(metricId) {
     const checkbox = document.querySelector(`#${metricId}`);

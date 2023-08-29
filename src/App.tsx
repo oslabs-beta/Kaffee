@@ -1,15 +1,30 @@
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLoaderData } from 'react-router-dom';
 import NavBar from './containers/NavBar.jsx';
 import client from './utils/socket.js';
+import { changeMetricCount } from './reducers/chartSlice.js';
+import { useDispatch } from 'react-redux';
+
+export async function loader() {
+  try {
+    const res = await fetch('http://localhost:3030/getSettings');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error fetching settings', { cause: error });
+  }
+}
 
 export default function App() {
-  useEffect(() => {
-    client.activate();
+  const { settings } = useLoaderData();
+  console.log(settings);
+  const dispatch = useDispatch();
 
-    return () => {
-      client.deactivate();
-    };
+  useEffect(() => {
+    if (typeof settings === 'object') {
+      dispatch(changeMetricCount(settings['metric-count']));
+    }
   }, []);
 
   return (

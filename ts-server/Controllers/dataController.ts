@@ -1,5 +1,11 @@
 //for read/write from local JSON file
-import express, { Express, Request, Response, NextFunction, response } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  response,
+} from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import * as fs from 'fs';
@@ -22,7 +28,7 @@ function formatDate(): string {
   const day = String(date.getDate()).padStart(2, '0');
 
   // Format the date as YY-mm-dd
-  return `${year}-${month}-${day}`; 
+  return `${year}-${month}-${day}`;
 }
 
 // fs.writeFile(filePath, content, (err) => {
@@ -44,81 +50,95 @@ function formatDate(): string {
 
 const dataController: object = {
   //middleware to fetch data from local json file
-  getData: (req: Request,res:Response, next: NextFunction) =>{
+  getData: (req: Request, res: Response, next: NextFunction) => {
     fs.readFile(filePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
       if (err) {
         console.error('error', err);
         return;
       }
-    })
-    next()
+    });
+    return next();
   },
   //middleware to write data to the local json file
-  addData: (req: Request,res:Response, next: NextFunction) => {
+  addData: (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log(req.body);
       const filename = formatDate() + '_log.json';
       console.log(filename);
-      filePath = path.resolve(__dirname, `../History/${filename}`)
+      filePath = path.resolve(__dirname, `../History/${filename}`);
       console.log(filePath);
       fs.appendFile(filePath, JSON.stringify(req.body, null, 2), (err) => {
         if (err) {
-          console.log(err)
+          console.log(err);
         } else {
-          console.log('file written')
-          next()
+          console.log('file written');
+          next();
         }
-      })
-
-
+      });
     } catch (error) {
-      console.log(error)
-      next({errMsg: "err", err: 500})
+      console.log(error);
+      next({ errMsg: 'err', err: 500 });
     }
   },
   //middleware to delete data from the local json file
-  deleteData: (req:Request,res:Response,next:NextFunction) => {
-    console.log('entered deleteData')
-    next()
+  deleteData: (req: Request, res: Response, next: NextFunction) => {
+    console.log('entered deleteData');
+    next();
   },
 
   //middleware to update user settings in settings.json
   updateSettings: (req: Request, res: Response, next: NextFunction) => {
     const { settingName, newValue } = req.body;
-    const settingsPath = path.join(__dirname, '..', 'UserSettings', 'settings.json');
+    const settingsPath = path.join(
+      __dirname,
+      '..',
+      'UserSettings',
+      'settings.json'
+    );
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
         console.error('Error reading settings:', readErr);
-        return res.status(500).json({ error: 'Error reading settings'});
+        return res.status(500).json({ error: 'Error reading settings' });
       }
       const settings = JSON.parse(data);
       settings[settingName] = newValue;
-      console.log(newValue)
-      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2) + ',', 'utf-8', (writeErr) => {
-        if (writeErr) {
-          console.error('Error writing settings:', writeErr);
-          return res.status(500).json({ error: 'Error updating settings' });
+      console.log(newValue);
+      fs.writeFile(
+        settingsPath,
+        JSON.stringify(settings, null, 2),
+        'utf-8',
+        (writeErr) => {
+          if (writeErr) {
+            console.error('Error writing settings:', writeErr);
+            return res.status(500).json({ error: 'Error updating settings' });
+          }
+          console.log('Setting updated successfully');
+          return res
+            .status(200)
+            .json({ message: 'Setting updated successfully' });
         }
-        console.log('Setting updated successfully');
-        return res.status(200).json({ message: 'Setting updated successfully' });
-      });
+      );
     });
   },
 
   //middleware to get user settings in settings.json
   getSettings: (req: Request, res: Response, next: NextFunction) => {
-    const settingsPath = path.join(__dirname, '..', 'UserSettings', 'settings.json');
+    const settingsPath = path.join(
+      __dirname,
+      '..',
+      'UserSettings',
+      'settings.json'
+    );
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
         console.error('Error reading settings:', readErr);
-        return res.status(500).json({error: 'Error reading settings'})
+        return res.status(500).json({ error: 'Error reading settings' });
       }
       const settings = JSON.parse(data);
       res.locals.settings = settings;
       next();
-    })
-  }
-
-}
+    });
+  },
+};
 
 export default dataController;
