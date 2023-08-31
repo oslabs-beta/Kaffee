@@ -85,7 +85,7 @@ const dataController: object = {
   //middleware to update user settings in settings.json
   updateSettings: (req: Request, res: Response, next: NextFunction) => {
     const { settingName, newValue } = req.body;
-    const settingsPath = path.join(__dirname, '..', 'UserSettings', 'settings.json');
+    const settingsPath = path.resolve(__dirname, '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json');
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
         console.error('Error reading settings:', readErr);
