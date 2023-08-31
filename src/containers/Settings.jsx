@@ -72,6 +72,7 @@ const Settings = () => {
 
   const handleEnterPress = (e, param, val) => {
     if (e.key === 'Enter') {
+      console.log(val, param)
       updateSettings(param, val);
       if (param === 'KAFKA_PORT') setkInput('');
       if (param === 'ZOOKEEPER_PORT') setzInput('');

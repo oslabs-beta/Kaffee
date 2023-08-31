@@ -93,21 +93,13 @@ const dataController: object = {
       }
       const settings = JSON.parse(data);
       settings[settingName] = newValue;
-      console.log(newValue)
-      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2) + ',', 'utf-8', (writeErr) => {
-        if (writeErr) {
-          console.error('Error writing settings:', writeErr);
-          return res.status(500).json({ error: 'Error updating settings' });
-        }
-        console.log('Setting updated successfully');
-        return res.status(200).json({ message: 'Setting updated successfully' });
-      });
+      next()
     });
   },
 
   //middleware to get user settings in settings.json
   getSettings: (req: Request, res: Response, next: NextFunction) => {
-    const settingsPath = path.join(__dirname, '..', 'UserSettings', 'settings.json');
+    const settingsPath = path.resolve(__dirname, '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json');
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
         console.error('Error reading settings:', readErr);
