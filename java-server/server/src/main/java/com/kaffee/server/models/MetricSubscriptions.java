@@ -16,8 +16,8 @@ import com.kaffee.server.UserSettings.ReadSettings;
 
 public class MetricSubscriptions {
   private int SERVER_JMX_PORT;
-  private int PRODUCER_JMX_PORT;
-  private int CONSUMER_JMX_PORT;
+  // private int PRODUCER_JMX_PORT;
+  // private int CONSUMER_JMX_PORT;
   private int KAFKA_PORT;
   private String KAFKA_URL;
   private String RESOLVED_URL;
@@ -121,7 +121,7 @@ public class MetricSubscriptions {
   }
 
   public void setKafkaPort () {
-    Integer port = Integer.parseInt(ReadSettings.main("KAFKA_URL").toString());
+    Integer port = Integer.parseInt(ReadSettings.main("KAFKA_PORT").toString());
     this.KAFKA_PORT = port;
   }
 }

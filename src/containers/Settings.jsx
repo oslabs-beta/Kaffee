@@ -45,9 +45,9 @@ const Settings = () => {
 
   const updateSettings = (param, val) => {
     if (
-      param === 'kafka-port' ||
-      param === 'zookeeper-port' ||
-      param === 'JMX-port' ||
+      param === 'KAFKA_PORT' ||
+      param === 'ZOOKEEPER_PORT' ||
+      param === 'JMX_PORT' ||
       param === 'metric-count'
     ) {
       val = Number(val);
@@ -62,9 +62,8 @@ const Settings = () => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(fetchSettings)
+      .then((response) => console.log(response))
+      .then(fetchSettings())
       .catch((error) => console.error('Error:', error));
   };
 
@@ -72,10 +71,11 @@ const Settings = () => {
 
   const handleEnterPress = (e, param, val) => {
     if (e.key === 'Enter') {
+      console.log(val, param)
       updateSettings(param, val);
-      if (param === 'kafka-port') setkInput('');
-      if (param === 'zookeeper-port') setzInput('');
-      if (param === 'JMX-port') setjInput('');
+      if (param === 'KAFKA_PORT') setkInput('');
+      if (param === 'ZOOKEEPER_PORT') setzInput('');
+      if (param === 'JMX_PORT') setjInput('');
       if (param === 'log-filepath') setfInput('');
     }
   };
@@ -117,7 +117,7 @@ const Settings = () => {
           type='text'
           name='kafka-port-num'
           defaultValue={kInput}
-          onKeyDown={(e) => handleEnterPress(e, 'kafka-port', kInput)}
+          onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
           onChange={(e) => setkInput(e.target.value)}
         />
         <label htmlFor='kafka-port'> {kafka} </label>
@@ -129,7 +129,7 @@ const Settings = () => {
           type='text'
           name='zookeeper-port-num'
           defaultValue={zInput}
-          onKeyDown={(e) => handleEnterPress(e, 'zookeeper-port', zInput)}
+          onKeyDown={(e) => handleEnterPress(e, 'ZOOKEEPER_PORT', zInput)}
           onChange={(e) => setzInput(e.target.value)}
         />
         <label htmlFor='kafka-port'> {zookeeper} </label>
@@ -141,7 +141,7 @@ const Settings = () => {
           type='text'
           name='JMX-port-num'
           defaultValue={jInput}
-          onKeyDown={(e) => handleEnterPress(e, 'JMX-port', jInput)}
+          onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
           onChange={(e) => setjInput(e.target.value)}
         />
         <label htmlFor='kafka-port'> {JMX} </label>
