@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import './styles/style.scss';
 
+import App from './App'
 import Main from './containers/Main';
 import NavBar from './containers/NavBar';
 import Clusters from './containers/Clusters';
@@ -21,7 +22,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       path='/'
-      element={<NavBar />}
+      element={<App />}
     >
       <Route
         index

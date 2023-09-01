@@ -8,10 +8,14 @@
   },
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm ./ts-server/server.ts",
+    "start": "concurrently \"npm run start:ts\" \"npm run start:java\"",
+    "start:ts": "node ./build/ts-server/server.js",
+    "start:java": "cd java-server/server && mvn spring-boot:run",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "dev": "cd java-server/server && mvn spring-boot:run & cd ../../ && nodemon --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js"
+    "build": "npm run build:ts && npm run build:java",
+    "build:ts": "tsc", 
+    "build:java": "cd java-server/server && mvn clean package && cp -r target ../../build",
+    "dev": "concurrently \"nodemon --loader ts-node/esm ./ts-server/server.ts\" \"webpack-dev-server --config webpack.config.js\" \"cd java-server/server && mvn spring-boot:run\""
   },
   "keywords": [],
   "author": "",
