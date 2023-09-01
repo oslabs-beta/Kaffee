@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
@@ -133,7 +133,6 @@ app.use(
 
 app.use(
   '/getSettings',
-  () => console.log('inside "server.ts/getSettings'),
   dataController['getSettings' as dataKey],
   (req: Request, res: Response) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');

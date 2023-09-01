@@ -41,12 +41,14 @@ const Settings = () => {
         return response.json();
       })
       .then((data) => {
-        // console.log(data, 'this is the fetch call');
-        setKafka(data['kafka-port']);
+        console.log(data, 'this is the fetch call');
+        setKafka(data['KAFKA_PORT']);
         // setZookeeper(data['zookeeper-port']);
-        setJMX(data['JMX-port']);
+        setJMX(data['JMX_PORT']); // Changed from 'JMX-port'
         setFilepath(data['log-filepath']);
-        // console.log(filepath);
+        setConsumers(data['consumers']);
+        setProducers(data['producers']);
+        setKafkaURL(data['KAFKA_URL']);
       })
       .catch((error) => {
         console.error('Fetch error:', error);
@@ -55,12 +57,16 @@ const Settings = () => {
 
   const updateSettings = (param, val) => {
     if (
+      // applies only to params that are numbers
       param === 'KAFKA_PORT' ||
       // param === 'ZOOKEEPER_PORT' ||
       param === 'JMX_PORT' ||
-      param === 'metric-count'
-    ) {
-      val = Number(val);
+      param === 'metric-count' ||
+      param === 'producers' ||
+      param === 'consumers' 
+      // param === 'KAFKA_URL' 
+    ) { 
+      val = Number(val); 
     }
     fetch('http://localhost:3030/updateSettings', {
       method: 'POST',
@@ -80,12 +86,16 @@ const Settings = () => {
   fetchSettings();
 
   const handleEnterPress = (e, param, val) => {
+ 
     if (e.key === 'Enter') {
       updateSettings(param, val);
       if (param === 'KAFKA_PORT') setkInput('');
       // if (param === 'ZOOKEEPER_PORT') setzInput('');
       if (param === 'JMX_PORT') setjInput('');
       if (param === 'log-filepath') setfInput('');
+      if (param === 'producers') setPInput('');
+      if (param === 'consumers') setCInput('');
+      if (param === 'KAFKA_URL') setkURLInput('');
     }
   };
 
@@ -112,7 +122,6 @@ const Settings = () => {
   };
 
   function setInput(e) {
-    // console.log(e);
     dispatch(changeMetricCount(e.target.value));
     updateSettings(e.target.id, e.target.value);
   }
@@ -123,13 +132,14 @@ const Settings = () => {
         <label htmlFor='kafka-port'>Kafka Port </label>
         <input
           id='kafka-port'
-          type='text'
+          type='number'
           name='kafka-port-num'
           defaultValue={kInput}
+          placeholder={kafka}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
           onChange={(e) => setkInput(e.target.value)}
         />
-        <label htmlFor='kafka-port'> {kafka} </label>
+        {/* <label htmlFor='kafka-port'> {kafka} </label> */}
       </div>
 
 
@@ -139,10 +149,12 @@ const Settings = () => {
           id='kafkaURL'
           type="text" 
           name='kafkaURL'
-          defaultValue={(e) => handleEnterPress(e, 'kafkaURL', kURLInput)}
-          onChange={(e) => setKafkaURL(e.target.value)}
+          defaultValue={kURLInput}
+          placeholder={kafkaURL}
+          onKeyDown= {(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
+          onChange={(e) => setkURLInput(e.target.value)}
         />
-        <label htmlFor='kafkaURL'> {kafkaURL} </label>
+        {/* <label htmlFor='kafkaURL'> {kafkaURL} </label> */}
       </div>
 
 
@@ -150,13 +162,14 @@ const Settings = () => {
         <label htmlFor='JMX-port'>JMX Port </label>
         <input
           id='JMX-port'
-          type='text'
+          type='number'
           name='JMX-port-num'
           defaultValue={jInput}
+          placeholder={JMX}
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
           onChange={(e) => setjInput(e.target.value)}
         />
-        <label htmlFor='JMX-port'> {JMX} </label>
+        {/* <label htmlFor='JMX-port'> {JMX} </label> */}
       </div>
     
       <div className='setting'>
@@ -166,37 +179,40 @@ const Settings = () => {
           type='text'
           name='log-filepath-string'
           defaultValue={fInput}
+          placeholder={filepath}
           onKeyDown={(e) => handleEnterPress(e, 'log-filepath', fInput)}
           onChange={(e) => setfInput(e.target.value)}
           // onClick={handleDirectorySelector}
         />
-        <label htmlFor='kafka-port'>{filepath} </label>
+        {/* <label htmlFor='log-filepath'>{filepath} </label> */}
       </div>
 
       <div className='setting'>
         <label htmlFor='producers'>Producers </label>
         <input
           id='producers'
-          type='text'
+          type='number'
           name='producers'
-          defaultValue={producers}
+          defaultValue={pInput}
+          placeholder={producers}
           onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
-          onChange={(e) => setProducers(e.target.value)}
+          onChange={(e) => setPInput(e.target.value)}
         />
-        <label htmlFor='kafka-port'> {producers} </label>
+        {/* <label htmlFor='producers'> {producers} </label> */}
       </div>
 
       <div className="setting">
         <label htmlFor='consumers'>Consumers</label>
         <input 
           id="consumers"
-          type="text" 
+          type="number" 
           name="consumers"
-          defaultValue={consumers}
+          defaultValue={cInput}
+          placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
-          onChange={(e) => setConsumers(e.target.value)}
+          onChange={(e) => setCInput(e.target.value)}
         />
-        <label htmlFor="consumers">{consumers}</label>
+        {/* <label htmlFor="consumers">{consumers}</label> */}
       </div>
 
 
@@ -212,7 +228,7 @@ const Settings = () => {
           defaultValue={metricCount}
           onChange={(e) => setInput(e)}
         ></input>
-        <label htmlFor='kafka-port'>{metricCount}</label>
+        <label htmlFor='metric-count'>{metricCount}</label>
       </div>
 
      
