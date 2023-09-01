@@ -2,7 +2,6 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dataController from './dataController';
-import settings from '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json' assert {type: 'json'};
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

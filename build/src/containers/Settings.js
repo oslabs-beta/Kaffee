@@ -39,9 +39,9 @@ const Settings = () => {
         });
     };
     const updateSettings = (param, val) => {
-        if (param === 'kafka-port' ||
-            param === 'zookeeper-port' ||
-            param === 'JMX-port' ||
+        if (param === 'KAFKA_PORT' ||
+            param === 'ZOOKEEPER_PORT' ||
+            param === 'JMX_PORT' ||
             param === 'metric-count') {
             val = Number(val);
         }
@@ -55,20 +55,20 @@ const Settings = () => {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         })
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .then(fetchSettings)
+            .then((response) => console.log(response))
+            .then(fetchSettings())
             .catch((error) => console.error('Error:', error));
     };
     fetchSettings();
     const handleEnterPress = (e, param, val) => {
         if (e.key === 'Enter') {
+            console.log(val, param);
             updateSettings(param, val);
-            if (param === 'kafka-port')
+            if (param === 'KAFKA_PORT')
                 setkInput('');
-            if (param === 'zookeeper-port')
+            if (param === 'ZOOKEEPER_PORT')
                 setzInput('');
-            if (param === 'JMX-port')
+            if (param === 'JMX_PORT')
                 setjInput('');
             if (param === 'log-filepath')
                 setfInput('');
@@ -98,7 +98,7 @@ const Settings = () => {
         dispatch(changeMetricCount(e.target.value));
         updateSettings(e.target.id, e.target.value);
     }
-    return (_jsxs("div", { className: 'settings-container', children: [_jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'kafka-port', children: "Kafka Port " }), _jsx("input", { id: 'kafka-port', type: 'text', name: 'kafka-port-num', defaultValue: kInput, onKeyDown: (e) => handleEnterPress(e, 'kafka-port', kInput), onChange: (e) => setkInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", kafka, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'zookeeper-port', children: "Zookeeper Port " }), _jsx("input", { id: 'zookeeper-port', type: 'text', name: 'zookeeper-port-num', defaultValue: zInput, onKeyDown: (e) => handleEnterPress(e, 'zookeeper-port', zInput), onChange: (e) => setzInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", zookeeper, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'JMX-port', children: "JMX Port " }), _jsx("input", { id: 'JMX-port', type: 'text', name: 'JMX-port-num', defaultValue: jInput, onKeyDown: (e) => handleEnterPress(e, 'JMX-port', jInput), onChange: (e) => setjInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", JMX, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'log-filepath', children: "Log Filepath " }), _jsx("input", { id: 'log-filepath', type: 'text', name: 'log-filepath-string', defaultValue: fInput, onKeyDown: (e) => handleEnterPress(e, 'log-filepath', fInput), onChange: (e) => setfInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [filepath, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'metric-count', children: "Metric Count" }), _jsx("input", { id: 'metric-count', name: 'metric-count', type: 'range', min: '10', max: '500', step: '10', defaultValue: metricCount, onChange: (e) => setInput(e) }), _jsx("label", { htmlFor: 'kafka-port', children: metricCount })] })] }));
+    return (_jsxs("div", { className: 'settings-container', children: [_jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'kafka-port', children: "Kafka Port " }), _jsx("input", { id: 'kafka-port', type: 'text', name: 'kafka-port-num', defaultValue: kInput, onKeyDown: (e) => handleEnterPress(e, 'KAFKA_PORT', kInput), onChange: (e) => setkInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", kafka, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'zookeeper-port', children: "Zookeeper Port " }), _jsx("input", { id: 'zookeeper-port', type: 'text', name: 'zookeeper-port-num', defaultValue: zInput, onKeyDown: (e) => handleEnterPress(e, 'ZOOKEEPER_PORT', zInput), onChange: (e) => setzInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", zookeeper, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'JMX-port', children: "JMX Port " }), _jsx("input", { id: 'JMX-port', type: 'text', name: 'JMX-port-num', defaultValue: jInput, onKeyDown: (e) => handleEnterPress(e, 'JMX_PORT', jInput), onChange: (e) => setjInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [" ", JMX, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'log-filepath', children: "Log Filepath " }), _jsx("input", { id: 'log-filepath', type: 'text', name: 'log-filepath-string', defaultValue: fInput, onKeyDown: (e) => handleEnterPress(e, 'log-filepath', fInput), onChange: (e) => setfInput(e.target.value) }), _jsxs("label", { htmlFor: 'kafka-port', children: [filepath, " "] })] }), _jsxs("div", { className: 'setting', children: [_jsx("label", { htmlFor: 'metric-count', children: "Metric Count" }), _jsx("input", { id: 'metric-count', name: 'metric-count', type: 'range', min: '10', max: '500', step: '10', defaultValue: metricCount, onChange: (e) => setInput(e) }), _jsx("label", { htmlFor: 'kafka-port', children: metricCount })] })] }));
 };
 export default Settings;
 //# sourceMappingURL=Settings.js.map

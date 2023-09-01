@@ -1,9 +1,9 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
-import dataController from './Controllers/dataController';
-import metricsController from './Controllers/metricsController';
-import testController from './Controllers/testController';
-import settingsController from './Controllers/settingsController';
+import dataController from './Controllers/dataController.js';
+import metricsController from './Controllers/metricsController.js';
+import testController from './Controllers/testController.js';
+import settingsController from './Controllers/settingsController.js';
 import cors from 'cors';
 
 const app: Express = express();

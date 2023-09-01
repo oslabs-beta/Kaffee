@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'path';
-import dataController from './Controllers/dataController';
-import metricsController from './Controllers/metricsController';
-import testController from './Controllers/testController';
-import settingsController from './Controllers/settingsController';
+import dataController from './Controllers/dataController.js';
+import metricsController from './Controllers/metricsController.js';
+import testController from './Controllers/testController.js';
+import settingsController from './Controllers/settingsController.js';
 import cors from 'cors';
 const app = express();
 const PORT = 3030;
@@ -64,7 +64,7 @@ app.use('/updateSettings', dataController['updateSettings'], (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.status(200).json();
+    res.sendStatus(200);
 });
 app.use('/getSettings', dataController['getSettings'], (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
