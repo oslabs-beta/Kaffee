@@ -11,7 +11,7 @@
     "start": "node --loader ts-node/esm ./ts-server/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "node --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js"
+    "dev": "cd java-server/server && mvn spring-boot:run & cd ../../ && nodemon --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
@@ -45,6 +45,7 @@
     "@types/webpack-env": "^1.18.1",
     "babel-loader": "^9.1.3",
     "chart.js": "^4.3.3",
+    "concurrently": "^8.2.1",
     "cors": "^2.8.5",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
