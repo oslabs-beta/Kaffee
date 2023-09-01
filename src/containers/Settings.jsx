@@ -62,9 +62,8 @@ const Settings = () => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(fetchSettings)
+      .then((response) => console.log(response))
+      .then(fetchSettings())
       .catch((error) => console.error('Error:', error));
   };
 
