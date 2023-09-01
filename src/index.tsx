@@ -2,23 +2,17 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.ts';
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import './styles/style.scss';
 
-import App, { loader as appLoader } from './App.tsx';
-import ErrorPage from './containers/ErrorPage.tsx';
+import App, { loader as appLoader } from './App.jsx';
+import ErrorPage from './containers/ErrorPage.jsx';
 import Main from './containers/Main.jsx';
 import Settings, { loader as settingLoader } from './containers/Settings.jsx';
 import History from './containers/History.jsx';
 import SocketTest from './components/SocketTest.jsx';
 import { loader as navLoader } from './containers/NavBar.jsx';
-import { json } from 'stream/consumers';
 
 const router = createBrowserRouter([
   {

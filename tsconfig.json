@@ -29,7 +29,7 @@
     "src/**/*.tsx",
     "ts-server/**/*.ts",
     "ts-server/**/*.tsx",
-    "src/utils/socket.js"
+    "src/containers/ErrorPage.jsx"
   ],
   "exclude": ["node_modules"]
 }

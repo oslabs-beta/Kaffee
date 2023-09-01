@@ -50,6 +50,7 @@ function formatDate(): string {
 
 const dataController: object = {
   //middleware to fetch data from local json file
+  getLogNames: (req: Request, res: Response, next: NextFunction) => {},
   getData: (req: Request, res: Response, next: NextFunction) => {
     fs.readFile(filePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
       if (err) {
@@ -61,23 +62,51 @@ const dataController: object = {
   },
   //middleware to write data to the local json file
   addData: (req: Request, res: Response, next: NextFunction) => {
+    type SetObj = {
+      [name: string]: Array<number>;
+    };
+
+    type HistoryObject = {
+      [metric: string]: {
+        labels: Array<number>;
+        datasets: Array<SetObj>;
+      };
+    };
+
     try {
-      console.log(req.body);
       const filename = formatDate() + '_log.json';
-      console.log(filename);
       filePath = path.resolve(__dirname, `../History/${filename}`);
-      console.log(filePath);
-      fs.appendFile(filePath, JSON.stringify(req.body, null, 2), (err) => {
-        if (err) {
-          console.log(err);
+      const newData = req.body;
+      let fileObj: HistoryObject = {};
+
+      try {
+        const file = fs.readFileSync(filePath, 'utf-8');
+        fileObj = JSON.parse(file);
+        const metric: string = Object.keys(newData)[0];
+        if (!Object.keys(fileObj).includes(metric)) {
+          fileObj[metric] = newData[metric];
         } else {
-          console.log('file written');
-          next();
+          fileObj = JSON.parse(file);
+          fileObj[metric].labels.push(...newData[metric].labels);
+          for (const newMetrics of newData[metric].datasets) {
+            for (const savedMetrics of fileObj[metric].datasets) {
+              if (savedMetrics.label === newMetrics.label) {
+                savedMetrics.data.push(...newMetrics.data);
+              }
+            }
+          }
         }
-      });
+      } catch (err) {
+        fileObj = newData;
+      }
+      console.log(fileObj);
+
+      fs.writeFileSync(filePath, JSON.stringify(fileObj));
+
+      return next();
     } catch (error) {
       console.log(error);
-      next({ errMsg: 'err', err: 500 });
+      return next({ errMsg: 'err', err: 500 });
     }
   },
   //middleware to delete data from the local json file

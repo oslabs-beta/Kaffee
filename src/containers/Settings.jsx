@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import path from 'path';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeMetricCount } from '../reducers/chartSlice.js';
+import {
+  setJmxPort,
+  setKafkaPort,
+  setLogFilepath,
+  setZookeeperPort,
+} from '../reducers/settingSlice.js';
 import { useLoaderData } from 'react-router';
 
 async function getDirectory() {
@@ -32,6 +38,13 @@ const Settings = () => {
   const [metricTimeout, setMetricTimeout] = useState(null);
 
   const metricCount = useSelector((state) => state.charts.metricCount);
+
+  // we load this data when we first boot the app. We shouldn't make 2 calls.
+  // saving for later.
+  // const filepath = useSelector((state) => state.settings.logfilePath);
+  // const JMX = useSelector((state) => state.settings.jmxPort);
+  // const zookeeper = useSelector((state) => state.settings.zookeeperPort);
+  // const kafka = useSelector((state) => state.settings.kafkaPort);
 
   const dispatch = useDispatch();
   const data = useLoaderData();
@@ -104,7 +117,7 @@ const Settings = () => {
   };
 
   function setInput(e) {
-    dispatch(changeMetricCount(e.target.value));
+    dispatch(changeMetricCount(e.target.value * 10));
 
     if (metricTimeout) {
       clearTimeout(metricTimeout);
@@ -166,14 +179,14 @@ const Settings = () => {
         <label htmlFor='kafka-port'>{filepath} </label>
       </div>
       <div className='setting'>
-        <label htmlFor='metric-count'>Metric Count</label>
+        <label htmlFor='metric-count'>Seconds of Data Displayed</label>
         <input
           id='metric-count'
           name='metric-count'
           type='range'
-          min='10'
-          max='500'
-          step='10'
+          min='1'
+          max='60'
+          step='5'
           value={metricCount}
           onChange={(e) => setInput(e)}
         ></input>

@@ -20,6 +20,10 @@ export function metricListFriendly(metricList) {
   return returnList;
 }
 
+export function parseMetricName(metricName) {
+  return metricName.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
 export const friendlyList = {
   'bytes-in': 'Server Bytes In',
   'isr-shrinks': 'Rate of In Sync Replica Shrinking',
@@ -57,3 +61,42 @@ export const metricColors = [
   '255, 0, 255',
   '0, 255, 255',
 ];
+
+const gridColor = '192, 152, 106, .6';
+const toolTipColor = `222, 215, 217`;
+export const chartOptionsInit = {
+  responsive: true,
+  type: 'line',
+  plugins: {
+    legend: {
+      position: 'bottom',
+    },
+    title: {
+      display: true,
+      text: '',
+    },
+    tooltip: {
+      titleColor: `rgba(${toolTipColor}, .8)`,
+      bodyColor: `rgba(${toolTipColor}, .6)`,
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        color: `rgba(${gridColor})`,
+      },
+      border: {
+        color: `rgba(${gridColor})`,
+      },
+    },
+    y: {
+      grid: {
+        color: `rgba(${gridColor})`,
+      },
+      border: {
+        color: `rgba(${gridColor})`,
+      },
+    },
+  },
+  updateMode: 'active',
+};
