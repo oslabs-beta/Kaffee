@@ -130,36 +130,53 @@ const dataController: object = {
   //middleware to update user settings in settings.json
   updateSettings: (req: Request, res: Response, next: NextFunction) => {
     const { settingName, newValue } = req.body;
-    const settingsPath = path.resolve(
-      __dirname,
-      '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json'
-    );
-    fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
-      if (readErr) {
-        console.error('Error reading settings:', readErr);
-        return res.status(500).json({ error: 'Error reading settings' });
-      }
-      const settings = JSON.parse(data);
-      settings[settingName] = newValue;
-      console.log(newValue);
-      fs.writeFile(
-        settingsPath,
-        JSON.stringify(settings, null, 2),
-        'utf-8',
-        (writeErr) => {
-          if (writeErr) {
-            console.error('Error writing settings:', writeErr);
-            return res.status(500).json({ error: 'Error updating settings' });
-          }
-          console.log('Setting updated successfully');
-          return res
-            .status(200)
-            .json({ message: 'Setting updated successfully' });
+    if (process.env.NODE_ENV === 'dev') {
+      const settingsPath = path.resolve(__dirname, '../Settings/settings.json');
+      fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
+        if (readErr) {
+          console.error('Error reading settings:', readErr);
+          return res.status(500).json({ error: 'Error reading settings' });
         }
+        const settings = JSON.parse(data);
+        settings[settingName] = newValue;
+        console.log(newValue);
+        fs.writeFile(
+          settingsPath,
+          JSON.stringify(settings, null, 2),
+          'utf-8',
+          (writeErr) => {
+            if (writeErr) {
+              console.error('Error writing settings:', writeErr);
+              return res.status(500).json({ error: 'Error updating settings' });
+            }
+            console.log('Setting updated successfully');
+            return res
+              .status(200)
+              .json({ message: 'Setting updated successfully' });
+          }
+        );
+      });
+      fetch(`http://localhost:8080/set${settingName}`);
+      next();
+    } else if (process.env.NODE_ENV === 'prod') {
+      const settingsPath = path.resolve(
+        __dirname,
+        '../../build/target/classes/settings.json'
       );
-    });
-    fetch(`http://localhost:8080/set${settingName}`);
-    next();
+      fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
+        if (readErr) {
+          console.error('Error reading settings:', readErr);
+          return res.status(500).json({ error: 'Error reading settings' });
+        }
+        const settings = JSON.parse(data);
+        settings[settingName] = newValue;
+        fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => {
+          console.log(err);
+        });
+      });
+      fetch(`http://localhost:8080/set${settingName}`);
+      next();
+    }
   },
 
   //middleware to get user settings in settings.json

@@ -1,0 +1,17 @@
+com/kaffee/server/controllers/ServerMetricController.class
+com/kaffee/server/models/MessageData.class
+com/kaffee/server/UserSettings/ReadSettings.class
+com/kaffee/server/controllers/ProducerMetricController.class
+com/kaffee/server/controllers/SocketController.class
+com/kaffee/server/test/TestProducer.class
+com/kaffee/server/ServerApplication.class
+com/kaffee/server/WebSocketConfig.class
+com/kaffee/server/models/MetricSubscriptions.class
+com/kaffee/server/test/KafkaProducerConfig.class
+com/kaffee/server/test/TestConsumer.class
+com/kaffee/server/controllers/ScheduledMessagesController.class
+com/kaffee/server/controllers/ProducerMetricController$1.class
+com/kaffee/server/test/KafkaConsumerConfig.class
+com/kaffee/server/WebConfig.class
+com/kaffee/server/models/MetricSubscriptions$1.class
+com/kaffee/server/test/RunTest.class
