@@ -10,13 +10,23 @@ async function getDirectory() {
 
 const Settings = () => {
   const [kafka, setKafka] = useState();
-  const [zookeeper, setZookeeper] = useState();
+  // const [zookeeper, setZookeeper] = useState();
   const [JMX, setJMX] = useState();
   const [filepath, setFilepath] = useState();
+
   const [kInput, setkInput] = useState('');
-  const [zInput, setzInput] = useState('');
+  // const [zInput, setzInput] = useState('');
   const [jInput, setjInput] = useState('');
   const [fInput, setfInput] = useState('');
+
+  const [producers, setProducers] = useState();
+  const [consumers, setConsumers] = useState();
+  const [kafkaURL, setKafkaURL] = useState();
+
+  const [kURLInput, setkURLInput] = useState('');
+  const [cInput, setCInput] = useState('');
+  const [pInput, setPInput] = useState('');
+
 
   const metricCount = useSelector((state) => state.charts.metricCount);
 
@@ -33,7 +43,7 @@ const Settings = () => {
       .then((data) => {
         // console.log(data, 'this is the fetch call');
         setKafka(data['kafka-port']);
-        setZookeeper(data['zookeeper-port']);
+        // setZookeeper(data['zookeeper-port']);
         setJMX(data['JMX-port']);
         setFilepath(data['log-filepath']);
         // console.log(filepath);
@@ -46,7 +56,7 @@ const Settings = () => {
   const updateSettings = (param, val) => {
     if (
       param === 'KAFKA_PORT' ||
-      param === 'ZOOKEEPER_PORT' ||
+      // param === 'ZOOKEEPER_PORT' ||
       param === 'JMX_PORT' ||
       param === 'metric-count'
     ) {
@@ -72,10 +82,9 @@ const Settings = () => {
 
   const handleEnterPress = (e, param, val) => {
     if (e.key === 'Enter') {
-      console.log(val, param)
       updateSettings(param, val);
       if (param === 'KAFKA_PORT') setkInput('');
-      if (param === 'ZOOKEEPER_PORT') setzInput('');
+      // if (param === 'ZOOKEEPER_PORT') setzInput('');
       if (param === 'JMX_PORT') setjInput('');
       if (param === 'log-filepath') setfInput('');
     }
@@ -123,18 +132,21 @@ const Settings = () => {
         />
         <label htmlFor='kafka-port'> {kafka} </label>
       </div>
-      <div className='setting'>
-        <label htmlFor='zookeeper-port'>Zookeeper Port </label>
-        <input
-          id='zookeeper-port'
-          type='text'
-          name='zookeeper-port-num'
-          defaultValue={zInput}
-          onKeyDown={(e) => handleEnterPress(e, 'ZOOKEEPER_PORT', zInput)}
-          onChange={(e) => setzInput(e.target.value)}
+
+
+      <div className="setting">
+        <label htmlFor='kafkaURL'>Kafka URL</label>
+        <input 
+          id='kafkaURL'
+          type="text" 
+          name='kafkaURL'
+          defaultValue={(e) => handleEnterPress(e, 'kafkaURL', kURLInput)}
+          onChange={(e) => setKafkaURL(e.target.value)}
         />
-        <label htmlFor='kafka-port'> {zookeeper} </label>
+        <label htmlFor='kafkaURL'> {kafkaURL} </label>
       </div>
+
+
       <div className='setting'>
         <label htmlFor='JMX-port'>JMX Port </label>
         <input
@@ -145,8 +157,9 @@ const Settings = () => {
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
           onChange={(e) => setjInput(e.target.value)}
         />
-        <label htmlFor='kafka-port'> {JMX} </label>
+        <label htmlFor='JMX-port'> {JMX} </label>
       </div>
+    
       <div className='setting'>
         <label htmlFor='log-filepath'>Log Filepath </label>
         <input
@@ -160,6 +173,34 @@ const Settings = () => {
         />
         <label htmlFor='kafka-port'>{filepath} </label>
       </div>
+
+      <div className='setting'>
+        <label htmlFor='producers'>Producers </label>
+        <input
+          id='producers'
+          type='text'
+          name='producers'
+          defaultValue={producers}
+          onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
+          onChange={(e) => setProducers(e.target.value)}
+        />
+        <label htmlFor='kafka-port'> {producers} </label>
+      </div>
+
+      <div className="setting">
+        <label htmlFor='consumers'>Consumers</label>
+        <input 
+          id="consumers"
+          type="text" 
+          name="consumers"
+          defaultValue={consumers}
+          onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
+          onChange={(e) => setConsumers(e.target.value)}
+        />
+        <label htmlFor="consumers">{consumers}</label>
+      </div>
+
+
       <div className='setting'>
         <label htmlFor='metric-count'>Metric Count</label>
         <input
@@ -174,8 +215,24 @@ const Settings = () => {
         ></input>
         <label htmlFor='kafka-port'>{metricCount}</label>
       </div>
+
+     
     </div>
   );
 };
 
 export default Settings;
+
+
+{/* <div className='setting'>
+<label htmlFor='zookeeper-port'>Zookeeper Port </label>
+<input
+  // id='zookeeper-port'
+  type='text'
+  // name='zookeeper-port-num'
+  defaultValue={zInput}
+  // onKeyDown={(e) => handleEnterPress(e, 'ZOOKEEPER_PORT', zInput)}
+  onChange={(e) => setzInput(e.target.value)}
+/>
+<label htmlFor='kafka-port'> {zookeeper} </label>
+</div> */}

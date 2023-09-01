@@ -132,6 +132,7 @@ app.use(
 
 app.use(
   '/getSettings',
+  () => console.log('inside "server.ts/getSettings'),
   dataController['getSettings' as dataKey],
   (req: Request, res: Response) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
