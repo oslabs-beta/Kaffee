@@ -1,9 +1,0 @@
-{
-  "kafka-port": 9094,
-  "zookeeper-port": 2181,
-  "JMX_PORT": 9092,
-  "log-filepath": "Desktop",
-  "producers": 1,
-  "testTime": 5,
-  "metric-count": 40
-},

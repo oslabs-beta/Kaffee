@@ -93,8 +93,10 @@ const dataController: object = {
       }
       const settings = JSON.parse(data);
       settings[settingName] = newValue;
-      next()
+      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => {console.log(err)})
     });
+    fetch(`http://localhost:8080/set${settingName}`)
+    next();
   },
 
   //middleware to get user settings in settings.json
@@ -107,6 +109,7 @@ const dataController: object = {
       }
       const settings = JSON.parse(data);
       res.locals.settings = settings;
+      console.log(settings)
       next();
     })
   }
