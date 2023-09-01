@@ -1,8 +1,8 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import NavBar from './containers/NavBar';
-import { setClient } from './reducers/socketSlice';
+import NavBar from './containers/NavBar.jsx';
+import { setClient } from './reducers/socketSlice.js';
 import client from './utils/socket.js';
 import { useDispatch, useSelector } from 'react-redux';
 export default function App() {

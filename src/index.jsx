@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import store from './redux/store';
+import store from './redux/store.ts';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,13 +10,13 @@ import {
 } from 'react-router-dom';
 import './styles/style.scss';
 
-import App from './App'
-import Main from './containers/Main';
-import NavBar from './containers/NavBar';
-import Clusters from './containers/Clusters';
-import History from './containers/History';
-import Settings from './containers/Settings';
-import ErrorPage from './error-page';
+import App from './App.jsx'
+import Main from './containers/Main.jsx';
+import NavBar from './containers/NavBar.jsx';
+import Clusters from './containers/Clusters.jsx';
+import History from './containers/History.jsx';
+import Settings from './containers/Settings.jsx';
+import ErrorPage from './error-page.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
