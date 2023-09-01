@@ -47,14 +47,19 @@ const Settings = () => {
   // const kafka = useSelector((state) => state.settings.kafkaPort);
 
   const dispatch = useDispatch();
-  const data = useLoaderData();
+
+  // const data = useLoaderData();
 
   useEffect(() => {
-    setKafka(data['kafka-port']);
-    setZookeeper(data['zookeeper-port']);
-    setJMX(data['JMX-port']);
-    setFilepath(data['log-filepath']);
-    dispatch(changeMetricCount(data['metric-count']));
+    async function setSettings() {
+      const data = await loader();
+      setKafka(data['kafka-port']);
+      setZookeeper(data['zookeeper-port']);
+      setJMX(data['JMX-port']);
+      setFilepath(data['log-filepath']);
+      dispatch(changeMetricCount(data['metric-count']));
+    }
+    setSettings();
   }, []);
 
   const updateSettings = (param, val) => {

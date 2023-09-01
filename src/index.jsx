@@ -10,19 +10,19 @@ import {
 } from 'react-router-dom';
 import './styles/style.scss';
 
-import App from './App'
+import App from './App';
 import Main from './containers/Main';
-import NavBar from './containers/NavBar';
 import Clusters from './containers/Clusters';
 import History from './containers/History';
 import Settings from './containers/Settings';
-import ErrorPage from './error-page';
+import ErrorPage from './containers/ErrorPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       path='/'
       element={<App />}
+      errorElement={<ErrorPage />}
     >
       <Route
         index

@@ -126,6 +126,7 @@ button {
   flex-direction: column;
   background-color: rgb(var(--ternary-bg));
   overflow: hidden;
+  overflow-y: scroll;
   z-index: 1;
 }
 

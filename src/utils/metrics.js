@@ -62,6 +62,9 @@ export const metricColors = [
   '0, 255, 255',
 ];
 
+// since I can't seem to assign these in the CSS file
+// these are colors imported from the CSS. If they change there,
+// we probably want to update these
 const gridColor = '192, 152, 106, .6';
 const toolTipColor = `222, 215, 217`;
 export const chartOptionsInit = {

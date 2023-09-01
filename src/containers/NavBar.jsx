@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import { metricListFriendly } from '../utils/metrics.js';
-
-async function getMetricsList() {}
 
 export async function loader() {
   try {
@@ -35,7 +33,19 @@ export default function NavBar() {
   const location = useLocation();
 
   const dispatch = useDispatch();
-  const { metrics } = useLoaderData();
+
+  // this is a holdover from using the new react-router methods in 6.4
+  // const { metrics } = useLoaderData();
+
+  const [metrics, setMetrics] = useState(null);
+  useEffect(() => {
+    async function getMetricsList() {
+      const metrics = await loader();
+      setMetrics(metrics);
+    }
+
+    getMetricsList();
+  }, []);
 
   function handleToggleChart(metricId) {
     const checkbox = document.querySelector(`#${metricId}`);

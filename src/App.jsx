@@ -31,8 +31,8 @@ export async function loader() {
 export const SocketContext = createContext(null);
 
 export default function App() {
-  // can we do this without any?
-  const data = useLoaderData();
+  // this is a holdover from using the new react-router methods in 6.4
+  // const data = useLoaderData();
   const dispatch = useDispatch();
 
   const [client, setClient] = useState(null);
@@ -50,12 +50,15 @@ export default function App() {
     };
 
     const client = new Client(options);
-    setClient(client);
     client.activate();
+    console.log(client.active);
+    setClient(client);
   }
 
-  useEffect(() => {
-    // check that we have metric-count and set it in the app
+  // check that we have metric-count and set it in the app
+  async function setData() {
+    const data = { settings: null };
+    data.settings = await loader();
     if (data.settings['metric-count']) {
       dispatch(changeMetricCount(data.settings['metric-count']));
     }
@@ -71,6 +74,10 @@ export default function App() {
     if (data['log-filepath']) {
       dispatch(setLogFilepath(data.settings['log-filepath']));
     }
+  }
+
+  useEffect(() => {
+    setData();
 
     socketConnect();
   }, []);

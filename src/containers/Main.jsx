@@ -26,7 +26,6 @@ import {
 export default function () {
   // const charts = useSelector((state: Array<ChartObj> ) => state.charts.list);
   const charts = useSelector((state) => state.charts.list);
-  const status = useSelector((state) => state.charts.status);
 
   useEffect(() => {
     try {
@@ -40,68 +39,6 @@ export default function () {
     };
   }, []);
 
-  // used in creating a test chart
-  // const [data, setData] = useState([]);
-  // const [labels, setLabels] = useState([]);
-
-  // used in creating a test chart
-  // const gridColor = '192, 152, 106, .6';
-  // const toolTipColor = `222, 215, 217`;
-  // const options = {
-  //   responsive: true,
-  //   type: 'line',
-  //   plugins: {
-  //     legend: {
-  //       position: 'bottom',
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: 'Test',
-  //     },
-  //     tooltip: {
-  //       titleColor: `rgba(${toolTipColor}, .8)`,
-  //       bodyColor: `rgba(${toolTipColor}, .6)`,
-  //     },
-  //   },
-  //   scales: {
-  //     x: {
-  //       grid: {
-  //         color: `rgba(${gridColor})`,
-  //       },
-  //       border: {
-  //         color: `rgba(${gridColor})`,
-  //       },
-  //     },
-  //     y: {
-  //       grid: {
-  //         color: `rgba(${gridColor})`,
-  //       },
-  //       border: {
-  //         color: `rgba(${gridColor})`,
-  //       },
-  //     },
-  //   },
-  //   updateMode: 'active',
-  // };
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const defaultData = {
-  //       backgroundColor: 'rgba(255, 0, 0, .8)',
-  //       borderColor: 'rgba(255, 0, 0, .6)',
-  //       fill: true,
-  //     };
-
-  //     const res = await fetch('http://localhost:3030/dummy/10');
-  //     const data = await res.json();
-  //     setData(Object.assign(defaultData, data));
-
-  //     const labels = data.data?.map((_, i) => (i + 1) * 100);
-  //     setLabels(labels);
-  //   };
-  //   getData();
-  // }, []);
-
   return (
     <>
       {/* <Cluster /> */}
@@ -112,20 +49,11 @@ export default function () {
             return (
               <Chart
                 key={chart.metric}
-                props={chart}
+                metric={chart.metric}
                 id={chart.metric}
               />
             );
           })}
-          {/* <div className='chartCanvas'>
-            <Line
-              options={options}
-              data={{
-                labels: labels,
-                datasets: [data],
-              }}
-            />
-          </div> */}
         </div>
       </div>
       {/* <SearchBar /> */}

@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useRef,
   useContext,
+  useMemo,
 } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -38,15 +39,10 @@ Chart.register(
   Legend
 );
 
-// since I can't seem to assign these in the CSS file
-// these are colors imported from the CSS. If they change there,
-// we probably want to update these
-
 export default function (props) {
   let beginTime;
   let lastSentTime;
 
-  let options = useRef(optionsInit);
   let chartRef = useRef(null);
   const updatingData = useRef(false);
 
@@ -64,13 +60,17 @@ export default function (props) {
   const metricCount = useSelector((state) => state.charts.metricCount);
   const { client } = useContext(SocketContext);
 
+  const options = useMemo(() => optionsInit, [options]);
+  console.log(options);
   useEffect(() => {
     // Set the title based upon the list of friendly metric names
     // stored in '../utils/metrics
-    options.current.plugins.title.text = friendlyList[props.metric];
+    options.plugins.title.text = friendlyList[props.metric];
 
     // if we have a props.data, we are loading from historical data
-    if (props.data) {
+    if (Object.hasOwn(props, 'data')) {
+      options.updateMode = 'none';
+
       const modifiedLabels = [];
       props.data.labels.forEach((label) => {
         const timeStamp = new Date(label);
@@ -112,6 +112,7 @@ export default function (props) {
     // this is used to make each line in the chart different
     // using the colors defined in ../utils.metricColors
     let colorInd = 0;
+    console.log('in addEvents');
 
     const body = JSON.parse(message.body);
 
@@ -148,15 +149,21 @@ export default function (props) {
       let metricLabel = parseMetricName(metric);
 
       // look through the data as it currently exists
-      for (const set of data) {
+      for (const ind in data) {
         // if this object has a label matching the metric we are seeing
+        const set = data[ind];
         if (set.label === metricLabel) {
+          console.log(`Data at index: ${ind}`);
+          console.log(`Is visible: ` + chartRef.current.isDatasetVisible(ind));
           // mark that we have this data
           inData = true;
           // add a new value to the data
           set.data.push(evalValue);
           while (set.data.length > metricCount) {
             set.data.shift();
+          }
+          if (!chartRef.current.isDatasetVisible(ind)) {
+            set.hidden = true;
           }
           break;
         }
@@ -244,7 +251,7 @@ export default function (props) {
       ) : (
         <Line
           datasetIdKey={props.metric}
-          options={options.current}
+          options={options}
           data={{
             labels: labels,
             datasets: data,
