@@ -130,11 +130,9 @@ const dataController: object = {
   //middleware to update user settings in settings.json
   updateSettings: (req: Request, res: Response, next: NextFunction) => {
     const { settingName, newValue } = req.body;
-    const settingsPath = path.join(
+    const settingsPath = path.resolve(
       __dirname,
-      '..',
-      'UserSettings',
-      'settings.json'
+      '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json'
     );
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
@@ -160,15 +158,15 @@ const dataController: object = {
         }
       );
     });
+    fetch(`http://localhost:8080/set${settingName}`);
+    next();
   },
 
   //middleware to get user settings in settings.json
   getSettings: (req: Request, res: Response, next: NextFunction) => {
-    const settingsPath = path.join(
+    const settingsPath = path.resolve(
       __dirname,
-      '..',
-      'UserSettings',
-      'settings.json'
+      '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json'
     );
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {
@@ -177,6 +175,7 @@ const dataController: object = {
       }
       const settings = JSON.parse(data);
       res.locals.settings = settings;
+      console.log(settings);
       next();
     });
   },
