@@ -1,3 +1,4 @@
 node_modules
 java-server/kafka_2.13-3.51
 ts-server/History
+/build
