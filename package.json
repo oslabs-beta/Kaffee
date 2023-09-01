@@ -10,7 +10,7 @@
   "scripts": {
     "start": "concurrently \"npm run start:ts\" \"npm run start:java\"",
     "start:ts": "node ./build/ts-server/server.js",
-    "start:java": "cd java-server/server && mvn spring-boot:run",
+    "start:java": "java -jar ./build/target/server-0.0.1-SNAPSHOT.jar",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:ts && npm run build:java",
     "build:ts": "tsc", 
