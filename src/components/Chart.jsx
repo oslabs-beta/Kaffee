@@ -42,7 +42,7 @@ Chart.register(
 // these are colors imported from the CSS. If they change there,
 // we probably want to update these
 
-export default function ({ props }) {
+export default function (props) {
   let beginTime;
   let lastSentTime;
 
@@ -65,6 +65,32 @@ export default function ({ props }) {
   const { client } = useContext(SocketContext);
 
   useEffect(() => {
+    // Set the title based upon the list of friendly metric names
+    // stored in '../utils/metrics
+    options.current.plugins.title.text = friendlyList[props.metric];
+
+    // if we have a props.data, we are loading from historical data
+    if (props.data) {
+      const modifiedLabels = [];
+      props.data.labels.forEach((label) => {
+        const timeStamp = new Date(label);
+        modifiedLabels.push(timeStamp.toLocaleTimeString('en-US'));
+      });
+
+      const modifiedDatasets = [];
+      props.data.datasets.forEach((set, i) => {
+        const rgb = metricColors[i];
+        set['borderColor'] = `rgba(${rgb}, 0.6)`;
+        set['backgroundColor'] = `rgba(${rgb}, 0.8)`;
+      });
+
+      setLabels(modifiedLabels);
+      setData(props.data.datasets);
+      setStatus('succeeded');
+      return;
+    }
+
+    // if we don't have props.data, we should get here
     if (updatingData.current) return;
     updatingData.current = true;
 
@@ -73,10 +99,6 @@ export default function ({ props }) {
     client.subscribe(path, (message) => {
       addEvents(message);
     });
-
-    // Set the title based upon the list of friendly metric names
-    // stored in '../utils/metrics
-    options.current.plugins.title.text = friendlyList[props.metric];
 
     // send a message to app/subscribe across the socket
     // to begin the scheduled tasks transmitting data for this metric

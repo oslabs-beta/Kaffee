@@ -23,7 +23,7 @@ function formatDate(): string {
   const date = new Date();
 
   // Extract year, month, and day
-  const year = date.getFullYear().toString().slice(-2); // Extract last 2 digits of year
+  const year = date.getFullYear().toString(); // Extract last 2 digits of year
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
   const day = String(date.getDate()).padStart(2, '0');
 
@@ -50,15 +50,28 @@ function formatDate(): string {
 
 const dataController: object = {
   //middleware to fetch data from local json file
-  getLogNames: (req: Request, res: Response, next: NextFunction) => {},
-  getData: (req: Request, res: Response, next: NextFunction) => {
-    fs.readFile(filePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
+  getLogFiles: (req: Request, res: Response, next: NextFunction) => {
+    const folderPath = path.resolve(__dirname, '../History/');
+
+    fs.readdir(folderPath, (err, files) => {
       if (err) {
-        console.error('error', err);
-        return;
+        return next(err);
       }
+
+      res.locals.filenames = files;
+      return next();
     });
-    return next();
+  },
+  getData: (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { filename } = req.params;
+      const filePath = path.resolve(__dirname, `../History/${filename}`);
+      const data = fs.readFileSync(filePath, 'utf-8');
+      res.locals.metrics = JSON.parse(data);
+      return next();
+    } catch (err) {
+      return next(err);
+    }
   },
   //middleware to write data to the local json file
   addData: (req: Request, res: Response, next: NextFunction) => {
@@ -99,7 +112,6 @@ const dataController: object = {
       } catch (err) {
         fileObj = newData;
       }
-      console.log(fileObj);
 
       fs.writeFileSync(filePath, JSON.stringify(fileObj));
 

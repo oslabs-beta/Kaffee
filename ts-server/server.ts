@@ -29,36 +29,56 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
 });
 
-app.use('/test', testController['runTest' as testKey],(req:Request, res:Response) => {
-  res.status(200).json(res.locals.data);
-})
+app.use(
+  '/test',
+  testController['runTest' as testKey],
+  (req: Request, res: Response) => {
+    res.status(200).json(res.locals.data);
+  }
+);
 
-app.use('/stopTest', testController['stopTest' as testKey],(req:Request,res:Response) => {
-  res.status(200).json(res.locals.data);
-})
-
+app.use(
+  '/stopTest',
+  testController['stopTest' as testKey],
+  (req: Request, res: Response) => {
+    res.status(200).json(res.locals.data);
+  }
+);
 
 // post requests to java server to update from settings.json
-app.use('/setJMX', settingsController['postJMXPort' as settingKey], (req:Request, res:Response) => {
-  res.sendStatus(200);
-})
-
-app.use('/setKafkaUrl', settingsController['postKafkaUrl' as settingKey], (req:Request, res:Response) => {
-  res.sendStatus(200);
-})
-
-app.use('/setKafkaPort', 
-  settingsController['postKafkaPort' as settingKey], 
-  (req:Request, res:Response) => {
+app.use(
+  '/setJMX',
+  settingsController['postJMXPort' as settingKey],
+  (req: Request, res: Response) => {
     res.sendStatus(200);
-})
+  }
+);
 
+app.use(
+  '/setKafkaUrl',
+  settingsController['postKafkaUrl' as settingKey],
+  (req: Request, res: Response) => {
+    res.sendStatus(200);
+  }
+);
 
+app.use(
+  '/setKafkaPort',
+  settingsController['postKafkaPort' as settingKey],
+  (req: Request, res: Response) => {
+    res.sendStatus(200);
+  }
+);
 
-app.use('/getBytes', metricsController['getBytes' as metricKey], dataController['addData' as metricKey], (req:Request,res:Response) => {
-  console.log(res.locals.data)
-  res.status(200).json(res.locals.data);
-})
+app.use(
+  '/getBytes',
+  metricsController['getBytes' as metricKey],
+  dataController['addData' as metricKey],
+  (req: Request, res: Response) => {
+    console.log(res.locals.data);
+    res.status(200).json(res.locals.data);
+  }
+);
 
 app.get(
   '/dummy/:count',
@@ -67,7 +87,6 @@ app.get(
     res.status(200).json(res.locals.data);
   }
 );
-
 
 app.use(
   '/getCluster',
@@ -94,10 +113,19 @@ app.use(
 );
 
 app.use(
-  '/getData',
+  '/getData/:filename',
   dataController['getData' as dataKey],
   (req: Request, res: Response) => {
-    res.sendStatus(200);
+    res.json(res.locals.metrics);
+  }
+);
+
+app.use(
+  '/getLogFiles',
+  dataController['getLogFiles' as dataKey],
+  (req: Request, res: Response) => {
+    console.log(res.locals);
+    res.json(res.locals.filenames);
   }
 );
 
@@ -105,7 +133,6 @@ app.use(
   '/addData',
   dataController['addData' as dataKey],
   (req: Request, res: Response) => {
-    console.log('addData')
     res.sendStatus(200);
   }
 );
@@ -122,7 +149,7 @@ app.use(
   '/updateSettings',
   dataController['updateSettings' as dataKey],
   (req: Request, res: Response) => {
-    console.log('route hit')
+    console.log('route hit');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -139,7 +166,7 @@ app.use(
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.status(200).json(res.locals.settings);
   }
-)
+);
 
 app.use('/', (req: Request, res: Response) => {
   res.status(404).send('What are you doing here?');
@@ -152,8 +179,7 @@ app.use((err: object, req: Request, res: Response) => {
   };
   const error = Object.assign(defaultErr, err);
   type ObjectKey = keyof typeof error;
-  res.status(error['status' as ObjectKey]).json(error['errMsg' as ObjectKey])
+  res.status(error['status' as ObjectKey]).json(error['errMsg' as ObjectKey]);
 });
-
 
 app.listen(PORT, () => console.log(`Connected to ${PORT}`));
