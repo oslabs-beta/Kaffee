@@ -1,35 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import { metricListFriendly } from '../utils/metrics.js';
 
-async function getMetricsList() {
-  const res = await fetch('http://localhost:8080/available-server-metrics');
-  const metricListRaw = await res.json();
+export async function loader() {
+  try {
+    const res = await fetch('http://localhost:8080/available-server-metrics');
 
-  const metricList = metricListFriendly(metricListRaw);
-  return metricList;
+    const metricListRaw = await res.json();
+
+    const metricList = metricListFriendly(metricListRaw);
+    return metricList;
+  } catch (err) {
+    throw new Error(
+      `Could not connect to the Java server. 
+      Please verify that the Java server is running.`,
+      // @ts-ignore
+      {
+        cause: err,
+      }
+    );
+  }
 }
 
-export default function NavBar({ props }) {
-  const [metrics, setMetrics] = useState([]);
+export default function NavBar() {
   const [run, setRun] = useState(false);
+  const [runningCharts, setRunningCharts] = useState({});
 
   const chartList = useSelector((state) => state.charts.list);
-  const metricCount = useSelector((state) => state.charts.metricCount);
   const location = useLocation();
 
   const dispatch = useDispatch();
 
+  // this is a holdover from using the new react-router methods in 6.4
+  // const { metrics } = useLoaderData();
+
   useEffect(() => {
-    async function getMetrics() {
-      const metrics = await getMetricsList();
+    const currentlyRunning = {};
+    chartList.forEach((chart) => {
+      const metric = chart.metric;
+      currentlyRunning[metric] = true;
+    });
+    setRunningCharts(currentlyRunning);
+  }, [chartList]);
+
+  const [metrics, setMetrics] = useState(null);
+  useEffect(() => {
+    async function getMetricsList() {
+      const metrics = await loader();
       setMetrics(metrics);
     }
 
-    getMetrics();
+    getMetricsList();
   }, []);
 
   function handleToggleChart(metricId) {
@@ -97,7 +121,7 @@ export default function NavBar({ props }) {
                         type='checkbox'
                         id={metric.name}
                         name={metric.name}
-                        defaultValue={chartList[metric]}
+                        checked={runningCharts[metric.name]}
                         onClick={() => handleToggleChart(metric.name)}
                       />
                       {metric.display}

@@ -53,7 +53,7 @@ const chartSlice = createSlice({
       // set maximum and minimum counts here as well as on the front end
       // this serves as some way of ensuring that data is displayed reasonably
       let MIN_COUNT = 10;
-      let MAX_COUNT = 500;
+      let MAX_COUNT = 600;
 
       let desiredCount = action.payload;
       if (desiredCount < MIN_COUNT) {

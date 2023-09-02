@@ -38,7 +38,6 @@ public class ScheduledMessagesController {
 
         MessageData message = new MessageData(metric.getKey(), data);
         String outputPath = "/metric/" + metric.getKey();
-        System.out.println(outputPath);
         simpMessagingTemplate.convertAndSend(outputPath, message);
         message = null;
       }

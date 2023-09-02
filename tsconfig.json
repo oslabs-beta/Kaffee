@@ -24,8 +24,8 @@
     "isolatedModules": true // Each file is treated as a separate module
   },
   "include": [
-    "src/**/*.ts",    // Include TypeScript files
-    "src/**/*.tsx",   // Include TypeScript React files
+    "src/**/*.ts", // Include TypeScript files
+    "src/**/*.tsx", // Include TypeScript React files
     "ts-server/**/*.ts", // Include backend TypeScript files
     "ts-server/**/*.tsx", // Include backend TypeScript React files
     "src/**/*.js",    // Include JavaScript files
