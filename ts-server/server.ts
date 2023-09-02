@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.ts';
 import metricsController from './Controllers/metricsController.ts';
@@ -9,6 +9,7 @@ import cors from 'cors';
 const app: Express = express();
 const PORT: number = 3030;
 app.use(cors());
+
 
 type dataKey = keyof typeof dataController;
 type metricKey = keyof typeof metricsController;
