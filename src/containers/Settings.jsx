@@ -33,15 +33,19 @@ const Settings = () => {
   const dispatch = useDispatch();
 
   const fetchSettings = () => {
+    // console.log('fS')
     fetch('http://localhost:3030/getSettings')
+
       .then((response) => {
         if (!response.ok) {
+          // console.log('fetch.res - ', response);
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data, 'this is the fetch call');
+        // console.log('fetch.res is ok');
+        // console.log(data, 'this is the fetch call');
         setKafka(data['KAFKA_PORT']);
         // setZookeeper(data['zookeeper-port']);
         setJMX(data['JMX_PORT']); // Changed from 'JMX-port'
@@ -78,7 +82,7 @@ const Settings = () => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
-      .then((response) => console.log(response))
+      // .then((response) => console.log(response))
       .then(fetchSettings())
       .catch((error) => console.error('Error:', error));
   };
@@ -112,7 +116,7 @@ const Settings = () => {
     const sep = path.sep;
     const dirArray = [];
     for await (const entry of directory.values()) {
-      console.log(entry.kind, entry.name);
+      // console.log(entry.kind, entry.name);
     }
     // console.log(dirArray);
     // const resolvedPath = dirArray.join(sep);
