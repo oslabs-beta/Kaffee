@@ -9,8 +9,8 @@
   "type": "module",
   "scripts": {
     "start": "concurrently \"npm run start:ts\" \"npm run start:java\"",
-    "start:ts": "NODE_ENV=prod nodemon ./build/ts-server/server.js",
-    "start:java": "java -jar ./build/target/server-0.0.1-SNAPSHOT.jar",
+    "start:ts": "NODE_ENV=prod nodemon ./ts-server/server.js",
+    "start:java": "java -jar ./target/server-0.0.1-SNAPSHOT.jar",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:ts && npm run build:java",
     "build:ts": "tsc && webpack --config ./webpack.config.js",

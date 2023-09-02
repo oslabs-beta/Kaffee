@@ -30,6 +30,7 @@ public class MetricSubscriptions {
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
     RESOLVED_URL = String.format(baseUrl, KAFKA_URL, SERVER_JMX_PORT);
+    System.out.println(RESOLVED_URL);
     serverMetrics = getServerMetricsStrings();
 
     subscribedServerMetrics = new HashMap<>();

@@ -85,21 +85,21 @@ const dataController: object = {
   //middleware to update user settings in settings.json
   updateSettings: (req: Request, res: Response, next: NextFunction) => {
     const { settingName, newValue } = req.body;
-    if(process.env.NODE_ENV === 'dev'){
-    const settingsPath = path.resolve(__dirname, '../Settings/settings.json');
-    fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
-      if (readErr) {
-        console.error('Error reading settings:', readErr);
-        return res.status(500).json({ error: 'Error reading settings'});
-      }
-      const settings = JSON.parse(data);
-      settings[settingName] = newValue;
-      fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => {console.log(err)})
-    });
-    fetch(`http://localhost:8080/set${settingName}`)
-    next();
-    }
-    else if(process.env.NODE_ENV === 'prod'){
+    // if(process.env.NODE_ENV === 'dev'){
+    // const settingsPath = path.resolve(__dirname, '../Settings/settings.json');
+    // fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
+    //   if (readErr) {
+    //     console.error('Error reading settings:', readErr);
+    //     return res.status(500).json({ error: 'Error reading settings'});
+    //   }
+    //   const settings = JSON.parse(data);
+    //   settings[settingName] = newValue;
+    //   fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => {console.log(err)})
+    // });
+    // fetch(`http://localhost:8080/set${settingName}`)
+    // next();
+    // }
+    // else if(process.env.NODE_ENV === 'prod'){
       const settingsPath = path.resolve(__dirname, '../../target/classes/settings.json');
       fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
         if (readErr) {
@@ -112,7 +112,7 @@ const dataController: object = {
       });
       fetch(`http://localhost:8080/set${settingName}`)
       next();
-      }
+      // }
   },
 
   //middleware to get user settings in settings.json
@@ -125,7 +125,7 @@ const dataController: object = {
       }
       const settings = JSON.parse(data);
       res.locals.settings = settings;
-      console.log(settings)
+      console.log(settings, 'these are the settings!!!!!!!!!')
       next();
     })
   }

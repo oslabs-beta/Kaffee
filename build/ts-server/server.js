@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, '../dist/')));
 app.get('/', (req, res) => {
-    console.log('asdfasdfasdfasdfasdfasdfasdfasdfasdf');
     res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
 });
 app.use('/test', testController['runTest'], (req, res) => {

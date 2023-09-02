@@ -4,25 +4,22 @@ RUN apk add --update nodejs npm
 
 WORKDIR /app
 
-COPY ./java-server /app/java-server
+COPY ./package.json /app/
 
-RUN cd /app/java-server/server && \
-  apk add maven && \
-  mvn clean install
+COPY ./webpack.config.js /app/
 
-COPY ./ts-server /app/ts-server
+COPY ./build/dist /app/dist
 
-RUN cd /app/ts-server && \
-  npm install && \
-  npm run build
+COPY ./build/target /app/target
 
-COPY ./webpack.config.js /app
-COPY ./src /app/src
+COPY ./build/ts-server /app/ts-server
+
+RUN npm install
+
+ENV HELLO=world
+ENV NODE_ENV=prod
 
 EXPOSE 8080
 EXPOSE 3030
-EXPOSE 8081
 
-CMD cd /app/java-server/server && mvn spring-boot:run & \
-    cd /app/ts-server && npm run start & \
-    webpack-dev-server --config webpack.config.js
+CMD npm start
