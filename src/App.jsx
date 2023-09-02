@@ -51,7 +51,6 @@ export default function App() {
 
     const client = new Client(options);
     client.activate();
-    console.log(client.active);
     setClient(client);
   }
 
