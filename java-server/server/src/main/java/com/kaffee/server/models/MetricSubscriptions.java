@@ -74,6 +74,7 @@ public class MetricSubscriptions {
 
   public JMXConnector connectToJMX() throws IOException {
     JMXServiceURL url = new JMXServiceURL(RESOLVED_URL);
+    System.out.println(RESOLVED_URL);
     return JMXConnectorFactory.connect(url);
   }
 

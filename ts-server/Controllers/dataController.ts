@@ -19,7 +19,7 @@ const desktopPath = path.join(os.homedir(), 'Desktop');
 let filePath = path.join(desktopPath, 'kaffee_log.json');
 const content = JSON.stringify('test');
 
-function formatDate(): string {
+export function formatDate(): string {
   const date = new Date();
 
   // Extract year, month, and day
