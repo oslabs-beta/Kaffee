@@ -10,7 +10,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("producer/")
+@RequestMapping("/")
 public class ProducerMetricController {
   private Map<String, String> producerMetricsMap = getProducerMetricMap();
 
@@ -24,11 +24,5 @@ public class ProducerMetricController {
       put("io-wait-time-ns-avg", "");
       put("batch-size-avg", "");
     }};
-  }
-
-
-  @GetMapping("/{metric}")
-  public double getByteRate(@PathVariable("metric")String metric) {
-    return 0.9;
   }
 }
