@@ -126,6 +126,7 @@ button {
   flex-direction: column;
   background-color: rgb(var(--ternary-bg));
   overflow: hidden;
+  overflow-y: scroll;
   z-index: 1;
 }
 
@@ -169,7 +170,7 @@ button {
   height: 80%;
   width: 100%;
   opacity: 0.06;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -202,7 +203,7 @@ button {
 }
 
 .chartCanvas {
-  min-width: 400px;
+  min-width: 600px;
   max-width: 1000px;
   margin: 2em;
   padding: 0.5em 0.75em;
@@ -292,8 +293,6 @@ header nav a.active button {
   align-items: center;
 }
 
-
-
 .history-item-container {
   display: flex;
   flex-direction: column; /* Change to column layout */
@@ -301,14 +300,25 @@ header nav a.active button {
   align-items: center;
   margin-top: 1vh;
   background-color: white;
-  width: 30vh;
+  min-width: 30vw;
+  max-width: 80vw;
   border-radius: 1vh;
 }
 
-
-
 .expanded-metrics {
-
-  margin-top: 1vh; /* Add margin to separate expanded metrics */
+  margin-top: 1em; /* Add margin to separate expanded metrics */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
+.error {
+  width: 50%;
+  margin: 3em auto;
+  padding: 1em;
+  background-color: rgb(var(--quaternary-bg));
+  display: block;
+  border-radius: var(--button-border-radius);
+  border: var(--border);
+  z-index: 1;
+}

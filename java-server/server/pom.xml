@@ -81,6 +81,14 @@
         </configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java/com/kaffee/server</directory>
+				<includes>
+					<include>**/*.json</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 </project>

@@ -1,9 +1,0 @@
-{
-  "KAFKA_PORT": 777,
-  "JMX_PORT": 3234,
-  "log-filepath": "Desktop",
-  "KAFKA_URL": "ENTER URL",
-  "producers": 55,
-  "consumers": 99,
-  "metric-count": 120
-}

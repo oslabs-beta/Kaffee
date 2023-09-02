@@ -2,10 +2,28 @@ import React, { useEffect, useState } from 'react';
 import path from 'path';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeMetricCount } from '../reducers/chartSlice.js';
+import {
+  setJmxPort,
+  setKafkaPort,
+  setLogFilepath,
+  setZookeeperPort,
+} from '../reducers/settingSlice.js';
+import { useLoaderData } from 'react-router';
 
 async function getDirectory() {
   const directory = await window.showDirectoryPicker();
   return directory;
+}
+
+export async function loader() {
+  try {
+    const res = await fetch('http://localhost:3030/getSettings');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error fetching settings', { cause: error });
+  }
 }
 
 const Settings = () => {
@@ -18,6 +36,7 @@ const Settings = () => {
   // const [zInput, setzInput] = useState('');
   const [jInput, setjInput] = useState('');
   const [fInput, setfInput] = useState('');
+  const [metricTimeout, setMetricTimeout] = useState(null);
 
   const [producers, setProducers] = useState();
   const [consumers, setConsumers] = useState();
@@ -27,37 +46,33 @@ const Settings = () => {
   const [cInput, setCInput] = useState('');
   const [pInput, setPInput] = useState('');
 
+  const metricCount = useSelector((state) => state.charts.metricCount / 10);
 
-  const metricCount = useSelector((state) => state.charts.metricCount);
+  // we load this data when we first boot the app. We shouldn't make 2 calls.
+  // saving for later.
+  // const filepath = useSelector((state) => state.settings.logfilePath);
+  // const JMX = useSelector((state) => state.settings.jmxPort);
+  // const zookeeper = useSelector((state) => state.settings.zookeeperPort);
+  // const kafka = useSelector((state) => state.settings.kafkaPort);
 
   const dispatch = useDispatch();
 
-  const fetchSettings = () => {
-    // console.log('fS')
-    fetch('http://localhost:3030/getSettings')
+  // const data = useLoaderData();
 
-      .then((response) => {
-        if (!response.ok) {
-          // console.log('fetch.res - ', response);
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // console.log('fetch.res is ok');
-        // console.log(data, 'this is the fetch call');
-        setKafka(data['KAFKA_PORT']);
-        // setZookeeper(data['zookeeper-port']);
-        setJMX(data['JMX_PORT']); // Changed from 'JMX-port'
-        setFilepath(data['log-filepath']);
-        setConsumers(data['consumers']);
-        setProducers(data['producers']);
-        setKafkaURL(data['KAFKA_URL']);
-      })
-      .catch((error) => {
-        console.error('Fetch error:', error);
-      });
-  };
+  useEffect(() => {
+    async function setSettings() {
+      const data = await loader();
+      setKafka(data['KAFKA_PORT']);
+      //setZookeeper(data['zookeeper-port']);
+      setJMX(data['JMX_PORT']);
+      setFilepath(data['log-filepath']);
+      setConsumers(data['consumers']);
+      setProducers(data['producers']);
+      setKafkaURL(data['KAFKA_URL']);
+      dispatch(changeMetricCount(data['metric-count']));
+    }
+    setSettings();
+  }, []);
 
   const updateSettings = (param, val) => {
     if (
@@ -67,11 +82,12 @@ const Settings = () => {
       param === 'JMX_PORT' ||
       param === 'metric-count' ||
       param === 'producers' ||
-      param === 'consumers' 
-      // param === 'KAFKA_URL' 
-    ) { 
-      val = Number(val); 
+      param === 'consumers'
+      // param === 'KAFKA_URL'
+    ) {
+      val = Number(val);
     }
+    console.log('in updateSettings');
     fetch('http://localhost:3030/updateSettings', {
       method: 'POST',
       body: JSON.stringify({
@@ -82,15 +98,14 @@ const Settings = () => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
-      // .then((response) => console.log(response))
-      .then(fetchSettings())
-      .catch((error) => console.error('Error:', error));
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        throw new Error('Error saving updated settings.', { cause: error });
+      });
   };
 
-  fetchSettings();
-
   const handleEnterPress = (e, param, val) => {
- 
     if (e.key === 'Enter') {
       updateSettings(param, val);
       if (param === 'KAFKA_PORT') setkInput('');
@@ -126,8 +141,14 @@ const Settings = () => {
   };
 
   function setInput(e) {
-    dispatch(changeMetricCount(e.target.value));
-    updateSettings(e.target.id, e.target.value);
+    dispatch(changeMetricCount(e.target.value * 10));
+
+    if (metricTimeout) {
+      clearTimeout(metricTimeout);
+    }
+    setMetricTimeout(
+      setTimeout(() => updateSettings(e.target.id, e.target.value), 500)
+    );
   }
 
   return (
@@ -146,21 +167,19 @@ const Settings = () => {
         {/* <label htmlFor='kafka-port'> {kafka} </label> */}
       </div>
 
-
-      <div className="setting">
+      <div className='setting'>
         <label htmlFor='kafkaURL'>Kafka URL</label>
-        <input 
+        <input
           id='kafkaURL'
-          type="text" 
+          type='text'
           name='kafkaURL'
           defaultValue={kURLInput}
           placeholder={kafkaURL}
-          onKeyDown= {(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
+          onKeyDown={(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
           onChange={(e) => setkURLInput(e.target.value)}
         />
         {/* <label htmlFor='kafkaURL'> {kafkaURL} </label> */}
       </div>
-
 
       <div className='setting'>
         <label htmlFor='JMX-port'>JMX Port </label>
@@ -175,7 +194,7 @@ const Settings = () => {
         />
         {/* <label htmlFor='JMX-port'> {JMX} </label> */}
       </div>
-    
+
       <div className='setting'>
         <label htmlFor='log-filepath'>Log Filepath </label>
         <input
@@ -205,12 +224,12 @@ const Settings = () => {
         {/* <label htmlFor='producers'> {producers} </label> */}
       </div>
 
-      <div className="setting">
+      <div className='setting'>
         <label htmlFor='consumers'>Consumers</label>
-        <input 
-          id="consumers"
-          type="number" 
-          name="consumers"
+        <input
+          id='consumers'
+          type='number'
+          name='consumers'
           defaultValue={cInput}
           placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
@@ -219,31 +238,28 @@ const Settings = () => {
         {/* <label htmlFor="consumers">{consumers}</label> */}
       </div>
 
-
       <div className='setting'>
-        <label htmlFor='metric-count'>Metric Count</label>
+        <label htmlFor='metric-count'>Seconds of Data Displayed</label>
         <input
           id='metric-count'
           name='metric-count'
           type='range'
-          min='10'
-          max='500'
-          step='10'
-          defaultValue={metricCount}
+          min='1'
+          max='60'
+          step='5'
+          value={metricCount}
           onChange={(e) => setInput(e)}
         ></input>
         <label htmlFor='metric-count'>{metricCount}</label>
       </div>
-
-     
     </div>
   );
 };
 
 export default Settings;
 
-
-{/* <div className='setting'>
+{
+  /* <div className='setting'>
 <label htmlFor='zookeeper-port'>Zookeeper Port </label>
 <input
   // id='zookeeper-port'
@@ -254,4 +270,5 @@ export default Settings;
   onChange={(e) => setzInput(e.target.value)}
 />
 <label htmlFor='kafka-port'> {zookeeper} </label>
-</div> */}
+</div> */
+}
