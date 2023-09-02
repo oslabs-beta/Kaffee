@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavLink, Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
@@ -27,15 +27,24 @@ export async function loader() {
 
 export default function NavBar() {
   const [run, setRun] = useState(false);
+  const [runningCharts, setRunningCharts] = useState({});
 
   const chartList = useSelector((state) => state.charts.list);
-  const metricCount = useSelector((state) => state.charts.metricCount);
   const location = useLocation();
 
   const dispatch = useDispatch();
 
   // this is a holdover from using the new react-router methods in 6.4
   // const { metrics } = useLoaderData();
+
+  useEffect(() => {
+    const currentlyRunning = {};
+    chartList.forEach((chart) => {
+      const metric = chart.metric;
+      currentlyRunning[metric] = true;
+    });
+    setRunningCharts(currentlyRunning);
+  }, [chartList]);
 
   const [metrics, setMetrics] = useState(null);
   useEffect(() => {
@@ -112,7 +121,7 @@ export default function NavBar() {
                         type='checkbox'
                         id={metric.name}
                         name={metric.name}
-                        defaultValue={chartList[metric]}
+                        checked={runningCharts[metric.name]}
                         onClick={() => handleToggleChart(metric.name)}
                       />
                       {metric.display}
