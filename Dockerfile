@@ -14,12 +14,13 @@ COPY ./build/target /app/target
 
 COPY ./build/ts-server /app/ts-server
 
+RUN chmod +x /app/ts-server/server.js
+
 RUN npm install
 
-ENV HELLO=world
 ENV NODE_ENV=prod
 
 EXPOSE 8080
 EXPOSE 3030
 
-CMD npm start
+CMD npm run start:both

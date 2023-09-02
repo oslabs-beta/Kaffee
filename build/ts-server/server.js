@@ -49,22 +49,24 @@ app.use('/addCluster', metricsController['addCluster'], (req, res) => {
 app.use('/deleteCluster', metricsController['deleteCluster'], (req, res) => {
     res.status(200).send('works');
 });
-app.use('/getData', dataController['getData'], (req, res) => {
-    res.sendStatus(200);
+app.use('/getData/:filename', dataController['getData'], (req, res) => {
+    res.json(res.locals.metrics);
+});
+app.use('/getLogFiles', dataController['getLogFiles'], (req, res) => {
+    console.log(res.locals);
+    res.json(res.locals.filenames);
 });
 app.use('/addData', dataController['addData'], (req, res) => {
-    console.log('addData');
     res.sendStatus(200);
 });
 app.use('/deleteData', dataController['deleteData'], (req, res) => {
     res.sendStatus(200);
 });
 app.use('/updateSettings', dataController['updateSettings'], (req, res) => {
-    console.log('route hit');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.sendStatus(200);
+    res.status(200);
 });
 app.use('/getSettings', dataController['getSettings'], (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');

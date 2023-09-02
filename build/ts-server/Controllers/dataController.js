@@ -10,7 +10,7 @@ const content = JSON.stringify('test');
 function formatDate() {
     const date = new Date();
     // Extract year, month, and day
-    const year = date.getFullYear().toString().slice(-2); // Extract last 2 digits of year
+    const year = date.getFullYear().toString(); // Extract last 2 digits of year
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
     const day = String(date.getDate()).padStart(2, '0');
     // Format the date as YY-mm-dd
@@ -33,36 +33,63 @@ function formatDate() {
 // })
 const dataController = {
     //middleware to fetch data from local json file
-    getData: (req, res, next) => {
-        fs.readFile(filePath, (err, data) => {
+    getLogFiles: (req, res, next) => {
+        const folderPath = path.resolve(__dirname, '../History/');
+        fs.readdir(folderPath, (err, files) => {
             if (err) {
-                console.error('error', err);
-                return;
+                return next(err);
             }
+            res.locals.filenames = files;
+            return next();
         });
-        next();
+    },
+    getData: (req, res, next) => {
+        try {
+            const { filename } = req.params;
+            const filePath = path.resolve(__dirname, `../History/${filename}`);
+            const data = fs.readFileSync(filePath, 'utf-8');
+            res.locals.metrics = JSON.parse(data);
+            return next();
+        }
+        catch (err) {
+            return next(err);
+        }
     },
     //middleware to write data to the local json file
     addData: (req, res, next) => {
         try {
-            console.log(req.body);
             const filename = formatDate() + '_log.json';
-            console.log(filename);
             filePath = path.resolve(__dirname, `../History/${filename}`);
-            console.log(filePath);
-            fs.appendFile(filePath, JSON.stringify(req.body, null, 2), (err) => {
-                if (err) {
-                    console.log(err);
+            const newData = req.body;
+            let fileObj = {};
+            try {
+                const file = fs.readFileSync(filePath, 'utf-8');
+                fileObj = JSON.parse(file);
+                const metric = Object.keys(newData)[0];
+                if (!Object.keys(fileObj).includes(metric)) {
+                    fileObj[metric] = newData[metric];
                 }
                 else {
-                    console.log('file written');
-                    next();
+                    fileObj = JSON.parse(file);
+                    fileObj[metric].labels.push(...newData[metric].labels);
+                    for (const newMetrics of newData[metric].datasets) {
+                        for (const savedMetrics of fileObj[metric].datasets) {
+                            if (savedMetrics.label === newMetrics.label) {
+                                savedMetrics.data.push(...newMetrics.data);
+                            }
+                        }
+                    }
                 }
-            });
+            }
+            catch (err) {
+                fileObj = newData;
+            }
+            fs.writeFileSync(filePath, JSON.stringify(fileObj));
+            return next();
         }
         catch (error) {
             console.log(error);
-            next({ errMsg: "err", err: 500 });
+            return next({ errMsg: 'err', err: 500 });
         }
     },
     //middleware to delete data from the local json file
@@ -73,22 +100,17 @@ const dataController = {
     //middleware to update user settings in settings.json
     updateSettings: (req, res, next) => {
         const { settingName, newValue } = req.body;
-        // if(process.env.NODE_ENV === 'dev'){
-        // const settingsPath = path.resolve(__dirname, '../Settings/settings.json');
-        // fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
-        //   if (readErr) {
-        //     console.error('Error reading settings:', readErr);
-        //     return res.status(500).json({ error: 'Error reading settings'});
-        //   }
-        //   const settings = JSON.parse(data);
-        //   settings[settingName] = newValue;
-        //   fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => {console.log(err)})
-        // });
-        // fetch(`http://localhost:8080/set${settingName}`)
-        // next();
-        // }
-        // else if(process.env.NODE_ENV === 'prod'){
-        const settingsPath = path.resolve(__dirname, '../../target/classes/settings.json');
+        let settingsPath;
+        if (process.env.NODE_ENV === 'dev') {
+            settingsPath = path.resolve(__dirname, '../../java-server/server/src/main/java/com/kaffee/server/settings.json');
+        }
+        else if (process.env.NODE_ENV === 'prod') {
+            settingsPath = path.resolve(__dirname, '../../build/target/classes/settings.json');
+        }
+        else {
+            const Error = 'no path to settings was set';
+            return next({ message: Error });
+        }
         fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
             if (readErr) {
                 console.error('Error reading settings:', readErr);
@@ -96,15 +118,21 @@ const dataController = {
             }
             const settings = JSON.parse(data);
             settings[settingName] = newValue;
-            fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), (err) => { console.log(err); });
+            console.log(newValue);
+            fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), 'utf-8', (writeErr) => {
+                if (writeErr) {
+                    console.error('Error writing settings:', writeErr);
+                    return res.status(500).json({ error: 'Error updating settings' });
+                }
+                console.log('Setting updated successfully');
+                fetch(`http://localhost:8080/set${settingName}`);
+                return next();
+            });
         });
-        fetch(`http://localhost:8080/set${settingName}`);
-        next();
-        // }
     },
     //middleware to get user settings in settings.json
     getSettings: (req, res, next) => {
-        const settingsPath = path.resolve(__dirname, '../../target/classes/settings.json');
+        const settingsPath = path.resolve(__dirname, '../../java-server/server/src/main/java/com/kaffee/server/settings.json');
         fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
             if (readErr) {
                 console.error('Error reading settings:', readErr);
@@ -112,10 +140,10 @@ const dataController = {
             }
             const settings = JSON.parse(data);
             res.locals.settings = settings;
-            console.log(settings, 'these are the settings!!!!!!!!!');
+            console.log(settings);
             next();
         });
-    }
+    },
 };
 export default dataController;
 //# sourceMappingURL=dataController.js.map
