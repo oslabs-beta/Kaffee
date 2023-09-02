@@ -61,7 +61,6 @@ export default function (props) {
   const { client } = useContext(SocketContext);
 
   const options = useMemo(() => optionsInit, [options]);
-  console.log(options);
   useEffect(() => {
     // Set the title based upon the list of friendly metric names
     // stored in '../utils/metrics
@@ -112,7 +111,6 @@ export default function (props) {
     // this is used to make each line in the chart different
     // using the colors defined in ../utils.metricColors
     let colorInd = 0;
-    console.log('in addEvents');
 
     const body = JSON.parse(message.body);
 
@@ -153,8 +151,6 @@ export default function (props) {
         // if this object has a label matching the metric we are seeing
         const set = data[ind];
         if (set.label === metricLabel) {
-          console.log(`Data at index: ${ind}`);
-          console.log(`Is visible: ` + chartRef.current.isDatasetVisible(ind));
           // mark that we have this data
           inData = true;
           // add a new value to the data
