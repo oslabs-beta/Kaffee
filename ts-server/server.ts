@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import dataController from './Controllers/dataController.js';
 import metricsController from './Controllers/metricsController.js';
@@ -150,11 +150,10 @@ app.use(
   '/updateSettings',
   dataController['updateSettings' as dataKey],
   (req: Request, res: Response) => {
-    console.log('route hit');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.sendStatus(200);
+    res.status(200);
   }
 );
 

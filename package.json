@@ -8,14 +8,15 @@
   },
   "type": "module",
   "scripts": {
-    "start": "concurrently \"npm run start:ts\" \"npm run start:java\"",
-    "start:ts": "NODE_ENV=prod ./build/ts-server/server.js",
+    "start": "node --loader ts-node/esm ./ts-server/server.ts & webpack-dev-server --config webpack.config.js",
+    "start:both": "concurrently \"npm run start:ts\" \"npm run start:java\"",
+    "start:ts": "NODE_ENV=prod ./build/ts-server/server.js & webpack-dev-server --config webpack.config.js",
     "start:java": "java -jar ./build/target/server-0.0.1-SNAPSHOT.jar",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:ts && npm run build:java",
-    "build:ts": "tsc", 
+    "build:ts": "tsc",
     "build:java": "cd java-server/server && mvn clean package && cp -r target ../../build",
-    "dev": "concurrently \"NODE_ENV=dev\" \"nodemon --loader ts-node/esm ./ts-server/server.ts\" \"webpack-dev-server --config webpack.config.js\" \"cd java-server/server && mvn spring-boot:run\""
+    "dev": "NODE_ENV=\"dev\" concurrently  \"nodemon --loader ts-node/esm ./ts-server/server.ts\" \"webpack-dev-server --config webpack.config.js\" \"cd java-server/server && mvn spring-boot:run\""
   },
   "keywords": [],
   "author": "",

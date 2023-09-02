@@ -82,7 +82,7 @@ public class MetricSubscriptions {
     try {    
       String metricString = serverMetrics.get(metric);
       if (metricString != null) {
-        subscribedServerMetrics.put(metric, metricString);
+        subscribedServerMetrics.put(metric, metricString);        
       }
     } catch (NullPointerException npe) {
       System.out.println(String.format("No metric found for string: %s", metric));

@@ -31,12 +31,11 @@ export default function ErrorPage() {
   } else if (typeof err === 'string') {
     text = err;
   } else {
-    text = 'Unknown error.';
+    text = 'This page does not exist.';
   }
 
   return (
     <>
-      <NavBar />
       <div id='main'>
         <div className='error'>{text}</div>
       </div>
