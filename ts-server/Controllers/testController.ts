@@ -10,16 +10,10 @@ const testController: object = {
   runTest: (req:Request,res:Response,next:NextFunction) => {
     try {
       fetch("http://localhost:8080/test/runTest", {method:"GET"})
-      .then((response) => {
-        response.json()
-        .then((result) => {
-          res.locals.data = result
-          next()
-        })
-      })
+      .then(() => next())
     } catch (error) {
       console.log('error!')
-      next({err:500, errMsg: "Somethin fucky"})
+      next({err:500, errMsg: "run test not started"})
     }
   },
   stopTest: (req:Request, res:Response, next:NextFunction) => {

@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - '2181:2181'
+    volumes:
+      - 'zookeeper_data:/bitnami'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - JVM_OPTS=-Xmx512m -Xms512m -XX:MaxPermSize=256m
+
+  kafka:
+    image: docker.io/bitnami/kafka:3.4
+    ports:
+      - '9094:9094'
+      - '9999:9999'
+    volumes:
+      - 'kafka_data:/bitnami'
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9094
+      - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=host.docker.internal -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.rmi.port=9999 -Dcom.sun.management.jxmremote.port=9999
+      - JMX_PORT=9999
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://host.docker.internal:9094
+      - JVM_OPTS=-Xmx1g -Xms1g -XX:MaxPermSize=1024m
+    depends_on:
+      - zookeeper
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  Kaffee:
+    image: teamkaffee/kaffee
+    ports:
+      - '8080:8080'
+      - '3030:3030'
+    depends_on:
+      - kafka
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local

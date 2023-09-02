@@ -72,7 +72,7 @@ export default function NavBar() {
 
   function startProducers() {
     if (!run) {
-      fetch('http://localhost:3030/test', { mode: 'no-cors' });
+      fetch('http://localhost:3030/test/', { mode: 'no-cors' });
       setRun(true);
     } else {
       fetch('http://localhost:3030/stopTest', { mode: 'no-cors' });
