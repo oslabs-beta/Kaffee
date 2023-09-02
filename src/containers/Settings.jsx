@@ -141,6 +141,9 @@ const Settings = () => {
   };
 
   function setInput(e) {
+    if (e.target.value < 1) {
+      e.target.value = 1;
+    }
     dispatch(changeMetricCount(e.target.value * 10));
 
     if (metricTimeout) {
@@ -240,17 +243,19 @@ const Settings = () => {
 
       <div className='setting'>
         <label htmlFor='metric-count'>Seconds of Data Displayed</label>
-        <input
-          id='metric-count'
-          name='metric-count'
-          type='range'
-          min='1'
-          max='60'
-          step='5'
-          value={metricCount}
-          onChange={(e) => setInput(e)}
-        ></input>
-        <label htmlFor='metric-count'>{metricCount}</label>
+        <div className='range'>
+          <input
+            id='metric-count'
+            name='metric-count'
+            type='range'
+            min='0'
+            max='60'
+            step='5'
+            value={metricCount}
+            onChange={(e) => setInput(e)}
+          ></input>
+          <label className='range-label'>{metricCount} Seconds</label>
+        </div>
       </div>
     </div>
   );
