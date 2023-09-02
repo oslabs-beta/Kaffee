@@ -62,7 +62,6 @@ const Settings = () => {
   useEffect(() => {
     async function setSettings() {
       const data = await loader();
-      console.log(data);
       setKafka(data['KAFKA_PORT']);
       //setZookeeper(data['zookeeper-port']);
       setJMX(data['JMX_PORT']);
