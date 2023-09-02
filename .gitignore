@@ -3,4 +3,4 @@ java-server/kafka_2.13-3.51
 ts-server/.DS_Store
 ts-server/History/*
 /build
-src/deprecated
+
