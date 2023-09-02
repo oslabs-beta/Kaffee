@@ -148,7 +148,7 @@ app.use(
 
 app.use(
   '/updateSettings',
-  dataController['updateSettings' as dataKey],
+  settingsController['updateSettings' as settingKey],
   (req: Request, res: Response) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -159,7 +159,7 @@ app.use(
 
 app.use(
   '/getSettings',
-  dataController['getSettings' as dataKey],
+  settingsController['getSettings' as settingKey],
   (req: Request, res: Response) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6060');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');

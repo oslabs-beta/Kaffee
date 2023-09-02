@@ -126,69 +126,6 @@ const dataController: object = {
     console.log('entered deleteData');
     next();
   },
-
-  //middleware to update user settings in settings.json
-  updateSettings: (req: Request, res: Response, next: NextFunction) => {
-    const { settingName, newValue } = req.body;
-    let settingsPath: string;
-    if (process.env.NODE_ENV === 'dev') {
-      settingsPath = path.resolve(
-        __dirname,
-        '../../java-server/server/src/main/java/com/kaffee/server/settings.json'
-      );
-    } else if (process.env.NODE_ENV === 'prod') {
-      settingsPath = path.resolve(
-        __dirname,
-        '../../build/target/classes/settings.json'
-      );
-    } else {
-      const Error = 'no path to settings was set';
-      return next({ message: Error });
-    }
-
-    fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
-      if (readErr) {
-        console.error('Error reading settings:', readErr);
-        return res.status(500).json({ error: 'Error reading settings' });
-      }
-      const settings = JSON.parse(data);
-      settings[settingName] = newValue;
-      console.log(newValue);
-      fs.writeFile(
-        settingsPath,
-        JSON.stringify(settings, null, 2),
-        'utf-8',
-        (writeErr) => {
-          if (writeErr) {
-            console.error('Error writing settings:', writeErr);
-            return res.status(500).json({ error: 'Error updating settings' });
-          }
-          console.log('Setting updated successfully');
-
-          fetch(`http://localhost:8080/set${settingName}`);
-          return next();
-        }
-      );
-    });
-  },
-
-  //middleware to get user settings in settings.json
-  getSettings: (req: Request, res: Response, next: NextFunction) => {
-    const settingsPath = path.resolve(
-      __dirname,
-      '../../java-server/server/src/main/java/com/kaffee/server/settings.json'
-    );
-    fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
-      if (readErr) {
-        console.error('Error reading settings:', readErr);
-        return res.status(500).json({ error: 'Error reading settings' });
-      }
-      const settings = JSON.parse(data);
-      res.locals.settings = settings;
-      console.log(settings);
-      next();
-    });
-  },
 };
 
 export default dataController;

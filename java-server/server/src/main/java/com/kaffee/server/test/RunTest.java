@@ -48,8 +48,10 @@ public class RunTest{
       TestConsumer consumer = new TestConsumer();
       consumer.start();
     }
+   
     return smc.getBytesInOut();
   }
+
   @GetMapping("/stopTest")
   public HashMap<String, AttributeList> stopTest() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
     MBeanException, ReflectionException, InstanceNotFoundException, IntrospectionException, InterruptedException, javax.management.IntrospectionException{
