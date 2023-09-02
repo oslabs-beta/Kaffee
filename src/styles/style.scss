@@ -21,7 +21,7 @@
   --top-nav-inner-div-height: 3.5em;
 
   --button-border-radius: 0.25em;
-  --element-border-radius: 0px;
+  --element-border-radius: 1em;
 
   /* ----- logo element ----- */
   --logo_url: url('../assets/logo.png');
@@ -260,25 +260,47 @@ button {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 2em auto 0;
+  min-width: 20em;
+  max-width: 40em;
   gap: 10px;
   z-index: 1;
+  padding: 1em;
+  background-color: rgb(var(--quaternary-bg));
+  border: var(--border);
+  border-radius: var(--element-border-radius);
 }
 
 .setting {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 0.5em;
+  width: 100%;
 }
 
-.setting label {
+.setting > label {
   width: 150px;
   padding-right: 10px;
 }
 
-.setting input[type='text'] {
+.setting input[type='text'],
+.setting input[type='number'] {
   padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: var(--border);
+  border-radius: var(--button-border-radius);
+}
+
+.setting .range {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  flex-grow: 1;
+}
+
+.range-label {
+  display: block;
+  margin: 0 auto;
 }
 
 header nav a.active button {
@@ -296,13 +318,16 @@ header nav a.active button {
 .history-item-container {
   display: flex;
   flex-direction: column; /* Change to column layout */
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 0.5em;
   align-items: center;
-  margin-top: 1vh;
+  margin: 1vh 1em 0;
   background-color: white;
+  border: var(--border);
+  padding: 1em;
   min-width: 30vw;
-  max-width: 80vw;
-  border-radius: 1vh;
+  max-width: 95vw;
+  border-radius: var(--element-border-radius);
 }
 
 .expanded-metrics {
