@@ -183,7 +183,7 @@ const dataController: object = {
   getSettings: (req: Request, res: Response, next: NextFunction) => {
     const settingsPath = path.resolve(
       __dirname,
-      '../../java-server/server/src/main/java/com/kaffee/server/UserSettings/settings.json'
+      '../../java-server/server/src/main/java/com/kaffee/server/settings.json'
     );
     fs.readFile(settingsPath, 'utf-8', (readErr, data) => {
       if (readErr) {

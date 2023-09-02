@@ -30,7 +30,6 @@ export default function NavBar() {
   const [runningCharts, setRunningCharts] = useState({});
 
   const chartList = useSelector((state) => state.charts.list);
-  const metricCount = useSelector((state) => state.charts.metricCount);
   const location = useLocation();
 
   const dispatch = useDispatch();
