@@ -60,15 +60,16 @@ export default function (props) {
   const metricCount = useSelector((state) => state.charts.metricCount);
   const { client } = useContext(SocketContext);
 
-  const options = useMemo(() => optionsInit, [options]);
+  const chartOptions = Object.assign({}, optionsInit);
+  chartOptions.plugins.title.text = friendlyList[props.metric];
+
   useEffect(() => {
     // Set the title based upon the list of friendly metric names
     // stored in '../utils/metrics
-    options.plugins.title.text = friendlyList[props.metric];
 
     // if we have a props.data, we are loading from historical data
     if (Object.hasOwn(props, 'data')) {
-      options.updateMode = 'none';
+      chartOptions.updateMode = 'none';
 
       const modifiedLabels = [];
       props.data.labels.forEach((label) => {
@@ -247,7 +248,7 @@ export default function (props) {
       ) : (
         <Line
           datasetIdKey={props.metric}
-          options={options}
+          options={chartOptions}
           data={{
             labels: labels,
             datasets: data,

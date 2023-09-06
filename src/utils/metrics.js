@@ -102,4 +102,5 @@ export const chartOptionsInit = {
     },
   },
   updateMode: 'active',
+  animation: false,
 };
