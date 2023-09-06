@@ -70,7 +70,7 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
-<table>
+<table style="border: none">
   <tr>
   <td>
     <h3>Duke Ahn</h3>
