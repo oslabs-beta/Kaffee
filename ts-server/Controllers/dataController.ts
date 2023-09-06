@@ -88,7 +88,14 @@ const dataController: object = {
 
     try {
       const filename = formatDate() + '_log.json';
-      filePath = path.resolve(__dirname, `../History/${filename}`);
+      const LOG_DIR_NAME = 'History';
+      const LOG_DIR_PATH = path.resolve(__dirname, '..', LOG_DIR_NAME);
+
+      if (!fs.existsSync(LOG_DIR_PATH)) {
+        fs.mkdirSync(LOG_DIR_PATH);
+      }
+
+      filePath = path.resolve(LOG_DIR_PATH, filename);
       const newData = req.body;
       let fileObj: HistoryObject = {};
 
