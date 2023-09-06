@@ -62,8 +62,6 @@ Confluent has documentation about setting up JMX through their Docker image that
 
 Red Hat has documentation about setting up JMX that relates to the Kafka binaries distributed by Apache. These instructions can be read [here](https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html/using_amq_streams_on_red_hat_enterprise_linux_rhel/monitoring-str).
 
-You may need to explore other configuration options if not listed here.
-
 ## Associated Links
 
 - [The Official Kaffee Landing Page](http://firebase.here/)
@@ -78,7 +76,7 @@ You may need to explore other configuration options if not listed here.
     <img src="profile.png" alt="Duke Ahn">
     <p>
     <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Duke Ahn's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="githublogo.png" alt="Duke Ahn's GitHub" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Duke Ahn's GitHub" /></a>
     </p>
   </li>
   <li>
@@ -86,7 +84,7 @@ You may need to explore other configuration options if not listed here.
     <img src="profile.png" alt="Vitaly Blotski">
     <p>
     <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Vitaly Blotski's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="githublogo.png" alt="Vitaly Blotski's GitHub" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Vitaly Blotski's GitHub" /></a>
     </p>
   </li>
   <li>
@@ -94,7 +92,7 @@ You may need to explore other configuration options if not listed here.
     <img src="profile.png" alt="Clay Hilgert">
     <p>
     <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Clay Hilgert's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="githublogo.png" alt="Clay Hilgert's GitHub" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Clay Hilgert's GitHub" /></a>
     </p>
   </li>
   <li>
@@ -102,7 +100,7 @@ You may need to explore other configuration options if not listed here.
     <img src="profile.png" alt="Darren Pavel">
     <p>
     <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Darren Pavel's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="githublogo.png" alt="Darren Pavel's GitHub" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Darren Pavel's GitHub" /></a>
     </p>
   </li>
 </ul>
