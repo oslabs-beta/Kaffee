@@ -70,48 +70,13 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
-<div align="center">
-<table >
-<tbody>
-  <tr>
-  <td>
-    <h3>Duke Ahn</h3>
-    <a href="https://www.linkedin.com/in/duke-ahn-3886b9284/"><img src="src/assets/readme/duke-ahn.png" alt="Duke Ahn"></a>
-    <p>
-    <a href="https://www.linkedin.com/in/duke-ahn-3886b9284/"><img src="/src/assets/readme/linkedin.png" alt="Duke Ahn's LinkedIn" /></a>
-    <a href="http://github.com/AhnDuke"><img src="/src/assets/readme/github.png" alt="Duke Ahn's GitHub" /></a>
-    </p>
-  </td>
-  <td>
-    <h3>Vitaly Blotski</h3>
-    <a href="https://www.linkedin.com/in/vitaly-blotski/"><img src="src/assets/readme/Blotski.png" alt="Vitaly Blotski"></a>
-    <p>
-    <a href="https://www.linkedin.com/in/vitaly-blotski/"><img src="/src/assets/readme/linkedin.png" alt="Vitaly Blotski's LinkedIn" /></a>
-    <a href="http://github.com/Blotski"><img src="/src/assets/readme/github.png" alt="Vitaly Blotski's GitHub" /></a>
-    </p>
-  </td>
-  </tr>
-  <tr>
-  <td>
-    <h3>Clay Hilgert</h3>
-    <a href="https://www.linkedin.com/in/clay-hilgert/"><img src="src/assets/readme/clhilgert.png" alt="Clay Hilgert"></a>
-    <p>
-    <a href="https://www.linkedin.com/in/clay-hilgert/"><img src="/src/assets/readme/linkedin.png" alt="Clay Hilgert's LinkedIn" /></a>
-    <a href="http://github.com/clhilgert"><img src="/src/assets/readme/github.png" alt="Clay Hilgert's GitHub" /></a>
-    </p>
-  </td>
-  <td>
-    <h3>Darren Pavel</h3>
-    <a href="https://www.linkedin.com/in/darren-pavel/"><img src="src/assets/readme/dpavel.png" alt="Darren Pavel"></a>
-    <p>
-    <a href="https://www.linkedin.com/in/darren-pavel/"><img src="/src/assets/readme/linkedin.png" alt="Darren Pavel's LinkedIn" /></a>
-    <a href="https://github.com/dcpavel"><img src="/src/assets/readme/github.png" alt="Darren Pavel's GitHub" /></a>
-    </p>
-  </td>
-  </tr>
-  </tbody>
-</table>
-</div>
+|                                                                                                                                                 Duke Ahn                                                                                                                                                 |                                                                                                                                                  Vitaly Blotski                                                                                                                                                  |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [![Duke Ahn's LinkedIn](src/assets/readme/duke-ahn.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/)<br/>[![Duke Ahn's Github](src/assets/readme/github.png)](https://github.com/AhnDuke) [![Duke Ahn's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/) | [![Vitaly Blotski's LinkedIn](src/assets/readme/Blotski.png)](https://www.linkedin.com/in/vitaly-blotski/)<br/>[![Vitaly Blotski's Github](src/assets/readme/github.png)](https://github.com/Blotski)[![Vitaly Blotski's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/vitaly-blotski/) |
+
+|                                                                                                                                           Clay Hilgert                                                                                                                                           |                                                                                                                                                           Darren Pavel                                                                                                                                                           |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [![Clay Hilgert](src/assets/readme/clhilgert.png)](https://www.linkedin.com/in/clay-hilgert/)<br/>[![Clay Hilgert's Github](src/assets/readme/github.png)](https://github.com/clhilgert) [![Clay Hilgert's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/clay-hilgert/) | [![Darren Pavel's LinkedIn](src/assets/readme/dpavel.png)](<[http://](https://www.linkedin.com/in/darren-pavel/)>)<br/>[![Darren Pavel's Github](src/assets/readme/github.png)](https://github.com/dcpavel) [![Darren Pavel's LinkedIn](src/assets/readme/linkedin.png)](<[http://](https://www.linkedin.com/in/darren-pavel/)>) |
 
 ---
 
