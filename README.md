@@ -54,9 +54,15 @@ In order to develop Kaffee further please follow these steps:
 
 #### Installing Kafka Maven
 
+You can find instructions for installing Maven from Apache [here](https://maven.apache.org/install.html).
+
 #### Exposing Kafka's JMX Endpoints
 
-Confluent has documentation about setting up JMX that can be read [here](https://docs.confluent.io/platform/current/installation/docker/operations/monitoring.html#use-jmx-monitor-docker-deployments).
+Confluent has documentation about setting up JMX through their Docker image that can be read [here](https://docs.confluent.io/platform/current/installation/docker/operations/monitoring.html#use-jmx-monitor-docker-deployments).
+
+Red Hat has documentation about setting up JMX that relates to the Kafka binaries distributed by Apache. These instructions can be read [here](https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html/using_amq_streams_on_red_hat_enterprise_linux_rhel/monitoring-str).
+
+You may need to explore other configuration options if not listed here.
 
 ## Associated Links
 
