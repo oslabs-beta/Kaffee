@@ -70,8 +70,8 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
-<table style="border: none; background: none; text-align: center;">
-<tbody>
+<table >
+<tbody style="border: none; background: none; text-align: center;">
   <tr>
   <td>
     <h3>Duke Ahn</h3>
