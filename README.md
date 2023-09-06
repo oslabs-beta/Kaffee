@@ -70,14 +70,7 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
-<style>
-  .cont * {
-    border: none;
-    background: none;
-    text-align: center;
-  }
-</style>
-<table class="cont">
+<table style="border: none; background: none; text-align: center;">
 <tbody>
   <tr>
   <td>
