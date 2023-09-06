@@ -70,8 +70,9 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
+<div align="center">
 <table >
-<tbody style="border: none; background: none; text-align: center;">
+<tbody>
   <tr>
   <td>
     <h3>Duke Ahn</h3>
@@ -110,6 +111,7 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
   </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
