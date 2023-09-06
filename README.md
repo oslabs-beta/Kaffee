@@ -70,40 +70,25 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Contributor Information
 
-<ul style="list-style: none; display: inline-grid; grid-template-columns: 1fr 1fr;">
-  <li>
-    <h3>Duke Ahn</h3>
-    <img src="profile.png" alt="Duke Ahn">
-    <p>
-    <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Duke Ahn's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Duke Ahn's GitHub" /></a>
-    </p>
-  </li>
-  <li>
-    <h3>Vitaly Blotski</h3>
-    <img src="profile.png" alt="Vitaly Blotski">
-    <p>
-    <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Vitaly Blotski's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Vitaly Blotski's GitHub" /></a>
-    </p>
-  </li>
-  <li>
-    <h3>Clay Hilgert</h3>
-    <img src="profile.png" alt="Clay Hilgert">
-    <p>
-    <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Clay Hilgert's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Clay Hilgert's GitHub" /></a>
-    </p>
-  </li>
-  <li>
-    <h3>Darren Pavel</h3>
-    <img src="profile.png" alt="Darren Pavel">
-    <p>
-    <a href="http://linkedin.com/"><img src="linkedinlogo.png" alt="Darren Pavel's LinkedIn" /></a>
-    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Darren Pavel's GitHub" /></a>
-    </p>
-  </li>
-</ul>
+| Duke Ahn | Vitaly Blotski |
+| :------: | :------------: |
+
+|[![Duke Ahn's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/)<br/>
+[![Duke Ahn's Github](src/assets/readme/github.png)](https://github.com/AhnDuke) [![Duke Ahn's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/)
+|
+[![Vitaly Blotski's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/vitaly-blotski/)<br/>[![Vitaly Blotski's Github](src/assets/readme/github.png)](https://github.com/Blotski)[![Vitaly Blotski's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/vitaly-blotski/)
+|
+
+| Clay Hilgert | Darren Pavel |
+| :----------: | :----------: |
+
+|[![Clay Hilgert](src/assets/readme/clhilgert.png)](https://www.linkedin.com/in/clay-hilgert/)<br/>
+[![Clay Hilgert's Github](src/assets/readme/github.png)](https://github.com/clhilgert) [![Clay Hilgert's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/clay-hilgert/)
+|
+[![Darren Pavel's LinkedIn](src/assets/readme/linkedin.png)](<[http://](https://www.linkedin.com/in/darren-pavel/)>)<br/>
+
+[![Darren Pavel's Github](src/assets/readme/github.png)](https://github.com/dcpavel) [![Darren Pavel's LinkedIn](src/assets/readme/linkedin.png)](<[http://](https://www.linkedin.com/in/darren-pavel/)>)
+|
 
 ---
 
