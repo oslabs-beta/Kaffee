@@ -90,6 +90,48 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 [![Darren Pavel's Github](src/assets/readme/github.png)](https://github.com/dcpavel) [![Darren Pavel's LinkedIn](src/assets/readme/linkedin.png)](<[http://](https://www.linkedin.com/in/darren-pavel/)>)
 |
 
+| Duke Ahn | Vitaly Blotski |
+| :------: | :------------: |
+
+<table>
+  <tr>
+  <td>
+    <h3>Duke Ahn</h3>
+    <img src="profile.png" alt="Duke Ahn">
+    <p>
+    <a href="http://linkedin.com/"><img src="/src/assets/readme/linkedin.png" alt="Duke Ahn's LinkedIn" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Duke Ahn's GitHub" /></a>
+    </p>
+  </td>
+  <td>
+    <h3>Vitaly Blotski</h3>
+    <img src="profile.png" alt="Vitaly Blotski">
+    <p>
+    <a href="http://linkedin.com/"><img src="/src/assets/readme/linkedin.png" alt="Vitaly Blotski's LinkedIn" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Vitaly Blotski's GitHub" /></a>
+    </p>
+  </td>
+  </tr>
+  <tr>
+  <td>
+    <h3>Clay Hilgert</h3>
+    <img src="profile.png" alt="Clay Hilgert">
+    <p>
+    <a href="http://linkedin.com/"><img src="/src/assets/readme/linkedin.png" alt="Clay Hilgert's LinkedIn" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Clay Hilgert's GitHub" /></a>
+    </p>
+  </td>
+  <td>
+    <h3>Darren Pavel</h3>
+    <img src="profile.png" alt="Darren Pavel">
+    <p>
+    <a href="https://www.linkedin.com/in/darren-pavel/"><img src="/src/assets/readme/linkedin.png" alt="Darren Pavel's LinkedIn" /></a>
+    <a href="http://github.com/"><img src="/src/assets/readme/github.png" alt="Darren Pavel's GitHub" /></a>
+    </p>
+  </td>
+  </tr>
+</table>
+
 ---
 
 ### License Information
