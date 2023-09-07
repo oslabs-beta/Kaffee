@@ -28,7 +28,7 @@ services:
     depends_on:
       - zookeeper
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
   Kaffee:
     image: teamkaffee/kaffee:latest
     ports:

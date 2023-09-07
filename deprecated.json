@@ -1,5 +1,5 @@
 {
-  "watch": ["ts-server"],  
-  "ext": "ts",  
+  "watch": ["ts-server"],
+  "ext": "ts",
   "exec": "ts-node-esm ts-server/server.ts"
 }

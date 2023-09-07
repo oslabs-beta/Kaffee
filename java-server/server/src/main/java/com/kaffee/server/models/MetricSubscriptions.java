@@ -44,7 +44,7 @@ public class MetricSubscriptions {
       put("isr-expands", "kafka.server:type=ReplicaManager,name=IsrExpandsPerSec");
       put("active-controller-count", "kafka.controller:type=KafkaController,name=ActiveControllerCount");
       put("offline-partitions-count", "kafka.controller:type=KafkaController,name=OfflinePartitionsCount");
-      put("leader-election-rate", "	kafka.controller:type=ControllerStats,name=LeaderElectionRateAndTimeMs");
+      // put("leader-election-rate", "	kafka.controller:type=ControllerStats,name=LeaderElectionRateAndTimeMs");
       put("unclean-leader-selection", "kafka.controller:type=ControllerStats,name=UncleanLeaderElectionsPerSec");
 
       // The following won't work as listed, we may need to break this into multiple parts for each element within {}

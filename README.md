@@ -10,7 +10,9 @@ As charts are displayed, data is saved within log files for historical analysis.
 
 ## Setup / Installation
 
-You can use our Docker image to run Kaffee. Ensure you have a Docker service running on your system, and then run "docker-compose up" within the root directory to start Kaffee on your system.
+You can use our Docker image to run Kaffee. Ensure you have a Docker service running on your system, before you start.
+
+Next, copy our docker-compose.yml file to your system. Then run "docker-compose up" within the root directory to start Kaffee on your system. This will start both a Kafka broker on port 9094 with JMX set on port 9999, as well as Kaffee to monitor this broker.
 
 ## How To Use
 
