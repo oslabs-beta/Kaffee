@@ -16,27 +16,25 @@ You can use our Docker image to run Kaffee. Ensure you have a Docker service run
 
 After booting up Kaffee for the first time you will be presented with the following screen:
 
-![Image Here](image.link)
+![Kafka Main Page](/src/assets/readme/Main.png)
 
 Please click on the **Settings** button at the top and ensure that the your Kafka URL, Port, and JMX Ports are all set correcly. You can use the **Seconds of Data to Display** slider to change the number of seconds that will displayed on each chart in future sets.
 
-![Settings Button Highlighted](image.link)
+![Settings Button Highlighted](/src/assets/readme/Settings.png)
 
 Click the **Main** button at the top to transition to the metrics display area. In future launches you will begin here with the settings saved. Once you are in the Main area, you will see the **Choose Metrics** button.
 
-![Choose Metrics Button Highlighted](image.link)
-
 Clicking on **Choose Metrics** will display a list of available metrics to display. Simply check one of the check boxes to begin tracking that metric.
 
-![Data Displayed Example Opening/Closing](image.link)
+![Data Displayed Example Opening/Closing](/src/assets/readme/add%20a%20chart.gif)
 
 Once you have started tracking a metric, every one (1) second the data will be stored in a log file and can be accessed within the **History** area.
 
-![History Page](image.link)
+![History Page](/src/assets/readme/History.png)
 
 If you would like to stress your Kafka broker a bit, you may click on the **Start Producers** button. This will begin the number of Kafka producers and consumers specified within **Settings** and have them generate dummy data. In order to stop producing this dummy data, click on the button it the same location, now with the text **Stop Producers**
 
-![Start/Stop Producers and Consumers](image.link)
+![Start/Stop Producers and Consumers](</src/assets/readme/stop%20and%20start%20(1).gif>)
 
 ## How to contribute
 
@@ -64,8 +62,8 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Associated Links
 
-- [The Official Kaffee Landing Page](http://firebase.here/)
-- [Our Original Medium Article](http://medium.article.here/)
+- [The Official Kaffee Landing Page](http://kafka-kafka.com/)
+- [Our Original Medium Article](https://medium.com/@darren.pavel/kaffee-an-apache-kafka-monitor-fe4fa4e997d1/)
 - [Apache Kafka](https://kafka.apache.org/)
 
 ## Contributor Information
