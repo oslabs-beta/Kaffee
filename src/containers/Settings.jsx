@@ -69,7 +69,7 @@ const Settings = () => {
       setConsumers(data['consumers']);
       setProducers(data['producers']);
       setKafkaURL(data['KAFKA_URL']);
-      dispatch(changeMetricCount(data['metric-count']));
+      dispatch(changeMetricCount(data['metric-count'] * 10));
     }
     setSettings();
   }, []);
@@ -141,6 +141,7 @@ const Settings = () => {
   };
 
   function setInput(e) {
+    console.log(e.target.value);
     if (e.target.value < 1) {
       e.target.value = 1;
     }
@@ -162,6 +163,7 @@ const Settings = () => {
           id='kafka-port'
           type='number'
           name='kafka-port-num'
+          readOnly={true}
           defaultValue={kInput}
           placeholder={kafka}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
@@ -176,6 +178,7 @@ const Settings = () => {
           id='kafkaURL'
           type='text'
           name='kafkaURL'
+          readOnly={true}
           defaultValue={kURLInput}
           placeholder={kafkaURL}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
@@ -190,6 +193,7 @@ const Settings = () => {
           id='JMX-port'
           type='number'
           name='JMX-port-num'
+          readOnly={true}
           defaultValue={jInput}
           placeholder={JMX}
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
@@ -219,6 +223,7 @@ const Settings = () => {
           id='producers'
           type='number'
           name='producers'
+          readOnly={true}
           defaultValue={pInput}
           placeholder={producers}
           onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
@@ -233,6 +238,7 @@ const Settings = () => {
           id='consumers'
           type='number'
           name='consumers'
+          readOnly={true}
           defaultValue={cInput}
           placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}

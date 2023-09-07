@@ -5,5 +5,5 @@
   "KAFKA_URL": "host.docker.internal",
   "producers": 5,
   "consumers": 9,
-  "metric-count": 26
+  "metric-count": 40
 }

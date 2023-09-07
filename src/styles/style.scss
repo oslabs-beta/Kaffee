@@ -298,6 +298,11 @@ button {
   flex-grow: 1;
 }
 
+.setting input {
+  border: none !important;
+  background-color: rgb(var(--quaternary-bg));
+}
+
 .range-label {
   display: block;
   margin: 0 auto;

@@ -59,7 +59,7 @@ export default function App() {
     const data = { settings: null };
     data.settings = await loader();
     if (data.settings['metric-count']) {
-      dispatch(changeMetricCount(data.settings['metric-count']));
+      dispatch(changeMetricCount(data.settings['metric-count'] * 10));
     }
     if (data.settings['kafka-port']) {
       dispatch(setKafkaPort(data.settings['kafka-port']));
