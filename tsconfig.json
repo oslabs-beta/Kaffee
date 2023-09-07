@@ -5,7 +5,7 @@
 {
   "compilerOptions": {
     "target": "ESNext", // Target ESNext version
-    "module": "esnext", // Use ES modules
+    "module": "es2020", // Use ES modules
     "jsx": "react-jsx", // Enable JSX for React
     "allowJs": true, // Allow TypeScript to compile JavaScript files
     "outDir": "build", // Output directory for compiled code
@@ -28,15 +28,15 @@
     "src/**/*.tsx", // Include TypeScript React files
     "ts-server/**/*.ts", // Include backend TypeScript files
     "ts-server/**/*.tsx", // Include backend TypeScript React files
-    "src/**/*.js", // Include JavaScript files
-    "src/**/*.jsx", // Include JavaScript React files
-    "src/**/*.json", // Include JSON files
-    "src/**/*.css", // Include CSS files
-    "src/**/*.scss", // Include SCSS files
-    "src/**/*.sass", // Include Sass files
-    "src/**/*.png", // Include image files (adjust extensions as needed)
-    "src/**/*.jpg" // Include image files (adjust extensions as needed)
-    // Add more patterns for other file types if necessary
+    "src/**/*.js",    // Include JavaScript files
+    "src/**/*.jsx",   // Include JavaScript React files
+    "src/**/*.json",  // Include JSON files
+    "src/**/*.css",   // Include CSS files
+    "src/**/*.scss",  // Include SCSS files
+    "src/**/*.sass",  // Include Sass files
+    "src/**/*.png",   // Include image files (adjust extensions as needed)
+    "src/**/*.jpg",   // Include image files (adjust extensions as needed)
+    "src/**/*.html"
   ],
   "exclude": ["node_modules", "java-server"] // Exclude node_modules directory
 }

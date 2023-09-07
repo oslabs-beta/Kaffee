@@ -25,11 +25,13 @@ public class MetricSubscriptions {
   public Map<String, String> serverMetrics;
 
   public MetricSubscriptions() {
-    SERVER_JMX_PORT = setJmxPort();
-    KAFKA_URL = setKafkaUrl();
+    this.SERVER_JMX_PORT = setJmxPort();
+    this.KAFKA_URL = setKafkaUrl();
+    // this.KAFKA_URL = "host.docker.internal";
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
-    RESOLVED_URL = String.format(baseUrl, KAFKA_URL, SERVER_JMX_PORT);
+    this.RESOLVED_URL = String.format(baseUrl, this.KAFKA_URL, SERVER_JMX_PORT);
+    System.out.println(RESOLVED_URL);
     serverMetrics = getServerMetricsStrings();
 
     subscribedServerMetrics = new HashMap<>();
@@ -73,7 +75,12 @@ public class MetricSubscriptions {
   }
 
   public JMXConnector connectToJMX() throws IOException {
-    JMXServiceURL url = new JMXServiceURL(RESOLVED_URL);
+    JMXServiceURL url = new JMXServiceURL(this.RESOLVED_URL);
+    // System.out.println("The RESOLVED_URL is: ");
+    // System.out.println(this.RESOLVED_URL);
+    // JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://", "host.docker.internal", this.SERVER_JMX_PORT);
+    // System.out.println("The JMX Service URL hostname is: ");
+    // System.out.println(url.toString());
     return JMXConnectorFactory.connect(url);
   }
 

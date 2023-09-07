@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dataController from './dataController';
+import fetch from 'node-fetch';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV === 'dev') {
 } else {
   settingsPath = path.resolve(
     __dirname,
-    '../../build/target/classes/settings.json'
+    '../../target/classes/settings.json'
   );
 }
 
@@ -65,7 +66,7 @@ const settingsController: object = {
       }
       const settings = JSON.parse(data);
       settings[settingName] = newValue;
-      console.log(newValue);
+      console.log(settings, newValue, 'settings and new value');
       fs.writeFile(
         settingsPath,
         JSON.stringify(settings, null, 2),
@@ -75,8 +76,6 @@ const settingsController: object = {
             console.error('Error writing settings:', writeErr);
             return res.status(500).json({ error: 'Error updating settings' });
           }
-          console.log('Setting updated successfully');
-
           fetch(`http://localhost:8080/set${settingName}`);
           return next();
         }
@@ -93,7 +92,6 @@ const settingsController: object = {
       }
       const settings = JSON.parse(data);
       res.locals.settings = settings;
-      console.log(settings);
       next();
     });
   },
