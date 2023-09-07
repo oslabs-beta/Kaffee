@@ -198,7 +198,7 @@ const Settings = () => {
         {/* <label htmlFor='JMX-port'> {JMX} </label> */}
       </div>
 
-      <div className='setting'>
+      {/* <div className='setting'>
         <label htmlFor='log-filepath'>Log Filepath </label>
         <input
           id='log-filepath'
@@ -210,8 +210,8 @@ const Settings = () => {
           onChange={(e) => setfInput(e.target.value)}
           // onClick={handleDirectorySelector}
         />
-        {/* <label htmlFor='log-filepath'>{filepath} </label> */}
-      </div>
+        <label htmlFor='log-filepath'>{filepath} </label>
+      </div> */}
 
       <div className='setting'>
         <label htmlFor='producers'>Producers </label>
