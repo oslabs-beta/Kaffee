@@ -66,7 +66,7 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Associated Links
 
-- [The Official Kaffee Landing Page](http://kafka-kafka.com/)
+- [The Official Kaffee Landing Page](http://kafka-kaffee.com/)
 - [Our Original Medium Article](https://medium.com/@darren.pavel/kaffee-an-apache-kafka-monitor-fe4fa4e997d1/)
 - [Apache Kafka](https://kafka.apache.org/)
 
