@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/src/assets/readme/logo256.png" />
+  <img src="/src/assets/readme/logo2562.png" />
 </p>
 
 # Kaffee
