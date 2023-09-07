@@ -60,13 +60,13 @@ export default function (props) {
   const metricCount = useSelector((state) => state.charts.metricCount);
   const { client } = useContext(SocketContext);
 
-  const chartOptions = Object.assign({}, optionsInit);
+  const chartOptions = JSON.parse(JSON.stringify(optionsInit));
+  // Set the title based upon the list of friendly metric names
+  // stored in '../utils/metrics
   chartOptions.plugins.title.text = friendlyList[props.metric];
+  console.log(chartOptions);
 
   useEffect(() => {
-    // Set the title based upon the list of friendly metric names
-    // stored in '../utils/metrics
-
     // if we have a props.data, we are loading from historical data
     if (Object.hasOwn(props, 'data')) {
       chartOptions.updateMode = 'none';

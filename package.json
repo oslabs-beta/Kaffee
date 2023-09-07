@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
     "csv-parser": "^3.0.0",

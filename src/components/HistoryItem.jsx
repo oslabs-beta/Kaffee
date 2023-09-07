@@ -66,8 +66,6 @@ export default function ({ data: filename }) {
           {typeof metrics.current === 'string'
             ? metrics.current
             : Object.entries(metrics.current).map(([metric, metricData]) => {
-                console.log(metric);
-                console.log(metricData);
                 return (
                   <Chart
                     key={metric}
