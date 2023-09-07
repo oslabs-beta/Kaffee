@@ -2,8 +2,8 @@
   "KAFKA_PORT": 9094,
   "JMX_PORT": 9999,
   "log-filepath": "Desktop",
-  "KAFKA_URL": "localhost",
-  "producers": 55,
-  "consumers": 100,
-  "metric-count": 15
+  "KAFKA_URL": "host.docker.internal",
+  "producers": 5,
+  "consumers": 9,
+  "metric-count": 26
 }

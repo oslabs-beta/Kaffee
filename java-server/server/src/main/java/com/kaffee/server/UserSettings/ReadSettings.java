@@ -16,6 +16,8 @@ public record ReadSettings(){
     }
     JSONTokener tokener = new JSONTokener(is);
     JSONObject object = new JSONObject(tokener);
+    System.out.println(object.get(key));
+    System.out.println("VALUE" + object.get(key));
     return object.get(key);
   }
 }

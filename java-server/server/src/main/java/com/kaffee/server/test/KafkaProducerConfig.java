@@ -11,12 +11,11 @@ public class KafkaProducerConfig {
     public static Properties getProducerProperties() {
     String url = ReadSettings.main("KAFKA_URL").toString();
     String port = ReadSettings.main("KAFKA_PORT").toString();
-    System.out.println(url + ":" + port);
+    System.out.println(ReadSettings.main("KAFKA_URL").toString());
         Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, url + ":" + port); // Kafka broker addresses
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        
         // Additional configurations
         
         return properties;

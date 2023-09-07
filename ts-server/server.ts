@@ -24,7 +24,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.resolve(__dirname, '../src/')));
+app.use(express.static(path.resolve(__dirname, '../dist/')));
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).sendFile(path.resolve(__dirname, '../src/template.html'));
