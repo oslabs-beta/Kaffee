@@ -1,4 +1,6 @@
-![Kaffee Logo](/src/assets/readme/logo256.png)
+<p align="center">
+  <img src="/src/assets/readme/logoFixed.png" />
+</p>
 
 # Kaffee
 
