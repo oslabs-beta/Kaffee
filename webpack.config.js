@@ -1,5 +1,3 @@
-// const path = require('path');
-// const HTMLWebpackPlugin = require('html-webpack-plugin');
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
 import path from 'path';
@@ -9,11 +7,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  entry: './src/index.tsx',
-  // entry: './src/index.jsx',
-
+  entry: './src/index.jsx',
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, '/build/dist'),
     filename: 'bundle.js',
   },
   mode: 'development',
@@ -28,10 +24,6 @@ export default {
       '/api': {
         target: 'http://localhost:3030/',
         pathRewrite: { '^/api': '' },
-      },
-      '/get-metrics': {
-        target: 'http://localhost:6060/',
-        pathRewrite: { '^get-metrics': '' },
       },
     },
     open: true,
@@ -58,18 +50,6 @@ export default {
           loader: 'babel-loader',
         },
       },
-      // {
-      //   test: /\.tsx?$/,
-      //   exclude: [/node_modules/],
-      //   use: {
-      //     loader: 'ts-loader',
-      //     options: {
-      //       compilerOptions: {
-      //         jsx: 'preserve',
-      //       },
-      //     },
-      //   },
-      // },
       {
         test: /\.s?[ca]ss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],

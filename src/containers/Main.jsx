@@ -1,33 +1,43 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useEffect } from 'react';
 // import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import Cluster from './Clusters.jsx';
 import SearchBar from '../components/SearchBar.jsx';
 import Chart from '../components/Chart.jsx';
-import { addChart, removeChart, newChart } from '../reducers/chartSlice.js';
+import client from '../utils/socket.js';
+
+// used in creating a test chart
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  registerables,
+} from 'chart.js';
 
 // import type { ChartObj } from '../reducers/chartSlice.js';
 
 export default function () {
   // const charts = useSelector((state: Array<ChartObj> ) => state.charts.list);
   const charts = useSelector((state) => state.charts.list);
-  const status = useSelector((state) => state.charts.status);
 
-  // const dispatch = useAppDispatch();
-  const dispatch = useDispatch();
-
-  const handleAddChart = () => {
-    if (status === 'succeeded' || status === 'idle') {
-      dispatch(addChart('bytes-in'));
+  useEffect(() => {
+    try {
+      client.activate();
+    } catch (error) {
+      throw error;
     }
-  };
 
-  let spanText = 'Add A Chart';
-  if (status === 'loading') {
-    spanText = 'Loading New Chart';
-  } else if (status === 'failed') {
-    spanText = 'Failed to load chart, please check console';
-  }
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
   return (
     <>
@@ -35,23 +45,18 @@ export default function () {
       <div id='metrics'>
         <div id='charts'>
           {charts?.map((chart, i) => {
+            // console.log(chart);
             return (
               <Chart
-                key={`Chart_${i}`}
-                props={chart}
+                key={chart.metric}
+                metric={chart.metric}
+                id={chart.metric}
               />
             );
           })}
-          <div
-            className='chartCanvas'
-            onClick={handleAddChart}
-            id='add-chart'
-          >
-            <span>{spanText}</span>
-          </div>
         </div>
       </div>
-      <SearchBar />
+      {/* <SearchBar /> */}
     </>
   );
 }

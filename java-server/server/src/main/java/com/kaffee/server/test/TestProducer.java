@@ -11,22 +11,26 @@ public class TestProducer extends Thread{
     public TestProducer(String name){
         this.name = name;
     }
-
+    
     @Override
     public void run(){
         Properties producerProps = KafkaProducerConfig.getProducerProperties();
         try (Producer<String, String> producer = new KafkaProducer<>(producerProps)){
             String topic = "test";
-            for (int i = 0; i < 10; i++) {
-                System.out.println(i + "from" + name);
-                String key = "key-" + i;
-                String value = "value-" + i;
+            Integer count = 0;
+            while (RunTest.run == true) {
+                count++;
+                String key = "key-" + name;
+                String value = "value-" + count;
+                // System.out.println(value + " from " + name);
                 ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
                 producer.send(record);
                 record = null;
                 try {
                     Thread.sleep(1000);
-                } catch (Exception e) {
+                } 
+                catch(Exception e) {
+                    System.out.println(e);
                 }
             }
             producer.flush();
