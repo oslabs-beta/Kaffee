@@ -14,6 +14,8 @@ You can use our Docker image to run Kaffee. Ensure you have a Docker service run
 
 Next, copy our docker-compose.yml file to your system. Then run "docker-compose up" within the root directory to start Kaffee on your system. This will start both a Kafka broker on port 9094 with JMX set on port 9999, as well as Kaffee to monitor this broker.
 
+Our application will be available at [http://localhost:3030/](http://localhost:3030/)
+
 ## How To Use
 
 After booting up Kaffee for the first time you will be presented with the following screen:
