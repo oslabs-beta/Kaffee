@@ -15,9 +15,11 @@
   },
   "devDependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+    "@stomp/stompjs": "^7.0.0",
     "@types/node": "^20.8.9",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/stompjs": "^2.3.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
