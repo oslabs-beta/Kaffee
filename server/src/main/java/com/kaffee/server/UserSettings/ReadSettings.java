@@ -9,7 +9,7 @@ import java.util.Map;
 
 public record ReadSettings(){
   public static Object main(String key) {
-    String resourceName = "../../../../settings.json";
+    String resourceName = "../settings.json";
     InputStream is = ReadSettings.class.getResourceAsStream(resourceName);
     if (is == null) {
         throw new NullPointerException("Cannot find resource file " + resourceName);
