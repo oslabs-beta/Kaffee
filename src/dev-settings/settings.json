@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "kafka-port": 9094,
+    "JMX-port": 9999,
+    "zookeeper-port": 9093,
+    "log-filepath": "Desktop",
+    "KAFKA_URL": "localhost",
+    "producers": 1,
+    "consumers": 1,
+    "metric-count": 150
+  }
+}
