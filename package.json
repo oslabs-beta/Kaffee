@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "devFront": "vite",
+    "dev": "vite && npm start",
     "build": "tsc && vite build",
     "start": "cd server && mvn spring-boot:run",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
