@@ -12,6 +12,8 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Io;
+
 import com.kaffee.server.UserSettings.ReadSettings;
 
 public class MetricSubscriptions {
@@ -24,7 +26,7 @@ public class MetricSubscriptions {
   public Map<String, String> subscribedServerMetrics;
   public Map<String, String> serverMetrics;
 
-  public MetricSubscriptions() {
+  public MetricSubscriptions() throws IOException{
     this.SERVER_JMX_PORT = setJmxPort();
     this.KAFKA_URL = setKafkaUrl();
     // this.KAFKA_URL = "host.docker.internal";
@@ -106,7 +108,7 @@ public class MetricSubscriptions {
     return this.SERVER_JMX_PORT;
   }
 
-  public Integer setJmxPort() {
+  public Integer setJmxPort() throws IOException{
     Integer newPort = Integer.parseInt(ReadSettings.main("JMX_PORT").toString());
     System.out.println(newPort);
     this.SERVER_JMX_PORT = newPort;
@@ -118,7 +120,7 @@ public class MetricSubscriptions {
     return this.KAFKA_URL;
   }
 
-  public String setKafkaUrl() {
+  public String setKafkaUrl() throws IOException{
     String url = ReadSettings.main("KAFKA_URL").toString();
     this.KAFKA_URL = url;
     return url;
@@ -128,7 +130,7 @@ public class MetricSubscriptions {
     return this.KAFKA_PORT;
   }
 
-  public void setKafkaPort () {
+  public void setKafkaPort () throws IOException{
     Integer port = Integer.parseInt(ReadSettings.main("KAFKA_PORT").toString());
     this.KAFKA_PORT = port;
   }

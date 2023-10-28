@@ -1,23 +1,24 @@
 package com.kaffee.server.UserSettings;
 
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public record ReadSettings(){
-  public static Object main(String key) {
-    String resourceName = "../settings.json";
-    InputStream is = ReadSettings.class.getResourceAsStream(resourceName);
-    if (is == null) {
-        throw new NullPointerException("Cannot find resource file " + resourceName);
-    }
-    JSONTokener tokener = new JSONTokener(is);
-    JSONObject object = new JSONObject(tokener);
-    System.out.println(object.get(key));
-    System.out.println("VALUE" + object.get(key));
+  public static Object main(String key) throws IOException {
+    //declare String resource name and set value to settings file path
+    String resourceName = "src/main/java/com/kaffee/server/settings.json";
+    //pass path to Files.readAllBytes, convert byte array to String using new String();
+    String stringified = new String(Files.readAllBytes(Paths.get(resourceName)));
+    //convert stringified json to object
+    JSONObject object = new JSONObject(stringified);
+    //debugging system console logs
+    System.out.println("KEY: " + key);
+    System.out.println("VALUE: " + object.get(key));
+    //return updated value
     return object.get(key);
   }
 }

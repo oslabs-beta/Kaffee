@@ -1,10 +1,9 @@
 package com.kaffee.server.controllers;
 
+import com.kaffee.server.UserSettings.ReadSettings;
+
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.ServletRequest;
-
-import org.apache.kafka.common.protocol.types.Field.Str;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +52,7 @@ public class KaffeeSettingsController {
     byte[] jsonToBytes = reString.getBytes();
     //overwrite old settings file with the updated settings file
     Files.write(Paths.get(resourceName), jsonToBytes);
+    ReadSettings.main(settingName);
     return ResponseEntity.ok("Updated!");
   }
 }
