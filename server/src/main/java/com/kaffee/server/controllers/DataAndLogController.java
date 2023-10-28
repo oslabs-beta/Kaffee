@@ -15,8 +15,9 @@ import java.nio.file.Paths;
 public class DataAndLogController{
 //Get Historical Log Route
 @GetMapping("/getLogFiles")
-  private ResponseEntity<String> getLogFiles(){
-    
-    return ResponseEntity.ok()
+  private ResponseEntity<String> getLogFiles() throws IOException{
+    String resourceName = "/Users/lapduke/Desktop/Kaffee1.1/Kaffee/Historical_Logs/History.json";
+    String stringified = new String(Files.readAllBytes(Paths.get(resourceName)));
+    return ResponseEntity.ok(stringified);
   }
 }
