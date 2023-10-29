@@ -65,7 +65,7 @@ public class ServerMetricController {
 
   //JMX settings receiver and setter
   @GetMapping("/setJMX_PORT")
-  public void postJMXPort() {
+  public void postJMXPort() throws IOException{
     System.out.println("Before: " + ms.getJmxPort());
     ms.setJmxPort();
     System.out.println("After: " + ms.getJmxPort());
@@ -73,7 +73,7 @@ public class ServerMetricController {
 
   //KAFKA_URL settings receiver and setter
   @GetMapping("/setKAFKA_URL")
-  public void postKafkaUrl() {
+  public void postKafkaUrl() throws IOException{
     System.out.println("Before (Kafka_url): " + ms.getKafkaUrl());
     ms.setKafkaUrl();
     System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
@@ -81,7 +81,7 @@ public class ServerMetricController {
 
   //KAKFKA_PORT receiver and setter
   @GetMapping("/setKAFKA_PORT")
-  public void postKafkaPort() {
+  public void postKafkaPort() throws IOException{
     System.out.println(("Before: " + ms.getKafkaPort()));
     ms.setKafkaPort();
     System.out.println(("After: " + ms.getKafkaPort()));
