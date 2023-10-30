@@ -2,17 +2,18 @@ package com.kaffee.server.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
 @RestController
 @RequestMapping("/")
 public class ProducerMetricController {
-  private Map<String, String> producerMetricsMap = getProducerMetricMap();
+  private Map<String, String> producerMetricsMap;
+
+  public ProducerMetricController() {
+    this.producerMetricsMap = getProducerMetricMap();
+  }
 
   private Map<String, String> getProducerMetricMap() {
     return new HashMap<String, String>() {{

@@ -29,7 +29,6 @@ public class ServerMetricControllerTests {
   @Autowired
   private MockMvc mockMvc;
 
-  // verify "/availableServerMetrics"
   @Test
   @DisplayName("The path /availableServerMetrics should return a valid JSON object")
   void availableServerMetricsReturnsObject() throws Exception {
@@ -47,4 +46,19 @@ public class ServerMetricControllerTests {
 
     // do something with the resultMap?
   }
+
+  // verify that we can set the JMX port
+  // should we be doing this here or in DataAndLog
+
+  // verify that we can set the Kafka url
+  // should we be doing this here or in DataAndLog
+
+  // verify that we can set the Kafka port
+  // should we be doing this here or in DataAndLog
+
+  // verify we can get a list of the metrics attributes
+  // do we really care about exposing this as an API endpoint? Does the user need this?
+
+  // verify that we can get a formatted metric
+  // do we still need this, might this be useful for testing?
 }

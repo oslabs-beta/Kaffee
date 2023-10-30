@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-
+// shouldn't this be in a model, connected through a separate controller?
 public record ReadSettings(){
   public static Object main(String key) throws IOException {
     //declare String resource name and set value to settings file path

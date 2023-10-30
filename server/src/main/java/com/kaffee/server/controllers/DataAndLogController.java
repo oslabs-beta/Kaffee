@@ -33,4 +33,11 @@ public class DataAndLogController{
     //return the array of files
     return ResponseEntity.ok(files);
   }
+
+  // ideally this would be private, but for testing purposes we must expose this
+  // maybe it would be a good idea to keep this private, and then test that when a file is created
+  // that the created filename matches our desired string
+  public static String generateFileName() {
+    return "";
+  }
 }

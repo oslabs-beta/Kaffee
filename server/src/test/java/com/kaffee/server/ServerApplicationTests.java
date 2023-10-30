@@ -26,29 +26,5 @@ class ServerApplicationTests {
   // verify "/getLogFiles"
   
   // verify "/addData" --> perhaps this needs a more descriptive endpoint
-  
-  /////////////////////////////////
 
-  // verify that each WebSocket endpoint works:
-  
-  // verify "/subscribe"
-  @Test
-  void subscribeReturnsMessage() throws Exception {
-    // this is based upon an example get response. This should be modified as /subscribe
-    // has different behavior and is sent across the websocket
-    // this.mockMvc.perform(post("/subscribe"))
-    //   .andDo(print())
-    //   .andExpect(status().isOk())
-    //   .andExpect(content().string(containsString("Test")));
-  }
-  
-  // verify "/subscribe" returns error if the metric isn't in the list
-  @Test
-  void subscribeReturnsErrorWithInvalidMetric() throws Exception {
-
-  }
-  
-  // verify "/unsubscribe"
-
-  // verify "/metric/{exampleMetric}"
 }
