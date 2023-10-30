@@ -47,29 +47,4 @@ public class ServerMetricControllerTests {
 
     // do something with the resultMap?
   }
-
-  @Test
-  void testFormattedMetrics() {
-
-  }
-
-  @Test
-  void testMetricAttributes() {
-
-  }
-
-  @Test
-  void testPostJMXPort() {
-
-  }
-
-  @Test
-  void testPostKafkaPort() {
-
-  }
-
-  @Test
-  void testPostKafkaUrl() {
-
-  }
 }
