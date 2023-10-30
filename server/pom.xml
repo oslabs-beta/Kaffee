@@ -46,6 +46,7 @@
     </dependency>
 	</dependencies>
 
+
 	<build>
 		<plugins>
 			<plugin>
@@ -53,6 +54,12 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>Historical_Logs/</directory>
+			</resource>
+		</resources>
+
 	</build>
 
 </project>
