@@ -1,0 +1,8 @@
+{
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.checkstyle.configuration": "${workspaceFolder}/.vscode/kaffee_check.xml",
+  "java.format.settings.url": ".vscode/java-formatter.xml",
+  "[java]": {
+    "editor.tabSize": 2
+  }
+}
