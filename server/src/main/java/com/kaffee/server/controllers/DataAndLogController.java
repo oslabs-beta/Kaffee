@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
@@ -43,6 +45,18 @@ public class DataAndLogController{
 
     //return the array of files
     return ResponseEntity.ok(files);
+  }
+  @GetMapping("/getData")
+  private ResponseEntity<String> getData(@RequestParam String filename) throws IOException{
+    try {
+      //find file with the requested name
+      Path filePath = Paths.get("Historical_Logs/",filename);
+      String stringifiedFile = Files.readString(filePath);
+      return ResponseEntity.ok(stringifiedFile);
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body("Not Created: " + e);
+    }
+
   }
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body) throws IOException{

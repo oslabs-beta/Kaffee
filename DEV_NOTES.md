@@ -8,7 +8,9 @@
 # Backend 1.1
 
 - All Backend Methods Finished Except for Delete Log, which we can omit for now
-  - /addData, /getLogFiles, /getSettings, /updateSettings
+  - /addData, /getData, /getLogFiles, /getSettings, /updateSettings
+- FORMAT GET REQUESTS TO /getData LIKE THIS
+  fetch("localhost:8080/getData?filename={FILENAME}.json")
 - ALL POST REQUESTS TO /addData MUST BE FORMATTED EXACTLY THE SAME AND IN THE SAME ORDER (i.e. 
     req.body = { [METRIC NAME]: {
         labels: [],
