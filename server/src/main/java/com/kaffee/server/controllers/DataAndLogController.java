@@ -1,7 +1,6 @@
 package com.kaffee.server.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.apache.kafka.common.protocol.types.Field.Bool;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.File;
 
 
@@ -46,12 +46,16 @@ public class DataAndLogController{
   }
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body) throws IOException{
+
     //declare filename and path
     String filename = "Historical_Logs/" + LocalDate.now().toString() + "_log.json";
     JSONObject data = new JSONObject(body);
-    Iterator<String> dataKeys = data.keys();
-    String metricName = dataKeys.next();
-    String metricValue = data.getString(metricName);
+    //get the metric name from request body
+    String metricName = data.keys().next();
+    //get the metric data from request body
+    JSONObject metricValues = data.getJSONObject(metricName);
+    JSONArray metricTimeLabels = metricValues.getJSONArray("labels");
+    JSONArray datasets = metricValues.getJSONArray("datasets");
     try {
       //instantiate a new File passing in the path and filename as an arg
       File newLog = new File(filename);
@@ -59,13 +63,37 @@ public class DataAndLogController{
       Boolean check = newLog.createNewFile();
       newLog.createNewFile();
       if(check){
-        String emptyObj = "{labels: [], datasets: []}";
+        String emptyObj = "{}";
         Files.write(Paths.get(filename), emptyObj.getBytes());
       }
+      //get the file
       String stringified = new String(Files.readAllBytes(Paths.get(filename)));
+      //parse the file into a json object
       JSONObject jsonFile = new JSONObject(stringified);
-      String labelsObject = jsonFile.get("labels").toString();
+      //if metric name exists, skip creation of key
+      //else create metric name key
+      if(!jsonFile.has(metricName)){
+        jsonFile.put(metricName, "{labels: [], datasets: [{label: 'One Minute Rate', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}]}");
+      }
+      //push new timestamp labels to labels
+      JSONObject curMetrics = new JSONObject(jsonFile.getString(metricName));
+      JSONArray timestamps = curMetrics.getJSONArray("labels");
+      timestamps.putAll(metricTimeLabels);
+      curMetrics.put("labels", timestamps);
+      System.out.println(curMetrics);
+      //push new data to correct dataset with corresponding matching label
+      for(int i = 0; i < datasets.length(); i++){
+        //get the new dataset
+        JSONArray newDataSet = datasets.getJSONObject(i).getJSONArray("data");
+        //get the files dataset
+        JSONArray curDataSet = curMetrics.getJSONArray("datasets").getJSONObject(i).getJSONArray("data");
+        //push new dataset to curdata set
+        curDataSet.putAll(newDataSet);
+      }
+      //stringify jsonfile
+      jsonFile.put(metricName, curMetrics);
       String reString = jsonFile.toString();
+      //write updated log file to path
       Files.write(Paths.get(filename), reString.getBytes());
     } catch (Exception e) {
       return ResponseEntity.status(500).body("Not Created: " + e);
