@@ -29,6 +29,10 @@ public class DataAndLogControllerTests {
   @MockBean
   private DataAndLogController dataAndLog;
 
+  /**
+   * This could be generalized into creating a new log file and then seeing what the files
+   * in the directory resolve to.
+   */
   @Test
   @DisplayName("Check that new log files have the format YYYY-MM-DD_log.json")
   void validFileNameFormat() {
