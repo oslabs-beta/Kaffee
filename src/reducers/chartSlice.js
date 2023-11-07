@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // used when importing a test chart
 export const newChart = createAsyncThunk(
@@ -16,6 +16,15 @@ export const newChart = createAsyncThunk(
   }
 );
 
+// type chartState = {
+//   list: Array<chartObj>;
+// };
+
+// export type chartObj = {
+//  metric: string,
+// };
+
+// const initialState: chartState = {
 const initialState = {
   list: [],
   status: 'idle',
