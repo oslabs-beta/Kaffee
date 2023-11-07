@@ -7,8 +7,10 @@ const About = () => {
 
       <p>v1.1</p>
       <br />
-      <p>Kaffee is a free and open source product.</p>
-      <p>To contribute please open an issue or pull request.</p>
+      <p className="text-center">
+        Kaffee is a free and open source product <br /> in early development.
+      </p>
+      <p>To contribute, please open an issue or pull request.</p>
       <a href="https://github.com/oslabs-beta/Kaffee" target="_blank">
         <i className="fa fa-github" style={{ fontSize: '36px' }}></i>
       </a>
