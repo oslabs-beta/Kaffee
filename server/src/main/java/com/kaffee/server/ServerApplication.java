@@ -23,18 +23,29 @@ public class ServerApplication {
 
   /**
    * Main method to run the web server.
-   * 
+   *
    * @param args arguments to run the server
    */
   public static void main(final String[] args) {
     SpringApplication.run(ServerApplication.class, args);
   }
 
+  /**
+   * Create the Bean for MessageData.
+   *
+   * @return new MessageData
+   */
   @Bean
   public MessageData messageData() {
     return new MessageData();
   }
 
+  /**
+   * Create the Bean for MetricSubscriptions.
+   *
+   * @return new MetricSubscriptions
+   * @throws IOException
+   */
   @Bean
   public MetricSubscriptions metricSubscriptions() throws IOException {
     return new MetricSubscriptions();
