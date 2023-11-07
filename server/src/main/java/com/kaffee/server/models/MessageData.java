@@ -1,6 +1,7 @@
 package com.kaffee.server.models;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Creates the MessageData object which is used by the websocket connection.
@@ -103,11 +104,27 @@ public class MessageData {
   }
 
   /**
-   * Set the MessageData snapshot map.
+   * Set the MessageData snapshot map. The keys should never contain
+   * characters that are unsafe for URI strings.
    *
    * @param snapshot The metrics attributes and their values.
+   * @throws IllegalArgumentException the key values of the snapshot should be
+   *                                  URI safe.
    */
-  private void setSnapshot(final Map<String, String> snapshot) {
+  private void setSnapshot(final Map<String, String> snapshot)
+      throws IllegalArgumentException {
+    // Only letters, numbers, dashes and underscores allowed. I think this may
+    // be unnecessary here, but is necessary in the metrics list.
+    Pattern uriSafe = Pattern.compile("^[a-zA-Z0-9-_]$");
+    for (String key : snapshot.keySet()) {
+      if (!uriSafe.matcher(key).matches()) {
+        String errorMessage = """
+            Snapshot keys may only contain letters,
+            numbers, hyphens, and underscores.""";
+        throw new IllegalArgumentException(errorMessage);
+      }
+    }
+
     this.snapshot = snapshot;
   }
 }
