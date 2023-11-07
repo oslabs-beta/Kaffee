@@ -50,7 +50,8 @@ public class MessageData {
    * @param time     The time in milliseconds.
    * @param snapshot The map of metric attributes and their values.
    */
-  public MessageData(String metric, Number time, Map<String, String> snapshot) {
+  public MessageData(final String metric, final Number time,
+      final Map<String, String> snapshot) {
     this.setMetric(metric);
     this.setSnapshot(snapshot);
     this.setTime(time);
@@ -74,11 +75,21 @@ public class MessageData {
     return this.time;
   }
 
+  /**
+   * Get the MessageData snapshot mapping.
+   *
+   * @return The map of metric attributes and their values.
+   */
   public Map<String, String> getSnapshot() {
     return this.snapshot;
   }
 
-  public void setMetric(String metric) {
+  /**
+   * Set the MessageData metric name.
+   *
+   * @param metric The name of the MessageData metric
+   */
+  public void setMetric(final String metric) {
     this.metric = metric;
   }
 
@@ -91,7 +102,12 @@ public class MessageData {
     this.time = time;
   }
 
-  private void setSnapshot(Map<String, String> snapshot) {
+  /**
+   * Set the MessageData snapshot map.
+   *
+   * @param snapshot The metrics attributes and their values.
+   */
+  private void setSnapshot(final Map<String, String> snapshot) {
     this.snapshot = snapshot;
   }
 }

@@ -7,17 +7,22 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+/**
+ * Configures the WebSocket connection.
+ */
 @Configuration
 @EnableScheduling
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-  /**
-   * Configures the WebSocket connection.
-   */
 
-  // I was going to use this to validate CORS issues
+  /** The location of the client. */
   private String client = "http://localhost:6060/";
 
+  /**
+   * Overriding the configureMessageBroker.
+   *
+   * Taken from: https://spring.io/guides/gs/messaging-stomp-websocket/
+   */
   @Override
   public void configureMessageBroker(final MessageBrokerRegistry config) {
     // this is the prefix to add a message topic, in our case a new metric
@@ -28,14 +33,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     config.setApplicationDestinationPrefixes("/app");
   }
 
+  /**
+   * Overriding the registerStompEndpoints.
+   *
+   * Taken from: https://spring.io/guides/gs/messaging-stomp-websocket/
+   */
   @Override
   public void registerStompEndpoints(final StompEndpointRegistry registry) {
     // this is endpoint for websocket connections
     registry.addEndpoint("/socket").setAllowedOrigins(client);
     registry.addEndpoint("/socket").setAllowedOrigins(client).withSockJS();
-  }
-
-  public String getClient() {
-    return this.client;
   }
 }
