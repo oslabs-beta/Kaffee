@@ -66,6 +66,7 @@ public class DataAndLogController{
     String metricName = data.keys().next();
     //get the metric data from request body
     JSONObject metricValues = data.getJSONObject(metricName);
+    System.out.println(metricValues);
     JSONArray metricTimeLabels = metricValues.getJSONArray("labels");
     JSONArray datasets = metricValues.getJSONArray("datasets");
     try {
@@ -85,15 +86,15 @@ public class DataAndLogController{
       //if metric name exists, skip creation of key
       //else create metric name key
       if(!jsonFile.has(metricName)){
-        jsonFile.put(metricName, "{labels: [], datasets: [{label: 'One Minute Rate', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}]}");
+        jsonFile.put(metricName, new JSONObject("{labels: [], datasets: [{label: 'One Minute Rate', data: []},{label: 'Count', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}]}"));
       }
       //push new timestamp labels to labels
-      JSONObject curMetrics = new JSONObject(jsonFile.getString(metricName));
+      JSONObject curMetrics = jsonFile.getJSONObject(metricName);
       JSONArray timestamps = curMetrics.getJSONArray("labels");
       timestamps.putAll(metricTimeLabels);
       curMetrics.put("labels", timestamps);
       //push new data to correct dataset with corresponding matching label
-      for(int i = 0; i < datasets.length(); i++){
+      for(int i = 0; i < datasets.length()-1; i++){
         //get the new dataset
         JSONArray newDataSet = datasets.getJSONObject(i).getJSONArray("data");
         //get the files dataset
@@ -101,15 +102,16 @@ public class DataAndLogController{
         //push new dataset to curdata set
         curDataSet.putAll(newDataSet);
       }
-      System.out.println(curMetrics);
       //stringify jsonfile
+      jsonFile.remove(metricName);
       jsonFile.put(metricName, curMetrics);
       String reString = jsonFile.toString();
       //write updated log file to path
       Files.write(Paths.get(filename), reString.getBytes());
     } catch (Exception e) {
+      System.out.println(e);
       return ResponseEntity.status(500).body("Not Created: " + e);
     }
-    return ResponseEntity.ok("Created!");
+    return ResponseEntity.status(200).body("Created!");
   }
 }
