@@ -4,6 +4,6 @@
   "consumers": "2",
   "log-filepath": "Desktop",
   "KAFKA_PORT": 9092,
-  "KAFKA_URL": "http://localhost",
+  "KAFKA_URL": "localhost",
   "producers": 1
 }

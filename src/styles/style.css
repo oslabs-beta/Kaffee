@@ -56,6 +56,10 @@ body {
 }
 
 button {
+  min-width: 12rem;
+  max-width: 20rem;
+  margin-right: 10px;
+  height: 3rem;
   border-style: initial;
   background-color: rgb(var(--quaternary-bg));
   color: rgb(var(--text-color));
@@ -71,7 +75,7 @@ button:hover {
 header nav a.active button {
   /* border-color: rgba(255, 255, 0, 0.692); */
   border: none;
-  box-shadow: 2px 2px 4px 1px rgb(199, 168, 130);
+  box-shadow: 2px 2px 4px 1px rgb(231, 172, 99);
 }
 
 #root {
@@ -83,7 +87,7 @@ header nav a.active button {
 
 .nav-bar header {
   width: 100%;
-  padding: 0.25em;
+  padding: 0.75em;
   border-bottom: var(--border);
   background: linear-gradient(
     rgb(var(--primary-bg)) 1%,
@@ -222,13 +226,14 @@ header nav a.active button {
   max-width: 1000px;
   margin: 2em;
   padding: 0.5em 0.75em;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(10, 10, 15);
+  color: rgb(255, 255, 255);
   border: var(--border);
-  color: rgb(var(--ternary-bg));
-  border-radius: 10% / 8%;
+  /* color: rgb(var(--ternary-bg)); */
+  /* border-radius: 10% / 8%; */
   box-shadow:
-    0px 0.15em 0.5em 0.1em rgba(var(--text-color), 0.2),
-    inset 1px 2px 10px 1px rgba(var(--quaternary-bg), 0.9);
+    0px 0.15em 0.5em 0.1em rgb(8, 8, 8),
+    inset 1px 2px 3px 1px black;
   position: relative;
   aspect-ratio: 16/9;
 }
