@@ -1,21 +1,19 @@
 package com.kaffee.server.models;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import javax.lang.model.element.VariableElement;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Io;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.kaffee.server.UserSettings.ReadSettings;
 
+@ConfigurationProperties
 public class MetricSubscriptions {
   private int SERVER_JMX_PORT;
   // private int PRODUCER_JMX_PORT;
@@ -78,15 +76,17 @@ public class MetricSubscriptions {
 
   public JMXConnector connectToJMX() throws IOException {
     JMXServiceURL url = new JMXServiceURL(this.RESOLVED_URL);
-    // System.out.println("The RESOLVED_URL is: ");
-    // System.out.println(this.RESOLVED_URL);
-    // JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://", "host.docker.internal", this.SERVER_JMX_PORT);
-    // System.out.println("The JMX Service URL hostname is: ");
-    // System.out.println(url.toString());
     return JMXConnectorFactory.connect(url);
   }
 
-  
+  public void reInitialize() throws IOException{
+    SERVER_JMX_PORT = setJmxPort();
+    KAFKA_URL = setKafkaUrl();
+    String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
+    RESOLVED_URL = String.format(baseUrl, this.KAFKA_URL, SERVER_JMX_PORT);
+    serverMetrics = getServerMetricsStrings();
+  }
+
   public void addSubscription(String metric) throws NullPointerException {
     try {    
       String metricString = serverMetrics.get(metric);

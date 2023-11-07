@@ -33,7 +33,7 @@ public class SocketController {
   @Autowired
   SimpMessagingTemplate simpMessagingTemplate;
 
-  private final MetricSubscriptions ms;
+  private MetricSubscriptions ms;
 
   public SocketController(MetricSubscriptions ms) {
     this.ms = ms;

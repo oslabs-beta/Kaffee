@@ -3,7 +3,7 @@ import HistoryItem from '../components/HistoryItem.jsx';
 
 
 async function getLogFiles() {
-  const res = await fetch('http://localhost:3030/getLogFiles');
+  const res = await fetch('http://localhost:8080/getLogFiles');
   const data = await res.json();
 
   return data;

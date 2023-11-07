@@ -17,7 +17,7 @@ async function getDirectory() {
 
 export async function loader() {
   try {
-    const res = await fetch('http://localhost:3030/getSettings');
+    const res = await fetch('http://localhost:8080/getSettings');
     const data = await res.json();
     return data;
   } catch (error) {
@@ -75,20 +75,20 @@ const Settings = () => {
   }, []);
 
   const updateSettings = (param, val) => {
-    if (
-      // applies only to params that are numbers
-      param === 'KAFKA_PORT' ||
-      // param === 'ZOOKEEPER_PORT' ||
-      param === 'JMX_PORT' ||
-      param === 'metric-count' ||
-      param === 'producers' ||
-      param === 'consumers'
-      // param === 'KAFKA_URL'
-    ) {
-      val = Number(val);
-    }
+    // if (
+    //   // applies only to params that are numbers
+    //   param === 'KAFKA_PORT' ||
+    //   // param === 'ZOOKEEPER_PORT' ||
+    //   param === 'JMX_PORT' ||
+    //   param === 'metric-count' ||
+    //   param === 'producers' ||
+    //   param === 'consumers'
+    //   // param === 'KAFKA_URL'
+    // ) {
+    //   val = Number(val);
+    // }
     console.log('in updateSettings');
-    fetch('http://localhost:3030/updateSettings', {
+    fetch('http://localhost:8080/updateSettings', {
       method: 'POST',
       body: JSON.stringify({
         settingName: param,
@@ -163,7 +163,6 @@ const Settings = () => {
           id='kafka-port'
           type='number'
           name='kafka-port-num'
-          readOnly={true}
           defaultValue={kInput}
           placeholder={kafka}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
@@ -178,7 +177,6 @@ const Settings = () => {
           id='kafkaURL'
           type='text'
           name='kafkaURL'
-          readOnly={true}
           defaultValue={kURLInput}
           placeholder={kafkaURL}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
@@ -193,7 +191,6 @@ const Settings = () => {
           id='JMX-port'
           type='number'
           name='JMX-port-num'
-          readOnly={true}
           defaultValue={jInput}
           placeholder={JMX}
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
@@ -202,20 +199,20 @@ const Settings = () => {
         {/* <label htmlFor='JMX-port'> {JMX} </label> */}
       </div>
 
-      {/* <div className='setting'>
+      <div className='setting'>
         <label htmlFor='log-filepath'>Log Filepath </label>
         <input
           id='log-filepath'
           type='text'
           name='log-filepath-string'
-          // defaultValue={fInput}
+          defaultValue={fInput}
           placeholder={filepath}
           onKeyDown={(e) => handleEnterPress(e, 'log-filepath', fInput)}
           onChange={(e) => setfInput(e.target.value)}
-          // onClick={handleDirectorySelector}
+          onClick={handleDirectorySelector}
         />
-        <label htmlFor='log-filepath'>{filepath} </label>
-      </div> */}
+        {/* <label htmlFor='log-filepath'>{filepath} </label> */}
+      </div>
 
       <div className='setting'>
         <label htmlFor='producers'>Producers </label>
@@ -223,7 +220,6 @@ const Settings = () => {
           id='producers'
           type='number'
           name='producers'
-          readOnly={true}
           defaultValue={pInput}
           placeholder={producers}
           onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
@@ -238,7 +234,6 @@ const Settings = () => {
           id='consumers'
           type='number'
           name='consumers'
-          readOnly={true}
           defaultValue={cInput}
           placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
@@ -260,7 +255,7 @@ const Settings = () => {
             value={metricCount}
             onChange={(e) => setInput(e)}
           ></input>
-          <label className='range-label'>{metricCount} Seconds</label>
+          {/* <label className='range-label'>{metricCount} Seconds</label> */}
         </div>
       </div>
     </div>
