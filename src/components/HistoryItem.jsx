@@ -7,7 +7,8 @@ import Chart from './Chart.jsx';
 // create chartjs from data on expand
 
 async function getData(filename) {
-  const res = await fetch(`http://localhost:8080/getData/${filename}`);
+  console.log(filename)
+  const res = await fetch(`http://localhost:8080/getData?filename=${filename}`);
   if (res.ok) {
     const data = await res.json();
     console.log(data);

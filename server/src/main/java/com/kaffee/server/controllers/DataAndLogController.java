@@ -59,7 +59,6 @@ public class DataAndLogController{
   }
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body) throws IOException{
-
     //declare filename and path
     String filename = "Historical_Logs/" + LocalDate.now().toString() + "_log.json";
     JSONObject data = new JSONObject(body);
@@ -93,7 +92,6 @@ public class DataAndLogController{
       JSONArray timestamps = curMetrics.getJSONArray("labels");
       timestamps.putAll(metricTimeLabels);
       curMetrics.put("labels", timestamps);
-      System.out.println(curMetrics);
       //push new data to correct dataset with corresponding matching label
       for(int i = 0; i < datasets.length(); i++){
         //get the new dataset
@@ -103,6 +101,7 @@ public class DataAndLogController{
         //push new dataset to curdata set
         curDataSet.putAll(newDataSet);
       }
+      System.out.println(curMetrics);
       //stringify jsonfile
       jsonFile.put(metricName, curMetrics);
       String reString = jsonFile.toString();
