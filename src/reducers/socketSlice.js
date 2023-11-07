@@ -9,20 +9,11 @@ export const newChart = createAsyncThunk(
 
     const res = await fetch(apiUrl);
     const data = await res.json();
-    console.log(data);
 
     return data;
   }
 );
 
-// type chartState = {
-//   list: Array<chartObj>;
-// };
-
-// export type chartObj = {
-// };
-
-// const initialState: chartState = {
 const initialState = {
   list: [],
   client: null,
@@ -36,7 +27,7 @@ const socketSlice = createSlice({
     connected: (state) => {
       state.status = 'connected';
     },
-    // removeChart: (state, action: PayloadAction<number>) => {
+
     disconnected: (state, action) => {
       state.status = 'disconnected';
     },
@@ -44,13 +35,13 @@ const socketSlice = createSlice({
       state.client = action.payload;
     },
     filterCharts: (state, action) => {
-      // how do we do this without blowing up all the charts from before?
+
     },
   },
   extraReducers: {
-    [newChart.pending]: (state, action) => {},
-    [newChart.fulfilled]: (state, action) => {},
-    [newChart.rejected]: (state, action) => {},
+    [newChart.pending]: (state, action) => { },
+    [newChart.fulfilled]: (state, action) => { },
+    [newChart.rejected]: (state, action) => { },
   },
 });
 

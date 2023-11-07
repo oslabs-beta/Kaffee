@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import HistoryItem from '../components/HistoryItem.jsx';
-
 
 async function getLogFiles() {
   const res = await fetch('http://localhost:8080/getLogFiles');
@@ -21,14 +20,9 @@ const History = () => {
   }, []);
 
   return (
-    <div className='history'>
+    <div className="history">
       {logs.length ? (
-        logs.map((log, i) => (
-          <HistoryItem
-            data={log}
-            key={i}
-          />
-        ))
+        logs.map((log, i) => <HistoryItem data={log} key={i} />)
       ) : (
         <></>
       )}

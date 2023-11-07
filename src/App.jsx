@@ -1,11 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  createContext,
-} from 'react';
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { useEffect, useMemo, useState, createContext } from 'react';
+import { Outlet } from 'react-router-dom';
 import NavBar from './containers/NavBar.jsx';
 import { changeMetricCount } from './reducers/chartSlice.js';
 import { useDispatch } from 'react-redux';
@@ -23,7 +17,6 @@ export async function loader() {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log(error);
     throw new Error('Error fetching settings', { cause: error });
   }
 }
@@ -31,8 +24,6 @@ export async function loader() {
 export const SocketContext = createContext(null);
 
 export default function App() {
-  // this is a holdover from using the new react-router methods in 6.4
-  // const data = useLoaderData();
   const dispatch = useDispatch();
 
   const [client, setClient] = useState(null);
@@ -41,9 +32,6 @@ export default function App() {
     const brokerURL = 'ws://localhost:8080/socket';
     const options = {
       brokerURL,
-      // debug: function (message) {
-      //   console.log(message);
-      // },
       reconnectDelay: 500,
       heartbeatIncoming: 100,
       heartbeatOutgoing: 100,
@@ -87,7 +75,7 @@ export default function App() {
     <>
       <NavBar />
       <SocketContext.Provider value={contextValue}>
-        <div id='main'>
+        <div id="main">
           <Outlet />
         </div>
       </SocketContext.Provider>

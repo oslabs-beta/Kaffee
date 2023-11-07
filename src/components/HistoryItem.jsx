@@ -1,16 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Chart from './Chart.jsx';
-
-// TODO:
-// import history folder
-// parse names of json files by date
-// create chartjs from data on expand
 
 async function getData(filename) {
   const res = await fetch(`http://localhost:8080/getData/${filename}`);
   if (res.ok) {
     const data = await res.json();
-    console.log(data);
 
     return data;
   } else {

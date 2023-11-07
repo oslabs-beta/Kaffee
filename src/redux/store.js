@@ -1,4 +1,4 @@
-import { configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import clusterSlice from '../reducers/clusterSlice.js';
 import chartSlice from '../reducers/chartSlice.js';
 import socketSlice from '../reducers/socketSlice.js';
