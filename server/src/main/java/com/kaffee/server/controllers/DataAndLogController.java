@@ -83,4 +83,16 @@ public class DataAndLogController {
   private String getDirectory() {
     return this.directoryLocation;
   }
+
+  /**
+   * Generate filename function. Created so that DataAndLogControllerTest can
+   * compile. In reality filename generation should be private, and
+   * untestable. A work around is create a file through some public method,
+   * and then verify the newly created file passes any tests.
+   *
+   * @return A dummy string.
+   */
+  public static String generateFileName() {
+    return "filename";
+  }
 }

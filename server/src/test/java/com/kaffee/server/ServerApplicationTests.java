@@ -6,11 +6,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * Tests for the Server Application.
+ */
 @SpringBootTest(classes = ServerApplication.class)
 @ContextConfiguration
 @AutoConfigureMockMvc
 class ServerApplicationTests {
 
+  /**
+   * Autowiring the mockMvc.
+   */
   @Autowired
   private MockMvc mockMvc;
 

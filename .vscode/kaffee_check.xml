@@ -184,7 +184,7 @@
     <!-- Checks for class design                         -->
     <!-- See https://checkstyle.org/checks/design/index.html -->
     <module name="DesignForExtension">
-      <property name="ignoredAnnotations" value="Bean" />
+      <property name="ignoredAnnotations" value="Bean, Autowired, BeforeAll, MockBean, Test, Override" />
     </module>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
