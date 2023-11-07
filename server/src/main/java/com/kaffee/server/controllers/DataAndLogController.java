@@ -66,7 +66,6 @@ public class DataAndLogController{
     String metricName = data.keys().next();
     //get the metric data from request body
     JSONObject metricValues = data.getJSONObject(metricName);
-    System.out.println(metricValues);
     JSONArray metricTimeLabels = metricValues.getJSONArray("labels");
     JSONArray datasets = metricValues.getJSONArray("datasets");
     try {
@@ -96,11 +95,18 @@ public class DataAndLogController{
       //push new data to correct dataset with corresponding matching label
       for(int i = 0; i < datasets.length()-1; i++){
         //get the new dataset
-        JSONArray newDataSet = datasets.getJSONObject(i).getJSONArray("data");
-        //get the files dataset
-        JSONArray curDataSet = curMetrics.getJSONArray("datasets").getJSONObject(i).getJSONArray("data");
-        //push new dataset to curdata set
-        curDataSet.putAll(newDataSet);
+        JSONObject newDataSet = datasets.getJSONObject(i);
+        //get the current label
+        String curLabel = newDataSet.getString("label");
+        //.getJSONArray("data");
+        for(int j = 0; j < datasets.length()-1; j++){
+          //get the files dataset
+          JSONObject curDataSet = curMetrics.getJSONArray("datasets").getJSONObject(j);
+          if(curDataSet.getString("label").equals(curLabel)){
+            //push new dataset to curdata set
+            curDataSet.getJSONArray("data").putAll(newDataSet.getJSONArray("data"));
+          }
+        }
       }
       //stringify jsonfile
       jsonFile.remove(metricName);

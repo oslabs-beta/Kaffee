@@ -209,7 +209,6 @@ export default function (props) {
       labels: labelsToSend,
       datasets: dataToSend,
     };
-
     lastSentTime = Date.now();
     fetch('http://localhost:8080/addData', {
       method: 'POST',
@@ -219,9 +218,12 @@ export default function (props) {
       },
     })
       .then((res) => {
-        if (res.ok) {
-          setDataToSend([]);
-          setLabelsToSend([]);
+        if (res.status === 200) {
+          setDataToSend(new Array);
+          setLabelsToSend(new Array);
+          labelsToSend.length = 0;
+          dataToSend.length = 0;
+          console.log(labelsToSend,dataToSend)
         }
       })
       .catch((err) => {});

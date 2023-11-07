@@ -11,7 +11,25 @@ export async function loader() {
     throw new Error('Error fetching settings', { cause: error });
   }
 }
+  const handleDirectorySelector = async () => {
+    const directory = await getDirectory();
+    if (!directory) {
+      // user closed the window or otherwise failed to open the file
+      return;
+    }
 
+    // See: https://developer.chrome.com/articles/file-system-access/
+    const sep = path.sep;
+    const dirArray = [];
+    for await (const entry of directory.values()) {
+      // console.log(entry.kind, entry.name);
+    }
+    // console.log(dirArray);
+    // const resolvedPath = dirArray.join(sep);
+
+    // const field = document.querySelector('#log-filepath');
+    // field.value = directory;
+  };
 const Settings = () => {
   const [kafka, setKafka] = useState();
   const [JMX, setJMX] = useState();
@@ -91,6 +109,26 @@ const Settings = () => {
       if (param === 'KAFKA_URL') setkURLInput('');
     }
   };
+  
+  // const handleDirectorySelector = async () => {
+  //   const directory = await getDirectory();
+  //   if (!directory) {
+  //     // user closed the window or otherwise failed to open the file
+  //     return;
+  //   }
+
+  //   // See: https://developer.chrome.com/articles/file-system-access/
+  //   const sep = path.sep;
+  //   const dirArray = [];
+  //   for await (const entry of directory.values()) {
+  //     // console.log(entry.kind, entry.name);
+  //   }
+  //   // console.log(dirArray);
+  //   // const resolvedPath = dirArray.join(sep);
+
+  //   // const field = document.querySelector('#log-filepath');
+  //   // field.value = directory;
+  // };
 
   function setInput(e) {
     if (e.target.value < 1) {
@@ -154,6 +192,8 @@ const Settings = () => {
       </div>
 
 
+
+      {/*COMMENTED OUT SINCE WE ARE NOT SETTING LOG FILE PATH ANYMORE 
       <div className='setting'>
         <label htmlFor='log-filepath'>Log Filepath </label>
         <input
@@ -165,9 +205,9 @@ const Settings = () => {
           onKeyDown={(e) => handleEnterPress(e, 'log-filepath', fInput)}
           onChange={(e) => setfInput(e.target.value)}
           onClick={handleDirectorySelector}
-        />
+        /> */}
         {/* <label htmlFor='log-filepath'>{filepath} </label> */}
-      </div>
+      {/* </div> */}
 
       <div className='setting'>
         <label htmlFor='producers'>Producers </label>
