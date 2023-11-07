@@ -2,7 +2,8 @@ import { useState, useRef } from 'react';
 import Chart from './Chart.jsx';
 
 async function getData(filename) {
-  const res = await fetch(`http://localhost:8080/getData/${filename}`);
+  console.log(filename)
+  const res = await fetch(`http://localhost:8080/getData?filename=${filename}`);
   if (res.ok) {
     const data = await res.json();
 

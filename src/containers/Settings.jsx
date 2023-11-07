@@ -49,27 +49,35 @@ const Settings = () => {
   }, []);
 
   const updateSettings = (param, val) => {
-    if (
-      param === 'KAFKA_PORT' ||
-      param === 'JMX_PORT' ||
-      param === 'metric-count' ||
-      param === 'producers' ||
-      param === 'consumers'
-    )
-      fetch('http://localhost:8080/updateSettings', {
-        method: 'POST',
-        body: JSON.stringify({
-          settingName: param,
-          newValue: val,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-        .then((response) => response.json())
-        .catch((error) => {
-          throw new Error('Error saving updated settings.', { cause: error });
-        });
+    //ALL OF OUR PARAMTS ARE STRINGS NOW
+    // if (
+    //   // applies only to params that are numbers
+    //   param === 'KAFKA_PORT' ||
+    //   // param === 'ZOOKEEPER_PORT' ||
+    //   param === 'JMX_PORT' ||
+    //   param === 'metric-count' ||
+    //   param === 'producers' ||
+    //   param === 'consumers'
+    //   // param === 'KAFKA_URL'
+    // ) {
+    //   val = Number(val);
+    // }
+    console.log('in updateSettings');
+    fetch('http://localhost:8080/updateSettings', {
+      method: 'POST',
+      body: JSON.stringify({
+        settingName: param,
+        newValue: val,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        throw new Error('Error saving updated settings.', { cause: error });
+      });
   };
 
   const handleEnterPress = (e, param, val) => {
@@ -103,10 +111,11 @@ const Settings = () => {
       <div className="setting">
         <label htmlFor="kafka-port">Kafka Port </label>
         <input
-          id="kafka-port"
-          type="number"
-          name="kafka-port-num"
-          readOnly={true}
+
+          id='kafka-port'
+          type='number'
+          name='kafka-port-num'
+
           defaultValue={kInput}
           placeholder={kafka}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
@@ -117,10 +126,11 @@ const Settings = () => {
       <div className="setting">
         <label htmlFor="kafkaURL">Kafka URL</label>
         <input
-          id="kafkaURL"
-          type="text"
-          name="kafkaURL"
-          readOnly={true}
+
+          id='kafkaURL'
+          type='text'
+          name='kafkaURL'
+
           defaultValue={kURLInput}
           placeholder={kafkaURL}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
@@ -131,10 +141,11 @@ const Settings = () => {
       <div className="setting">
         <label htmlFor="JMX-port">JMX Port </label>
         <input
-          id="JMX-port"
-          type="number"
-          name="JMX-port-num"
-          readOnly={true}
+
+          id='JMX-port'
+          type='number'
+          name='JMX-port-num'
+
           defaultValue={jInput}
           placeholder={JMX}
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
@@ -142,13 +153,29 @@ const Settings = () => {
         />
       </div>
 
-      <div className="setting">
-        <label htmlFor="producers">Producers </label>
+
+      <div className='setting'>
+        <label htmlFor='log-filepath'>Log Filepath </label>
         <input
-          id="producers"
-          type="number"
-          name="producers"
-          readOnly={true}
+          id='log-filepath'
+          type='text'
+          name='log-filepath-string'
+          defaultValue={fInput}
+          placeholder={filepath}
+          onKeyDown={(e) => handleEnterPress(e, 'log-filepath', fInput)}
+          onChange={(e) => setfInput(e.target.value)}
+          onClick={handleDirectorySelector}
+        />
+        {/* <label htmlFor='log-filepath'>{filepath} </label> */}
+      </div>
+
+      <div className='setting'>
+        <label htmlFor='producers'>Producers </label>
+        <input
+          id='producers'
+          type='number'
+          name='producers'
+
           defaultValue={pInput}
           placeholder={producers}
           onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
@@ -159,10 +186,11 @@ const Settings = () => {
       <div className="setting">
         <label htmlFor="consumers">Consumers</label>
         <input
-          id="consumers"
-          type="number"
-          name="consumers"
-          readOnly={true}
+
+          id='consumers'
+          type='number'
+          name='consumers'
+
           defaultValue={cInput}
           placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
@@ -183,7 +211,9 @@ const Settings = () => {
             value={metricCount}
             onChange={(e) => setInput(e)}
           ></input>
+
           <label className="range-label">{metricCount} Seconds</label>
+
         </div>
       </div>
     </div>
