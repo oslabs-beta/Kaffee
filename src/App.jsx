@@ -19,7 +19,7 @@ import {
 
 export async function loader() {
   try {
-    const res = await fetch('http://localhost:3030/getSettings');
+    const res = await fetch('http://localhost:8080/getSettings');
     const data = await res.json();
     return data;
   } catch (error) {

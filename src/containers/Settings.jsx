@@ -17,7 +17,7 @@ async function getDirectory() {
 
 export async function loader() {
   try {
-    const res = await fetch('http://localhost:3030/getSettings');
+    const res = await fetch('http://localhost:8080/getSettings');
     const data = await res.json();
     return data;
   } catch (error) {
@@ -88,7 +88,7 @@ const Settings = () => {
       val = Number(val);
     }
     console.log('in updateSettings');
-    fetch('http://localhost:3030/updateSettings', {
+    fetch('http://localhost:8080/updateSettings', {
       method: 'POST',
       body: JSON.stringify({
         settingName: param,
@@ -156,13 +156,13 @@ const Settings = () => {
   }
 
   return (
-    <div className='settings-container'>
-      <div className='setting'>
-        <label htmlFor='kafka-port'>Kafka Port </label>
+    <div className="settings-container">
+      <div className="setting">
+        <label htmlFor="kafka-port">Kafka Port </label>
         <input
-          id='kafka-port'
-          type='number'
-          name='kafka-port-num'
+          id="kafka-port"
+          type="number"
+          name="kafka-port-num"
           readOnly={true}
           defaultValue={kInput}
           placeholder={kafka}
@@ -172,12 +172,12 @@ const Settings = () => {
         {/* <label htmlFor='kafka-port'> {kafka} </label> */}
       </div>
 
-      <div className='setting'>
-        <label htmlFor='kafkaURL'>Kafka URL</label>
+      <div className="setting">
+        <label htmlFor="kafkaURL">Kafka URL</label>
         <input
-          id='kafkaURL'
-          type='text'
-          name='kafkaURL'
+          id="kafkaURL"
+          type="text"
+          name="kafkaURL"
           readOnly={true}
           defaultValue={kURLInput}
           placeholder={kafkaURL}
@@ -187,12 +187,12 @@ const Settings = () => {
         {/* <label htmlFor='kafkaURL'> {kafkaURL} </label> */}
       </div>
 
-      <div className='setting'>
-        <label htmlFor='JMX-port'>JMX Port </label>
+      <div className="setting">
+        <label htmlFor="JMX-port">JMX Port </label>
         <input
-          id='JMX-port'
-          type='number'
-          name='JMX-port-num'
+          id="JMX-port"
+          type="number"
+          name="JMX-port-num"
           readOnly={true}
           defaultValue={jInput}
           placeholder={JMX}
@@ -217,12 +217,12 @@ const Settings = () => {
         <label htmlFor='log-filepath'>{filepath} </label>
       </div> */}
 
-      <div className='setting'>
-        <label htmlFor='producers'>Producers </label>
+      <div className="setting">
+        <label htmlFor="producers">Producers </label>
         <input
-          id='producers'
-          type='number'
-          name='producers'
+          id="producers"
+          type="number"
+          name="producers"
           readOnly={true}
           defaultValue={pInput}
           placeholder={producers}
@@ -232,12 +232,12 @@ const Settings = () => {
         {/* <label htmlFor='producers'> {producers} </label> */}
       </div>
 
-      <div className='setting'>
-        <label htmlFor='consumers'>Consumers</label>
+      <div className="setting">
+        <label htmlFor="consumers">Consumers</label>
         <input
-          id='consumers'
-          type='number'
-          name='consumers'
+          id="consumers"
+          type="number"
+          name="consumers"
           readOnly={true}
           defaultValue={cInput}
           placeholder={consumers}
@@ -247,20 +247,20 @@ const Settings = () => {
         {/* <label htmlFor="consumers">{consumers}</label> */}
       </div>
 
-      <div className='setting'>
-        <label htmlFor='metric-count'>Seconds of Data Displayed</label>
-        <div className='range'>
+      <div className="setting">
+        <label htmlFor="metric-count">Seconds of Data Displayed</label>
+        <div className="range">
           <input
-            id='metric-count'
-            name='metric-count'
-            type='range'
-            min='0'
-            max='60'
-            step='5'
+            id="metric-count"
+            name="metric-count"
+            type="range"
+            min="0"
+            max="60"
+            step="5"
             value={metricCount}
             onChange={(e) => setInput(e)}
           ></input>
-          <label className='range-label'>{metricCount} Seconds</label>
+          <label className="range-label">{metricCount} Seconds</label>
         </div>
       </div>
     </div>

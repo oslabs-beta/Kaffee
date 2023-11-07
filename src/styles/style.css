@@ -1,5 +1,7 @@
 @import url('reset.css');
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @font-face {
   font-family: IAGG;
   src: url('../assets/fonts/ITC Avant Garde Gothic Medium.otf');
@@ -224,7 +226,8 @@ header nav a.active button {
   border: var(--border);
   color: rgb(var(--ternary-bg));
   border-radius: 10% / 8%;
-  box-shadow: 0px 0.15em 0.5em 0.1em rgba(var(--text-color), 0.2),
+  box-shadow:
+    0px 0.15em 0.5em 0.1em rgba(var(--text-color), 0.2),
     inset 1px 2px 10px 1px rgba(var(--quaternary-bg), 0.9);
   position: relative;
   aspect-ratio: 16/9;

@@ -222,7 +222,7 @@ export default function (props) {
     };
 
     lastSentTime = Date.now();
-    fetch('http://localhost:3030/addData', {
+    fetch('http://localhost:8080/addData', {
       method: 'POST',
       body: JSON.stringify(objToSend),
       headers: {
