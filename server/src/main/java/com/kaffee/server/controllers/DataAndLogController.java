@@ -56,7 +56,6 @@ public class DataAndLogController{
     } catch (Exception e) {
       return ResponseEntity.status(500).body("Not Created: " + e);
     }
-
   }
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body) throws IOException{
