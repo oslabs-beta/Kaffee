@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  MouseEvent,
-  useEffect,
-  useRef,
-  useContext,
-  useMemo,
-} from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -16,13 +9,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from 'chart.js';
-// import { useAppDispatch, useAppSelector } from '../redux/hooks.ts';
 import {
   friendlyList,
   metricColors,
-  preferredMetrics,
   chartOptionsInit as optionsInit,
   parseMetricName,
 } from '../utils/metrics.js';
@@ -64,7 +54,6 @@ export default function (props) {
   // Set the title based upon the list of friendly metric names
   // stored in '../utils/metrics
   chartOptions.plugins.title.text = friendlyList[props.metric];
-  console.log(chartOptions);
 
   useEffect(() => {
     // if we have a props.data, we are loading from historical data
@@ -235,14 +224,11 @@ export default function (props) {
           setLabelsToSend([]);
         }
       })
-      .catch((err) => {
-        // what do we do if the fetch fails?
-        console.log(err);
-      });
+      .catch((err) => {});
   }
 
   return (
-    <div className='chartCanvas'>
+    <div className="chartCanvas">
       {status === 'loading' ? (
         <span>Loading Chart</span>
       ) : (
@@ -260,55 +246,3 @@ export default function (props) {
     </div>
   );
 }
-
-/*
-  data object from Java server
-  {
-    "metric": "bytes-in",
-    "time": 1693251471538,
-    "snapshot": {
-      "RateUnit": "SECONDS",
-      "OneMinuteRate": "5.646250107634674E-43",
-      "EventType": "bytes",
-      "FifteenMinuteRate": "0.035843277946316754",
-      "Count": "32300",
-      "FiveMinuteRate": "1.0746448344638806E-7",
-      "MeanRate": "4.6865081791319945"
-    }
-  }
-  
-  we want to store the data looking like:
-  {
-    "bytes-in": {
-      labels: [time1, time2, time3 ]
-      datasets: [
-        {
-          label: OneMinuteRate,
-          data[data1, data2, data3]
-        }
-      ]
-    }
-    "isr-shrinks": {
-      labels: [time1, time2, time3 ]
-      datasets: [
-        {
-          label: OneMinuteRate,
-          data[data1, data2, data3]
-        }
-      ]
-    }
-  }
-
-  chartjs dataset object looks like:
-  data={
-    labels: [timestamps],
-    datasets: [
-      {
-        data: Array<Numbers>,
-        label: "metric",
-        borderColor: something
-      }
-    ]      
-  }
-  
-  */

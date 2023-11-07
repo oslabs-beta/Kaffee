@@ -28,7 +28,6 @@ const router = createBrowserRouter(
       <Route path="about" element={<About />} />
       <Route path="*" element={<ErrorPage />} />{' '}
       <Route path="*" element={<ErrorPage />} />
-      {/* <Route path="metrics" element={<Metrics />} /> */}
       <Route path="*" element={<ErrorPage />} />
     </Route>
   )

@@ -11,12 +11,12 @@
   - /addData, /getData, /getLogFiles, /getSettings, /updateSettings
 - FORMAT GET REQUESTS TO /getData LIKE THIS
   fetch("localhost:8080/getData?filename={FILENAME}.json")
-- ALL POST REQUESTS TO /addData MUST BE FORMATTED EXACTLY THE SAME AND IN THE SAME ORDER (i.e. 
-    req.body = { [METRIC NAME]: {
-        labels: [],
-        datasets: [
-          {label: 'One Minute Rate', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}
-        ]
-      }
-    }
+- ALL POST REQUESTS TO /addData MUST BE FORMATTED EXACTLY THE SAME AND IN THE SAME ORDER (i.e.
+  req.body = { [METRIC NAME]: {
+  labels: [],
+  datasets: [
+  {label: 'One Minute Rate', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}
+  ]
+  }
+  }
   )
