@@ -55,23 +55,21 @@ const Settings = () => {
       param === 'metric-count' ||
       param === 'producers' ||
       param === 'consumers'
-    ) {
-      val = Number(val);
-    }
-    fetch('http://localhost:8080/updateSettings', {
-      method: 'POST',
-      body: JSON.stringify({
-        settingName: param,
-        newValue: val,
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        throw new Error('Error saving updated settings.', { cause: error });
-      });
+    )
+      fetch('http://localhost:8080/updateSettings', {
+        method: 'POST',
+        body: JSON.stringify({
+          settingName: param,
+          newValue: val,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          throw new Error('Error saving updated settings.', { cause: error });
+        });
   };
 
   const handleEnterPress = (e, param, val) => {
