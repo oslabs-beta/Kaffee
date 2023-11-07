@@ -97,14 +97,10 @@
   <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
   <!--   <property name="fileExtensions" value="java"/> -->
   <!-- </module> -->
-
+  
   <module name="TreeWalker">
     <!-- Enable warnings suppression -->
     <!-- See https://checkstyle.sourceforge.io/checks/annotation/suppresswarnings.html -->
-    <module name="SuppressWarnings">
-      <property name="format" value="^magicnumber$" />
-      <property name="tokens" value="ANNOTATION_FIELD_DEF" />
-    </module>
 
     <!-- Checks for Javadoc comments.                     -->
     <!-- See https://checkstyle.org/checks/javadoc/index.html -->
@@ -177,7 +173,9 @@
     </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <module name="MagicNumber">
+      <property name="ignoreAnnotation" value="true" />
+    </module>
     <module name="MissingSwitchDefault"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="SimplifyBooleanExpression"/>
