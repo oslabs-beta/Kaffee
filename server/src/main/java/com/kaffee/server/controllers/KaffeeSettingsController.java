@@ -68,9 +68,7 @@ public class KaffeeSettingsController {
     // refresh Connection to use new Settings
     MetricSubscriptions ms = context.getBean("metricSubscriptions",
         MetricSubscriptions.class);
-    ms.setJmxPort();
-    ms.setKafkaPort();
-    ms.setKafkaUrl();
+    ms.reInitialize();
     // MetricSubscriptions newMs = ms.getBean("metricSubscriptions",
     // MetricSubscriptions.class);
     // newMs.reInitialize();

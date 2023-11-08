@@ -1,13 +1,16 @@
 package com.kaffee.server.models;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -34,10 +37,10 @@ public class MetricSubscriptions {
    */
   private String resolvedUrl;
   /** The map of subscribed metrics. */
-  private Map<String, String> subscribedServerMetrics = new HashMap<>();
+  public Map<String, String> subscribedServerMetrics = new HashMap<>();
   /**
    * The map of server metrics. Perhaps this doesn't need to be saved at the
-   * class level and can just be returned from the getServerMetrisStrings
+   * class level and can just be returned from the getServerMetricsStrings
    * method.
    */
   private Map<String, String> serverMetrics;
@@ -57,7 +60,6 @@ public class MetricSubscriptions {
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
     this.resolvedUrl = String.format(baseUrl, this.kafkaUrl, serverJmxPort);
-    System.out.println(resolvedUrl);
     this.serverMetrics = getServerMetricsStrings();
   }
 
@@ -67,7 +69,7 @@ public class MetricSubscriptions {
    * @return Map of the server metrics with a user-friendly name mapped to the
    *         corresponding JMX endpoint
    */
-  private Map<String, String> getServerMetricsStrings() {
+  public Map<String, String> getServerMetricsStrings() {
     return new HashMap<String, String>() {
       {
         put("under-replicated-partitions",
@@ -135,15 +137,15 @@ public class MetricSubscriptions {
    * @throws IOException
    */
   public JMXConnector connectToJMX() throws IOException {
-    JMXServiceURL url = new JMXServiceURL(this.RESOLVED_URL);
+    JMXServiceURL url = new JMXServiceURL(this.resolvedUrl);
     return JMXConnectorFactory.connect(url);
   }
 
   public void reInitialize() throws IOException {
-    SERVER_JMX_PORT = setJmxPort();
-    KAFKA_URL = setKafkaUrl();
+    setJmxPort();
+    setKafkaUrl();
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
-    RESOLVED_URL = String.format(baseUrl, this.KAFKA_URL, SERVER_JMX_PORT);
+    resolvedUrl = String.format(baseUrl, this.kafkaUrl, serverJmxPort);
     serverMetrics = getServerMetricsStrings();
   }
 
@@ -188,12 +190,12 @@ public class MetricSubscriptions {
    * @throws IOException
    * @throws IllegalArgumentException
    */
-  private void setJmxPort() throws IOException, IllegalArgumentException {
+  public void setJmxPort() throws IOException, IllegalArgumentException {
     Integer newPort = Integer
         .parseInt(ReadSettings.main("JMX_PORT").toString());
 
     if (!this.isValidPort(newPort)) {
-      throw new IllegalArgumentException("Inaviled JMX Port value");
+      throw new IllegalArgumentException("Invalid JMX Port value");
     }
     this.serverJmxPort = newPort;
   }
@@ -220,12 +222,14 @@ public class MetricSubscriptions {
    * @throws IOException
    * @throws IllegalArgumentException
    */
-  private void setKafkaUrl() throws IOException, IllegalArgumentException {
+  public void setKafkaUrl() throws IOException, IllegalArgumentException {
     String url = ReadSettings.main("KAFKA_URL").toString();
-    UrlValidator uv = new UrlValidator();
-    if (!uv.isValid(url)) {
-      throw new IllegalArgumentException("Kafka URL provided is invalid.");
-    }
+    String jmxPort = ReadSettings.main("JMX_PORT").toString();
+    String baseUrl = "service:jmx:rmi:///jndi/rmi://" + url + ":" + jmxPort + "/jmxrmi";
+    // UrlValidator uv = new UrlValidator();
+    // if (!uv.isValid(baseUrl)) {
+    //   throw new IllegalArgumentException("Kafka URL provided is invalid.");
+    // }
     this.kafkaUrl = url;
   }
 
@@ -246,12 +250,11 @@ public class MetricSubscriptions {
    * @throws IOException
    * @throws IllegalArgumentException
    */
-  private void setKafkaPort() throws IOException, IllegalArgumentException {
+  public void setKafkaPort() throws IOException, IllegalArgumentException {
     Integer port = Integer.parseInt(ReadSettings.main("KAFKA_PORT").toString());
     if (!this.isValidPort(port)) {
-      throw new IllegalArgumentException("Inaviled Kafka Port value");
+      throw new IllegalArgumentException("Invalid Kafka Port value");
     }
-
     this.kafkaPort = port;
   }
 
@@ -263,7 +266,8 @@ public class MetricSubscriptions {
    */
   private boolean isValidPort(final Integer port) {
     List<Integer> commonPorts = Arrays.asList(1433, 1434, 3306, 3389, 8080,
-        8443);
-    return (1024 > port && port < 65535 && !commonPorts.contains(port));
+    8443);
+
+    return (port > 1024 && port < 65535 && !commonPorts.contains(port));
   }
 }
