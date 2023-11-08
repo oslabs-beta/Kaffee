@@ -20,3 +20,12 @@
   }
   }
   )
+
+  # PROD1.1
+  - TO GET THE DOCKER IMAGE TO BUILD AND RUN PROPERLY TAKE THESE STEPS
+    - npm run build:java
+    - npm run build
+    - COPY settings.json TO build/target/classes/com/kaffee/server
+    - NEW folder IN build/classes/com/kaffee/server NAMED Historical_Logs
+    - BUILD DOCKER IMAGE
+
