@@ -1,16 +1,13 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// used when importing a test chart
 export const newChart = createAsyncThunk(
   'chart/newChart',
   async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
     const count = 50;
     const apiUrl = `http://localhost:8080/api/dummy/${count}`;
 
     const res = await fetch(apiUrl);
     const data = await res.json();
-    console.log(data);
 
     return data;
   }
@@ -29,7 +26,6 @@ const chartSlice = createSlice({
     addChart: (state, action) => {
       state.list.push({ metric: action.payload });
     },
-    // removeChart: (state, action: PayloadAction<number>) => {
     removeChart: (state, action) => {
       const newChartList = state.list.filter((chart) => {
         return chart.metric !== action.payload;

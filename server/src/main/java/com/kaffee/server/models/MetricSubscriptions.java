@@ -1,16 +1,15 @@
 package com.kaffee.server.models;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.commons.validator.routines.UrlValidator;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.kaffee.server.UserSettings.ReadSettings;
 
@@ -20,6 +19,7 @@ import com.kaffee.server.UserSettings.ReadSettings;
  * This may need a class rename since producers and consumer metrics will
  * probably need to be handled separately.
  */
+@ConfigurationProperties
 public class MetricSubscriptions {
   /** The JMX port of the Kafka server. */
   private int serverJmxPort;
@@ -135,25 +135,19 @@ public class MetricSubscriptions {
    * @throws IOException
    */
   public JMXConnector connectToJMX() throws IOException {
-    JMXServiceURL url = new JMXServiceURL(this.resolvedUrl);
-    // System.out.println("The RESOLVED_URL is: ");
-    // System.out.println(this.RESOLVED_URL);
-    // JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://",
-    // "host.docker.internal", this.SERVER_JMX_PORT);
-    // System.out.println("The JMX Service URL hostname is: ");
-    // System.out.println(url.toString());
+    JMXServiceURL url = new JMXServiceURL(this.RESOLVED_URL);
     return JMXConnectorFactory.connect(url);
   }
 
-  /**
-   * Add a metric to the subscription list. Throws an exception if the metric
-   * is not part of the list of valid subscriptions. Can we output the message
-   * to a log, or maybe only output when debug is enabled?
-   *
-   * @param metric
-   * @throws NullPointerException
-   */
-  public void addSubscription(final String metric) throws NullPointerException {
+  public void reInitialize() throws IOException {
+    SERVER_JMX_PORT = setJmxPort();
+    KAFKA_URL = setKafkaUrl();
+    String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
+    RESOLVED_URL = String.format(baseUrl, this.KAFKA_URL, SERVER_JMX_PORT);
+    serverMetrics = getServerMetricsStrings();
+  }
+
+  public void addSubscription(String metric) throws NullPointerException {
     try {
       String metricString = serverMetrics.get(metric);
       if (metricString != null) {

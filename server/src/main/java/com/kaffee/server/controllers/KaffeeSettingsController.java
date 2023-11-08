@@ -1,10 +1,16 @@
 package com.kaffee.server.controllers;
 
+import com.kaffee.server.ServerApplication;
 import com.kaffee.server.UserSettings.ReadSettings;
+import com.kaffee.server.controllers.SocketController;
+import com.kaffee.server.models.MetricSubscriptions;
 
 import org.springframework.web.bind.annotation.RestController;
-
+import org.apache.kafka.common.Metric;
+import org.apache.kafka.common.protocol.types.Field.Bool;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +25,9 @@ import java.nio.file.Paths;
 @RequestMapping("/")
 public class KaffeeSettingsController {
   // Get Settings Route and Handler
+  @Autowired
+  ApplicationContext context;
+
   @GetMapping("/getSettings")
   private ResponseEntity<String> getSettings() throws IOException {
     // Declare path to settings.json
@@ -33,7 +42,7 @@ public class KaffeeSettingsController {
   // set Post route to /updateSettings
   @PostMapping("/updateSettings")
   // declare argument using annotation @RequestBody to get body from request
-  private ResponseEntity<String> updateSettings(final @RequestBody String body)
+  public ResponseEntity<String> updateSettings(@RequestBody String body)
       throws IOException {
     // Convert body to JSON
     JSONObject reqBody = new JSONObject(body);
@@ -56,6 +65,15 @@ public class KaffeeSettingsController {
     // overwrite old settings file with the updated settings file
     Files.write(Paths.get(resourceName), jsonToBytes);
     ReadSettings.main(settingName);
+    // refresh Connection to use new Settings
+    MetricSubscriptions ms = context.getBean("metricSubscriptions",
+        MetricSubscriptions.class);
+    ms.setJmxPort();
+    ms.setKafkaPort();
+    ms.setKafkaUrl();
+    // MetricSubscriptions newMs = ms.getBean("metricSubscriptions",
+    // MetricSubscriptions.class);
+    // newMs.reInitialize();
     return ResponseEntity.ok("Updated!");
   }
 }
