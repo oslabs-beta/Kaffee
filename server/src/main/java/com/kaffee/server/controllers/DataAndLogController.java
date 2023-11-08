@@ -21,103 +21,171 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.File;
 
-
-
+/**
+ * Controller for logging the metric data read.
+ */
 @RestController
 @RequestMapping("/")
-public class DataAndLogController{
-  //Get Historical Log Route
-  @GetMapping("/getLogFiles")
-  private ResponseEntity<String[]> getLogFiles() throws IOException{
-    //directory path
-    String resourceName = "Historical_Logs/";
-    //declare a new File at the directory path
-    File directory = new File(resourceName);
-    //declare a variable files which is an array of string of file names contained in the directory.
-    String files[] = directory.list();
-    //iterate through the files and list their name & their content using Files.readString
-    if(files != null){
-      for(int i = 0; i<files.length; i++){
-        Path filePath = Paths.get("Historical_Logs/",files[i]);
-        System.out.println(files[i] + ": " + "\n" + (Files.readString(filePath)));
-      }
-    }
+public class DataAndLogController {
+  /** String with path to log file location. */
+  private String directoryLocation;
 
-    //return the array of files
+  /**
+   * Create a DataAndLogController at the default directory. Default directory
+   * is "Historical_Logs"
+   */
+  public DataAndLogController() {
+    this.setDirectory("Historical_Logs");
+  }
+
+  /**
+   * Create a DataAndLogController at a given directory.
+   *
+   * @param dirLocation The relative path of the logs directory
+   */
+  public DataAndLogController(final String dirLocation) {
+    this.setDirectory(dirLocation);
+  }
+
+  /**
+   * API Endpoint for returning log liles.
+   *
+   * @return Response entity OK (200) and the array of files in the directory
+   * @throws IOException
+   */
+  @GetMapping("/getLogFiles")
+  private ResponseEntity<String[]> getLogFiles() throws IOException {
+    // directory path
+    String logDirectory = this.getDirectory();
+    // declare a new File at the directory path
+    File directory = new File(logDirectory);
+    // declare a variable files which is an array of string of file names
+    // contained in the directory.
+    String[] files = directory.list();
+    // iterate through the files and list their name & their content using
+    // Files.readString
+    for (int i = 0; i < files.length; i++) {
+      Path filePath = Paths.get(logDirectory, files[i]);
+      System.out.println(files[i] + ": " + "\n" + (Files.readString(filePath)));
+    }
+    // return the array of files
     return ResponseEntity.ok(files);
   }
+
   @GetMapping("/getData")
-  private ResponseEntity<String> getData(@RequestParam String filename) throws IOException{
+  private ResponseEntity<String> getData(@RequestParam String filename)
+      throws IOException {
     try {
-      //find file with the requested name
-      Path filePath = Paths.get("Historical_Logs/",filename);
+      // find file with the requested name
+      Path filePath = Paths.get("Historical_Logs/", filename);
       String stringifiedFile = Files.readString(filePath);
       return ResponseEntity.ok(stringifiedFile);
     } catch (Exception e) {
       return ResponseEntity.status(500).body("Not Created: " + e);
     }
   }
+
   @PostMapping("/addData")
-  private ResponseEntity<String> addData(@RequestBody String body) throws IOException{
-    //declare filename and path
-    String filename = "Historical_Logs/" + LocalDate.now().toString() + "_log.json";
+  private ResponseEntity<String> addData(@RequestBody String body)
+      throws IOException {
+    // declare filename and path
+    String filename = "Historical_Logs/" + LocalDate.now().toString()
+        + "_log.json";
     JSONObject data = new JSONObject(body);
-    //get the metric name from request body
+    // get the metric name from request body
     String metricName = data.keys().next();
-    //get the metric data from request body
+    // get the metric data from request body
     JSONObject metricValues = data.getJSONObject(metricName);
     JSONArray metricTimeLabels = metricValues.getJSONArray("labels");
     JSONArray datasets = metricValues.getJSONArray("datasets");
     try {
-      //instantiate a new File passing in the path and filename as an arg
+      // instantiate a new File passing in the path and filename as an arg
       File newLog = new File(filename);
-      //.createNewFile(); returns a boolean if the file exists or not. If it doesn't exist, creates the file, if it does exist, create the file
+      // .createNewFile(); returns a boolean if the file exists or not. If it
+      // doesn't exist, creates the file, if it does exist, create the file
       Boolean check = newLog.createNewFile();
       newLog.createNewFile();
-      if(check){
+      if (check) {
         String emptyObj = "{}";
         Files.write(Paths.get(filename), emptyObj.getBytes());
       }
-      //get the file
+      // get the file
       String stringified = new String(Files.readAllBytes(Paths.get(filename)));
-      //parse the file into a json object
+      // parse the file into a json object
       JSONObject jsonFile = new JSONObject(stringified);
-      //if metric name exists, skip creation of key
-      //else create metric name key
-      if(!jsonFile.has(metricName)){
-        jsonFile.put(metricName, new JSONObject("{labels: [], datasets: [{label: 'One Minute Rate', data: []},{label: 'Count', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}]}"));
+      // if metric name exists, skip creation of key
+      // else create metric name key
+      if (!jsonFile.has(metricName)) {
+        jsonFile.put(metricName, new JSONObject(
+            "{labels: [], datasets: [{label: 'One Minute Rate', data: []},{label: 'Count', data: []},{label: 'Fifteen Minute Rate', data: []},{label: 'Five Minute Rate', data: []},{label: 'Mean Rate', data: []}]}"));
       }
-      //push new timestamp labels to labels
+      // push new timestamp labels to labels
       JSONObject curMetrics = jsonFile.getJSONObject(metricName);
       JSONArray timestamps = curMetrics.getJSONArray("labels");
       timestamps.putAll(metricTimeLabels);
       curMetrics.put("labels", timestamps);
-      //push new data to correct dataset with corresponding matching label
-      for(int i = 0; i < datasets.length()-1; i++){
-        //get the new dataset
+      // push new data to correct dataset with corresponding matching label
+      for (int i = 0; i < datasets.length() - 1; i++) {
+        // get the new dataset
         JSONObject newDataSet = datasets.getJSONObject(i);
-        //get the current label
+        // get the current label
         String curLabel = newDataSet.getString("label");
-        //.getJSONArray("data");
-        for(int j = 0; j < datasets.length()-1; j++){
-          //get the files dataset
-          JSONObject curDataSet = curMetrics.getJSONArray("datasets").getJSONObject(j);
-          if(curDataSet.getString("label").equals(curLabel)){
-            //push new dataset to curdata set
-            curDataSet.getJSONArray("data").putAll(newDataSet.getJSONArray("data"));
+        // .getJSONArray("data");
+        for (int j = 0; j < datasets.length() - 1; j++) {
+          // get the files dataset
+          JSONObject curDataSet = curMetrics.getJSONArray("datasets")
+              .getJSONObject(j);
+          if (curDataSet.getString("label").equals(curLabel)) {
+            // push new dataset to curdata set
+            curDataSet.getJSONArray("data")
+                .putAll(newDataSet.getJSONArray("data"));
           }
         }
       }
-      //stringify jsonfile
+      // stringify jsonfile
       jsonFile.remove(metricName);
       jsonFile.put(metricName, curMetrics);
       String reString = jsonFile.toString();
-      //write updated log file to path
+      // write updated log file to path
       Files.write(Paths.get(filename), reString.getBytes());
     } catch (Exception e) {
       System.out.println(e);
       return ResponseEntity.status(500).body("Not Created: " + e);
     }
     return ResponseEntity.status(200).body("Created!");
+  }
+
+  /**
+   * Set the directory of the log files.
+   *
+   * @param dirLocation A string location of the directory
+   */
+  private void setDirectory(final String dirLocation) {
+    // Previous to this implementation, we used
+    // "/Users/lapduke/Desktop/Kaffee1.1/Kaffee/Historical_Logs"
+    Path path = Paths.get(System.getProperty("user.dir"));
+
+    this.directoryLocation = path.resolve(dirLocation).toString();
+  }
+
+  /**
+   * Get the currently set directory of the log files.
+   *
+   * @return the resolved full path of the log files directory.
+   */
+  private String getDirectory() {
+    return this.directoryLocation;
+  }
+
+  /**
+   * Generate filename function. Created so that DataAndLogControllerTest can
+   * compile. In reality filename generation should be private, and
+   * untestable. A work around is create a file through some public method,
+   * and then verify the newly created file passes any tests.
+   *
+   * @return A dummy string.
+   */
+  public static String generateFileName() {
+    return "filename";
   }
 }
