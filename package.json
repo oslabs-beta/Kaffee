@@ -6,7 +6,8 @@
   "scripts": {
     "devFront": "vite",
     "dev": "npm start & vite",
-    "build": "tsc && vite build",
+    "build": "vite build && npm run build:java",
+    "build:java": "cd server && mvn clean package && java -cp -r target/server-1.1.1-SNAPSHOT.jar",
     "start": "cd server && mvn spring-boot:run",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

@@ -60,6 +60,9 @@
 
 
 	<build>
+	<directory>
+	/Users/lapduke/Desktop/Kaffee1.1/Kaffee/build
+	</directory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -71,7 +74,6 @@
 				<directory>Historical_Logs/</directory>
 			</resource>
 		</resources>
-
 	</build>
 
 </project>

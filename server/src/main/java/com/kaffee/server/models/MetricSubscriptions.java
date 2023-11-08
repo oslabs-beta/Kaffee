@@ -179,7 +179,7 @@ public class MetricSubscriptions {
    * @return the current server JMX port value.
    */
   public int getJmxPort() {
-    return this.serverJmxPort;
+    return serverJmxPort;
   }
 
   /**
