@@ -28,4 +28,10 @@
     - COPY settings.json TO build/target/classes/com/kaffee/server
     - NEW folder IN build/classes/com/kaffee/server NAMED Historical_Logs
     - BUILD DOCKER IMAGE
+  - When running the Docker Image
+    - Optional Settings
+      - Set all ports to themselves (i.e)
+        - 3030:3030
+        - 5173:5173
+        - 8080:8080
 
