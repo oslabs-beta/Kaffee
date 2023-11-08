@@ -185,33 +185,7 @@ const Settings = () => {
       {/* </div> */}
 
       <div className="setting">
-        <label htmlFor="producers">Producers </label>
-        <input
-          id="producers"
-          type="number"
-          name="producers"
-          defaultValue={pInput}
-          placeholder={producers}
-          onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
-          onChange={(e) => setPInput(e.target.value)}
-        />
-      </div>
-
-      <div className="setting">
-        <label htmlFor="consumers">Consumers</label>
-        <input
-          id="consumers"
-          type="number"
-          name="consumers"
-          defaultValue={cInput}
-          placeholder={consumers}
-          onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
-          onChange={(e) => setCInput(e.target.value)}
-        />
-      </div>
-
-      <div className="setting">
-        <label htmlFor="metric-count">Seconds of Data Displayed</label>
+        <label htmlFor="metric-count">Chart Interval</label>
         <div className="range">
           <input
             id="metric-count"
@@ -226,6 +200,34 @@ const Settings = () => {
 
           <label className="range-label">{metricCount} Seconds</label>
         </div>
+      </div>
+
+<hr />
+
+      <div className="setting">
+        <label htmlFor="producers"># Test Producers</label>
+        <input
+          id="producers"
+          type="number"
+          name="producers"
+          defaultValue={pInput}
+          placeholder={producers}
+          onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
+          onChange={(e) => setPInput(e.target.value)}
+        />
+      </div>
+
+      <div className="setting">
+        <label htmlFor="consumers"># Test Consumers</label>
+        <input
+          id="consumers"
+          type="number"
+          name="consumers"
+          defaultValue={cInput}
+          placeholder={consumers}
+          onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
+          onChange={(e) => setCInput(e.target.value)}
+        />
       </div>
     </div>
   );
