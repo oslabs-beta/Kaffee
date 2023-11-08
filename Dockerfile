@@ -34,9 +34,13 @@ WORKDIR /app
 
 COPY ./package.json /app/
 
-COPY ./vite.config.js /app/
-
 COPY ./build/dist /app/dist
+
+COPY ./vite.config.js /app/dist
+
+COPY ./postcss.config.js /app/dist
+
+COPY ./tailwind.config.js /app/dist
 
 COPY ./build/target /app/target
 
