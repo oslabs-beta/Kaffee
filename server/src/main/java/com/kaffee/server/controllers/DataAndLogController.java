@@ -125,13 +125,13 @@ public class DataAndLogController {
       timestamps.putAll(metricTimeLabels);
       curMetrics.put("labels", timestamps);
       // push new data to correct dataset with corresponding matching label
-      for (int i = 0; i < datasets.length() - 1; i++) {
+      for (int i = 0; i < datasets.length(); i++) {
         // get the new dataset
         JSONObject newDataSet = datasets.getJSONObject(i);
         // get the current label
         String curLabel = newDataSet.getString("label");
         // .getJSONArray("data");
-        for (int j = 0; j < datasets.length() - 1; j++) {
+        for (int j = 0; j < datasets.length(); j++) {
           // get the files dataset
           JSONObject curDataSet = curMetrics.getJSONArray("datasets")
               .getJSONObject(j);
