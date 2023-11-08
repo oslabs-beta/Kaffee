@@ -46,4 +46,4 @@ EXPOSE 8080
 EXPOSE 3030
 EXPOSE 5173
 
-CMD npm run start:both
+CMD npm run start:both-prod

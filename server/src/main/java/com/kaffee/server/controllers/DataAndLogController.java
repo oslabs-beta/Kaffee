@@ -35,7 +35,7 @@ public class DataAndLogController {
    * is "Historical_Logs"
    */
   public DataAndLogController() {
-    this.setDirectory("Historical_Logs");
+    this.setDirectory("classes/com/kaffee/server/Historical_Logs/");
   }
 
   /**
@@ -77,7 +77,7 @@ public class DataAndLogController {
       throws IOException {
     try {
       // find file with the requested name
-      Path filePath = Paths.get("Historical_Logs/", filename);
+      Path filePath = Paths.get("classes/com/kaffee/server/Historical_Logs/", filename);
       String stringifiedFile = Files.readString(filePath);
       return ResponseEntity.ok(stringifiedFile);
     } catch (Exception e) {
@@ -88,9 +88,9 @@ public class DataAndLogController {
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body)
       throws IOException {
+    //check if folder exists
     // declare filename and path
-    String filename = "Historical_Logs/" + LocalDate.now().toString()
-        + "_log.json";
+    String filename = "classes/com/kaffee/server/Historical_Logs/" + LocalDate.now().toString()+ "_log.json";
     JSONObject data = new JSONObject(body);
     // get the metric name from request body
     String metricName = data.keys().next();
