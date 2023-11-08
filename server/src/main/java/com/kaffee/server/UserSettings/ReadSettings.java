@@ -23,7 +23,7 @@ public record ReadSettings() {
     // declare String resource name and set value to settings file path
     // I believe we should be storing this file in server/resources so that it
     // is properly located after complilation.
-    String resourceName = "src/main/java/com/kaffee/server/settings.json";
+    String resourceName = "classes/com/kaffee/server/settings.json";
     // pass path to Files.readAllBytes, convert byte array to String using new
     // String();
     String stringified = new String(

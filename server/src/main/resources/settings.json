@@ -4,7 +4,7 @@
   "consumers": "2",
   "log-filepath": "Desktop",
   "KAFKA_PORT": 9092,
-  "KAFKA_URL": "localhost",
+  "KAFKA_URL": "68.96.78.126",
   "producers": 1
 }
 

@@ -31,7 +31,7 @@ public class KaffeeSettingsController {
   @GetMapping("/getSettings")
   private ResponseEntity<String> getSettings() throws IOException {
     // Declare path to settings.json
-    String resourceName = "src/main/java/com/kaffee/server/settings.json";
+    String resourceName = "classes/com/kaffee/server/settings.json";
     // Read all bytes as bytes[], then stringify using new String();
     String stringified = new String(
         Files.readAllBytes(Paths.get(resourceName)));
@@ -50,7 +50,7 @@ public class KaffeeSettingsController {
     String settingName = reqBody.getString("settingName");
     String newValue = reqBody.getString("newValue");
     // declare path to settings.json
-    String resourceName = "src/main/java/com/kaffee/server/settings.json";
+    String resourceName = "classes/com/kaffee/server/settings.json";
     // Read all bytes as bytes[], then stringify using new String()
     String stringified = new String(
         Files.readAllBytes(Paths.get(resourceName)));

@@ -61,7 +61,7 @@
 
 	<build>
 	<directory>
-	/Users/lapduke/Desktop/Kaffee1.1/Kaffee/build
+	/Users/lapduke/Desktop/Kaffee1.1/Kaffee/build/target
 	</directory>
 		<plugins>
 			<plugin>

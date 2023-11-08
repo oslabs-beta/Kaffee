@@ -6,11 +6,12 @@
   "scripts": {
     "devFront": "vite",
     "dev": "npm start & vite",
-    "build": "vite build && npm run build:java",
+    "build": "vite build",
     "build:java": "cd server && mvn clean package && java -cp -r target/server-1.1.1-SNAPSHOT.jar",
     "start": "cd server && mvn spring-boot:run",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:both": "concurrently \"vite\" \"cd build/target && java -jar server-1.1.1-SNAPSHOT.jar\""
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",

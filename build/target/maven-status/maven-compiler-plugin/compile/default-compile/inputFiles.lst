@@ -1,0 +1,17 @@
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/models/MetricSubscriptions.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/DataAndLogController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/SocketController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/ServerMetricController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/ProducerMetricController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/TestController/KafkaProducerConfig.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/TestController/TestConsumer.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/WebConfig.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/WebSocketConfig.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/ScheduledMessagesController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/models/MessageData.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/TestController/KafkaConsumerConfig.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/UserSettings/ReadSettings.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/TestController/RunTest.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/TestController/TestProducer.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/controllers/KaffeeSettingsController.java
+/Users/lapduke/Desktop/Kaffee1.1/Kaffee/server/src/main/java/com/kaffee/server/ServerApplication.java
