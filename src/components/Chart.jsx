@@ -26,7 +26,7 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 export default function (props) {
@@ -219,11 +219,11 @@ export default function (props) {
     })
       .then((res) => {
         if (res.status === 200) {
-          setDataToSend(new Array);
-          setLabelsToSend(new Array);
+          setDataToSend(new Array());
+          setLabelsToSend(new Array());
           labelsToSend.length = 0;
           dataToSend.length = 0;
-          console.log(labelsToSend,dataToSend)
+          console.log(labelsToSend, dataToSend);
         }
       })
       .catch((err) => {});

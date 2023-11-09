@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import Chart from './Chart.jsx';
 
 async function getData(filename) {
-  console.log(filename)
+  console.log(filename);
   const res = await fetch(`http://localhost:8080/getData?filename=${filename}`);
   if (res.ok) {
     const data = await res.json();
@@ -48,26 +48,17 @@ export default function ({ data: filename }) {
 
   const label = parseDate(filename);
   return (
-    <div className='history-item-container'>
-      <div className='history-date'>{label}</div>
-      <button
-        className='expand-button'
-        onClick={clickHandler}
-      >
+    <div className="history-item-container">
+      <div className="history-date">{label}</div>
+      <button className="expand-button" onClick={clickHandler}>
         {expanded ? 'Collapse' : 'Expand'}
       </button>
       {expanded && (
-        <div className='expanded-metrics'>
+        <div className="expanded-metrics">
           {typeof metrics.current === 'string'
             ? metrics.current
             : Object.entries(metrics.current).map(([metric, metricData]) => {
-                return (
-                  <Chart
-                    key={metric}
-                    metric={metric}
-                    data={metricData}
-                  />
-                );
+                return <Chart key={metric} metric={metric} data={metricData} />;
               })}
         </div>
       )}

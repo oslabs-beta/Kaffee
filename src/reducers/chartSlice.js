@@ -10,7 +10,7 @@ export const newChart = createAsyncThunk(
     const data = await res.json();
 
     return data;
-  }
+  },
 );
 
 const initialState = {
@@ -63,8 +63,8 @@ const chartSlice = createSlice({
       })
       .addCase(newChart.rejected, (state, action) => {
         state.status = 'failed';
-      })
-  }
+      });
+  },
 });
 
 export default chartSlice.reducer;

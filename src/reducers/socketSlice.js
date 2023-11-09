@@ -11,7 +11,7 @@ export const newChart = createAsyncThunk(
     const data = await res.json();
 
     return data;
-  }
+  },
 );
 
 const initialState = {
@@ -34,22 +34,14 @@ const socketSlice = createSlice({
     setClient: (state, action) => {
       state.client = action.payload;
     },
-    filterCharts: (state, action) => {
-
-    },
+    filterCharts: (state, action) => {},
   },
   extraReducers: (builder) => {
     builder
-      .addCase(newChart.pending, (state, action) => {
-
-      })
-      .addCase(newChart.fulfilled, (state, action) => {
-
-      })
-      .addCase(newChart.rejected, (state, action) => {
-
-      })
-  }
+      .addCase(newChart.pending, (state, action) => {})
+      .addCase(newChart.fulfilled, (state, action) => {})
+      .addCase(newChart.rejected, (state, action) => {});
+  },
 });
 
 export default socketSlice.reducer;

@@ -20,7 +20,7 @@ export async function loader() {
       // @ts-ignore
       {
         cause: err,
-      }
+      },
     );
   }
 }
