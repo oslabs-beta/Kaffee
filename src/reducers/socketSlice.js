@@ -38,11 +38,18 @@ const socketSlice = createSlice({
 
     },
   },
-  extraReducers: {
-    [newChart.pending]: (state, action) => { },
-    [newChart.fulfilled]: (state, action) => { },
-    [newChart.rejected]: (state, action) => { },
-  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(newChart.pending, (state, action) => {
+
+      })
+      .addCase(newChart.fulfilled, (state, action) => {
+
+      })
+      .addCase(newChart.rejected, (state, action) => {
+
+      })
+  }
 });
 
 export default socketSlice.reducer;
