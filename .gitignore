@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 .vscode/
 build
+server/hs_err_pid14538.log

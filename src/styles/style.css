@@ -275,13 +275,25 @@ header nav a.active button {
   margin: 0 2em;
 }
 
+.settings-container label {
+  display: flex;
+  flex-grow: 1;
+}
+.settings-container hr {
+  border-style: dashed;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  width: 23vw;
+  border-color: rgb(0, 0, 0);
+}
+
 .settings-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: 2em auto 0;
-  min-width: 20em;
+  min-width: 23em;
   max-width: 40em;
   gap: 10px;
   z-index: 1;
