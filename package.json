@@ -9,6 +9,7 @@
     "build": "tsc && vite build",
     "start": "cd server && mvn spring-boot:run",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write 'src/**/*.{js,jsx,css,html}'",
     "preview": "vite preview"
   },
   "dependencies": {
