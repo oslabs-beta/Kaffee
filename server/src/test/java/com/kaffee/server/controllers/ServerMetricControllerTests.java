@@ -1,6 +1,6 @@
 package com.kaffee.server.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaffee.server.ServerApplication;
-import com.kaffee.server.models.MetricSubscriptions;
+
 
 @ContextConfiguration(classes = ServerApplication.class)
 @WebMvcTest(ServerMetricController.class)

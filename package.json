@@ -8,6 +8,7 @@
     "dev:frontend": "vite",
     "dev:backend": "cd server && mvn spring-boot:run",
     "build:frontend": "vite build",
+    "build:backend": "cd server && mvn clean package && cp -r target ../../build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write 'src/**/*.{js,jsx,css,html}'",
     "preview": "vite preview"
