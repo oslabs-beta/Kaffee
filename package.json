@@ -4,14 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm:dev:frontend\" \"npm:dev:backend\"",
-    "dev:frontend": "vite",
-    "dev:backend": "cd server && mvn spring-boot:run",
-    "build:frontend": "vite build",
-    "build:backend": "cd server && mvn clean package && cp -r target ../../build",
+    "devFront": "vite",
+    "dev": "npm start & vite",
+    "build": "vite build",
+    "build:java": "cd server && mvn clean package && java -cp -r target/server-1.1.1-SNAPSHOT.jar",
+    "start": "cd server && mvn spring-boot:run",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write 'src/**/*.{js,jsx,css,html}'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:both": "concurrently \"vite\" \"cd build/target && java -jar server-1.1.1-SNAPSHOT.jar\"",
+    "start:both-prod": "concurrently \"vite dist --port 3030 --host 0.0.0.0\" \"cd target && java -jar server-1.1.1-SNAPSHOT.jar\""
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
@@ -63,3 +65,4 @@
     "vite": "^4.4.5"
   }
 }
+
