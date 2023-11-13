@@ -188,4 +188,3 @@ public class DataAndLogController {
   public static String generateFileName() {
     return "filename";
   }
-}

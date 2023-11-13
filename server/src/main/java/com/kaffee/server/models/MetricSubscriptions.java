@@ -264,6 +264,6 @@ public class MetricSubscriptions {
   private boolean isValidPort(final Integer port) {
     List<Integer> commonPorts = Arrays.asList(1433, 1434, 3306, 3389, 8080,
         8443);
-    return (1024 > port && port < 65535 && !commonPorts.contains(port));
+    return (1024 < port && port < 65535 && !commonPorts.contains(port));
   }
 }
