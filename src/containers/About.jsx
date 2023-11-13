@@ -5,7 +5,7 @@ const About = () => {
     <div className="settings-container">
       <img style={{ width: '250px' }} src="src/assets/logo.png" alt="" />
 
-      <p>v1.1</p>
+      <p>v1.1.1</p>
       <br />
       <p className="text-center">
         Kaffee is a free and open source product <br /> in early development.

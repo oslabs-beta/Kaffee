@@ -1,13 +1,9 @@
 package com.kaffee.server.controllers;
 
-import com.kaffee.server.ServerApplication;
 import com.kaffee.server.UserSettings.ReadSettings;
-import com.kaffee.server.controllers.SocketController;
 import com.kaffee.server.models.MetricSubscriptions;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.apache.kafka.common.Metric;
-import org.apache.kafka.common.protocol.types.Field.Bool;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -68,9 +64,7 @@ public class KaffeeSettingsController {
     // refresh Connection to use new Settings
     MetricSubscriptions ms = context.getBean("metricSubscriptions",
         MetricSubscriptions.class);
-    ms.setJmxPort();
-    ms.setKafkaPort();
-    ms.setKafkaUrl();
+    ms.reInitialize();
     // MetricSubscriptions newMs = ms.getBean("metricSubscriptions",
     // MetricSubscriptions.class);
     // newMs.reInitialize();

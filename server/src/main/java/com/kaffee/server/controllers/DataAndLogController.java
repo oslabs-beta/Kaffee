@@ -11,14 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.File;
 
 /**
@@ -32,10 +28,10 @@ public class DataAndLogController {
 
   /**
    * Create a DataAndLogController at the default directory. Default directory
-   * is "Historical_Logs"
+   * is "history"
    */
   public DataAndLogController() {
-    this.setDirectory("Historical_Logs");
+    this.setDirectory("history");
   }
 
   /**
@@ -77,7 +73,7 @@ public class DataAndLogController {
       throws IOException {
     try {
       // find file with the requested name
-      Path filePath = Paths.get("Historical_Logs/", filename);
+      Path filePath = Paths.get("history/", filename);
       String stringifiedFile = Files.readString(filePath);
       return ResponseEntity.ok(stringifiedFile);
     } catch (Exception e) {
@@ -89,7 +85,7 @@ public class DataAndLogController {
   private ResponseEntity<String> addData(@RequestBody String body)
       throws IOException {
     // declare filename and path
-    String filename = "Historical_Logs/" + LocalDate.now().toString()
+    String filename = "history/" + LocalDate.now().toString()
         + "_log.json";
     JSONObject data = new JSONObject(body);
     // get the metric name from request body
@@ -125,13 +121,13 @@ public class DataAndLogController {
       timestamps.putAll(metricTimeLabels);
       curMetrics.put("labels", timestamps);
       // push new data to correct dataset with corresponding matching label
-      for (int i = 0; i < datasets.length() - 1; i++) {
+      for (int i = 0; i < datasets.length(); i++) {
         // get the new dataset
         JSONObject newDataSet = datasets.getJSONObject(i);
         // get the current label
         String curLabel = newDataSet.getString("label");
         // .getJSONArray("data");
-        for (int j = 0; j < datasets.length() - 1; j++) {
+        for (int j = 0; j < datasets.length(); j++) {
           // get the files dataset
           JSONObject curDataSet = curMetrics.getJSONArray("datasets")
               .getJSONObject(j);
@@ -162,7 +158,7 @@ public class DataAndLogController {
    */
   private void setDirectory(final String dirLocation) {
     // Previous to this implementation, we used
-    // "/Users/lapduke/Desktop/Kaffee1.1/Kaffee/Historical_Logs"
+    // "/Users/lapduke/Desktop/Kaffee1.1/Kaffee/history"
     Path path = Paths.get(System.getProperty("user.dir"));
 
     this.directoryLocation = path.resolve(dirLocation).toString();

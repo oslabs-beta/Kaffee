@@ -27,7 +27,7 @@
   --element-border-radius: 1em;
 
   /* ----- logo element ----- */
-  --logo_url: url('../assets/logo.png');
+  --logo_url: url('../assets/LogoNoText.png');
 }
 
 @media (prefers-color-scheme: dark) {
@@ -184,11 +184,12 @@ header nav a.active button {
 #main::before {
   content: ' ';
   background-image: var(--logo_url);
-  background-size: contain;
-  background-position: 50% 0;
+  background-size: 40%;
+  background-position: 50%;
+  background-position-y: 1.5em;
   background-repeat: no-repeat;
-  position: absolute;
-  height: 80%;
+  position: fixed;
+  height: 100%;
   width: 100%;
   opacity: 0.06;
   z-index: -1;
@@ -275,13 +276,25 @@ header nav a.active button {
   margin: 0 2em;
 }
 
+.settings-container label {
+  display: flex;
+  flex-grow: 1;
+}
+.settings-container hr {
+  border-style: dashed;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  width: 23vw;
+  border-color: rgb(0, 0, 0);
+}
+
 .settings-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: 2em auto 0;
-  min-width: 20em;
+  min-width: 23em;
   max-width: 40em;
   gap: 10px;
   z-index: 1;

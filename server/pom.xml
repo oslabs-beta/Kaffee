@@ -68,7 +68,7 @@
 		</plugins>
 		<resources>
 			<resource>
-				<directory>Historical_Logs/</directory>
+				<directory>history/</directory>
 			</resource>
 		</resources>
 

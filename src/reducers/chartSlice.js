@@ -52,19 +52,19 @@ const chartSlice = createSlice({
       state.metricCount = desiredCount;
     },
   },
-  extraReducers: {
-    [newChart.pending]: (state, action) => {
-      state.status = 'loading';
-    },
-    [newChart.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
-      // if we are getting chunks of data repeatedly, we will need to handle this differently
-      state.list.push(action.payload);
-    },
-    [newChart.rejected]: (state, action) => {
-      state.status = 'failed';
-    },
-  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(newChart.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(newChart.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.list.push(action.payload);
+      })
+      .addCase(newChart.rejected, (state, action) => {
+        state.status = 'failed';
+      })
+  }
 });
 
 export default chartSlice.reducer;
