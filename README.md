@@ -1,5 +1,5 @@
  <p align="center">
-  <img src="https://raw.githubusercontent.com/oslabs-beta/Kaffee/main/src/assets/readme/logoFixed.png" alt="" />
+  <img src="https://raw.githubusercontent.com/oslabs-beta/Kaffee/main/assets/readme/logoFixed.png" alt="" />
   </p>
 
 <div align="center">
