@@ -1,64 +1,63 @@
-<p align="center">
-  <img src="/src/assets/readme/logoFixed.png" />
-</p>
+ <p align="center">
+  <img src="https://raw.githubusercontent.com/oslabs-beta/Kaffee/main/src/assets/readme/logoFixed.png" alt="next.nav logo" />
+  </p>
 
-# Kaffee
+<div align="center">
 
-## Kafka Metrics and Diagnostics Tool
+![Version: 1.1.1](https://img.shields.io/badge/version-1.1.1-black)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
-Kaffee provides real-time metric data read directly from Kafka's exposed JMX endpoints.
-Using the displayed data, users will be able to diagnose problems within a Kafka broker.
-As charts are displayed, data is saved within log files for historical analysis.
+![pulls](https://img.shields.io/docker/pulls/teamkaffee/kaffee)
+
+
+</div>
+
+<div align="center">
+
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+
+</div>
+
+#
+
+## Kaffee
+
+Kaffee provides real-time metric visualization for Apache Kafka. Using the displayed data, users will be able to monitor and diagnose issues within a Kafka broker. As charts are displayed, data is saved within log files for historical analysis.
 
 ## Setup / Installation
 
-You can use our Docker image to run Kaffee. Ensure you have a Docker service running on your system, before you start.
+The easiest way to get Kaffee up and running is to use the provided docker-compose.yml provided in this repository and run ```docker compose up -d``` in a directory containing the file.
 
-Next, copy our docker-compose.yml file to your system. Then run "docker-compose up" within the root directory to start Kaffee on your system. This will start both a Kafka broker on port 9094 with JMX set on port 9999, as well as Kaffee to monitor this broker.
+Ensure that a Kafka cluster with an exposed JMX port is up and running prior to starting Kaffee. This can be done by simply setting an environment variable ```JMX_PORT=9999``` in your Kafka instance.
 
-Our application will be available at [http://localhost:3030/](http://localhost:3030/)
+Once the container is up and running, navigate to http://localhost:3030.
 
 ## How To Use
 
 After booting up Kaffee for the first time you will be presented with the following screen:
 
-![Kafka Main Page](/src/assets/readme/Main.png)
 
-Please click on the **Settings** button at the top and ensure that the your Kafka URL, Port, and JMX Ports are all set correcly. You can use the **Seconds of Data to Display** slider to change the number of seconds that will displayed on each chart in future sets.
+Click on the **Settings** button to ensure that the your Kafka URL, Port, and JMX Ports are all set correctly. Use the **Chart Interval** slider to change the number of seconds displayed on each chart.
 
-![Settings Button Highlighted](/src/assets/readme/Settings.png)
 
-Click the **Main** button at the top to transition to the metrics display area. In future launches you will begin here with the settings saved. Once you are in the Main area, you will see the **Choose Metrics** button.
+Click the **Home** button at the top to transition to the metrics display area and click on **Choose Metrics** will display a list of available metrics to display.
 
-Clicking on **Choose Metrics** will display a list of available metrics to display. Simply check one of the check boxes to begin tracking that metric.
 
-![Data Displayed Example Opening/Closing](/src/assets/readme/add%20a%20chart.gif)
+Once you have started tracking a metric, data will be stored in a log file and can be accessed within the **History** area.
 
-Once you have started tracking a metric, every one (1) second the data will be stored in a log file and can be accessed within the **History** area.
 
-![History Page](/src/assets/readme/History.png)
+To test a Kafka broker, click the **Start Producers** button. This will begin the number of Kafka producers and consumers specified within **Settings** and have them generate dummy data. In order to stop producing this dummy data, click on the button it the same location, now with the text **Stop Producers**
 
-If you would like to stress your Kafka broker a bit, you may click on the **Start Producers** button. This will begin the number of Kafka producers and consumers specified within **Settings** and have them generate dummy data. In order to stop producing this dummy data, click on the button it the same location, now with the text **Stop Producers**
 
-![Start/Stop Producers and Consumers](</src/assets/readme/stop%20and%20start%20(1).gif>)
+### To contribute, please open an issue or pull request.
 
-## How to contribute
-
-#### Please reach out to one of our contributors for ways in which you can contribute to this project.
-
-In order to develop Kaffee further please follow these steps:
-
-1. Fork the repository.
-2. Clone your fork into your development environment.
-3. Run "npm install" in the root of the forked directory.
-4. Ensure that you have installed Kafka Maven (see below for further instructions).
-5. Start your Kafka broker, making sure to expose your JMX endpoints (see below for further instructions).
-6. Once you have verified that Kafka is up and running, run "npm run dev" from the root directory.
-7. You should now be running our Java Spring-Boot server with hot reloading, the client with hot reloading, and the Node.js server with hot reloading.
-
-#### Installing Kafka Maven
-
-You can find instructions for installing Maven from Apache [here](https://maven.apache.org/install.html).
 
 #### Exposing Kafka's JMX Endpoints
 
@@ -68,24 +67,59 @@ Red Hat has documentation about setting up JMX that relates to the Kafka binarie
 
 ## Associated Links
 
-- [The Official Kaffee Landing Page](http://kafka-kaffee.com/)
-- [Our Original Medium Article](https://medium.com/@darren.pavel/kaffee-an-apache-kafka-monitor-fe4fa4e997d1/)
-- [Apache Kafka](https://kafka.apache.org/)
+- [Kaffee Landing Page](http://kafka-kaffee.com/)
+- [Medium Article](https://medium.com/@darren.pavel/kaffee-an-apache-kafka-monitor-fe4fa4e997d1/)
+## Release Notes
 
-## Contributor Information
+### 1.0.0 - Initial release of Kaffee
 
-<!-- Not sure why this mess works and so many other attempts didn't -->
+<details><summary>1.1.0</summary>
+  <ul>
+    <li>Converted split Node/Java backend to all Java</li>
+    <li>Fixed bug where saved settings wouldn't apply until restart</li>
+    <li>Updated styling</li>
+  </ul>
+</details>
 
-|                                                                                                                                                 Duke Ahn                                                                                                                                                 |                                                                                                                                                  Vitaly Blotski                                                                                                                                                  |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [![Duke Ahn's LinkedIn](src/assets/readme/duke-ahn.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/)<br/>[![Duke Ahn's Github](src/assets/readme/github.png)](https://github.com/AhnDuke) [![Duke Ahn's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/duke-ahn-3886b9284/) | [![Vitaly Blotski's LinkedIn](src/assets/readme/Blotski.png)](https://www.linkedin.com/in/vitaly-blotski/)<br/>[![Vitaly Blotski's Github](src/assets/readme/github.png)](https://github.com/Blotski)[![Vitaly Blotski's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/vitaly-blotski/) |
+<details><summary>1.1.1</summary>
+  <ul>
+    <li>General code cleanup and main branch update</li>
+  </ul>
+</details>
 
-|                                                                                                                                           Clay Hilgert                                                                                                                                           |                                                                                                                                              Darren Pavel                                                                                                                                              |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [![Clay Hilgert](src/assets/readme/clhilgert.png)](https://www.linkedin.com/in/clay-hilgert/)<br/>[![Clay Hilgert's Github](src/assets/readme/github.png)](https://github.com/clhilgert) [![Clay Hilgert's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/clay-hilgert/) | [![Darren Pavel's LinkedIn](src/assets/readme/dpavel.png)](https://www.linkedin.com/in/darren-pavel/)<br/>[![Darren Pavel's Github](src/assets/readme/github.png)](https://github.com/dcpavel) [![Darren Pavel's LinkedIn](src/assets/readme/linkedin.png)](https://www.linkedin.com/in/darren-pavel/) |
+## Contributors
 
----
-
-### License Information
-
-This project is licensed through MIT License. Please see the included LICENSE.md for more information.
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/readme/clhilgert.png" width="140px;" alt="a photo of Clay Hilgert"/>
+      <br />
+      <sub><b>Clay Hilgert</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/clay-hilgert/">Linkedin</a> |
+      <a href="https://github.com/clhilgert">GitHub</a>
+    </td>
+     <td align="center">
+      <img src="assets/readme/duke-ahn.png" width="140px;" alt="a photo of Duke Ahn"/>
+      <br />
+      <sub><b>Duke Ahn</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/duke-ahn-3886b9284/">Linkedin</a> |
+      <a href="https://github.com/AhnDuke">GitHub</a>
+    </td> <td align="center">
+      <img src="assets/readme/dpavel.png" width="140px;" alt="a photo of Darren Pavel"/>
+      <br />
+      <sub><b>Darren Pavel</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/darren-pavel/">Linkedin</a> |
+      <a href="https://github.com/dcpavel">GitHub</a>
+    </td> <td align="center">
+      <img src="assets/readme/Blotski.png" width="140px;" alt="a photo of Vitaly Blotski"/>
+      <br />
+      <sub><b>Vitaly Blotski</b></sub>
+      <br />
+      <a href="https://www.linkedin.com/in/vitaly-blotski/">Linkedin</a> |
+      <a href="https://github.com/Blotski">GitHub</a>
+    </td>     
+  </tr>
+</table>

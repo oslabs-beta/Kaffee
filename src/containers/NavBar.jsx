@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink, Outlet, useLoaderData, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { addChart, removeChart } from '../reducers/chartSlice.js';
 import client from '../utils/socket.js';
 import { metricListFriendly } from '../utils/metrics.js';
@@ -34,9 +34,6 @@ export default function NavBar() {
 
   const dispatch = useDispatch();
 
-  // this is a holdover from using the new react-router methods in 6.4
-  // const { metrics } = useLoaderData();
-
   useEffect(() => {
     const currentlyRunning = {};
     chartList.forEach((chart) => {
@@ -58,7 +55,6 @@ export default function NavBar() {
 
   function handleToggleChart(metricId) {
     const checkbox = document.querySelector(`#${metricId}`);
-    // console.log(checkbox);
     if (checkbox.checked) {
       dispatch(addChart(metricId));
     } else {
@@ -90,35 +86,29 @@ export default function NavBar() {
   }
 
   return (
-    <div className='nav-bar'>
+    <div className="nav-bar">
       <header>
-        <nav className='left'>
-          <NavLink to='/'>
+        <nav className="left">
+          <NavLink to="/">
             <button>Home</button>
           </NavLink>
-          <NavLink to='/history'>
+          <NavLink to="/history">
             <button>History</button>
           </NavLink>
-          <NavLink to='/settings'>
+          <NavLink to="/settings">
             <button>Settings</button>
           </NavLink>
           {location.pathname === '/' ? (
-            <div id='metric-picker'>
+            <div id="metric-picker">
               <div>
                 <button onClick={showMetrics}>Choose Metrics</button>
               </div>
-              <nav
-                id='metric-list'
-                onMouseLeave={showMetrics}
-              >
+              <nav id="metric-list" onMouseLeave={showMetrics}>
                 {metrics?.map((metric) => {
                   return (
-                    <label
-                      className='chart-selector'
-                      key={metric.name}
-                    >
+                    <label className="chart-selector" key={metric.name}>
                       <input
-                        type='checkbox'
+                        type="checkbox"
                         id={metric.name}
                         name={metric.name}
                         checked={runningCharts[metric.name]}
@@ -134,9 +124,12 @@ export default function NavBar() {
             <></>
           )}
         </nav>
-        <nav className='right'>
+        <nav className="right">
+          <NavLink to="/about">
+            <button>About</button>
+          </NavLink>
           <button onClick={startProducers}>
-            {run ? 'Stop' : 'Start'} Producers
+            {run ? 'Stop' : 'Start'} Test Producers
           </button>
         </nav>
       </header>

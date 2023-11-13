@@ -1,30 +1,18 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// used when importing a test chart
 export const newChart = createAsyncThunk(
   'chart/newChart',
   async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
     const count = 50;
     const apiUrl = `http://localhost:8080/api/dummy/${count}`;
 
     const res = await fetch(apiUrl);
     const data = await res.json();
-    console.log(data);
 
     return data;
   }
 );
 
-// type chartState = {
-//   list: Array<chartObj>;
-// };
-
-// export type chartObj = {
-//  metric: string,
-// };
-
-// const initialState: chartState = {
 const initialState = {
   list: [],
   status: 'idle',
@@ -38,7 +26,6 @@ const chartSlice = createSlice({
     addChart: (state, action) => {
       state.list.push({ metric: action.payload });
     },
-    // removeChart: (state, action: PayloadAction<number>) => {
     removeChart: (state, action) => {
       const newChartList = state.list.filter((chart) => {
         return chart.metric !== action.payload;
@@ -65,19 +52,19 @@ const chartSlice = createSlice({
       state.metricCount = desiredCount;
     },
   },
-  extraReducers: {
-    [newChart.pending]: (state, action) => {
-      state.status = 'loading';
-    },
-    [newChart.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
-      // if we are getting chunks of data repeatedly, we will need to handle this differently
-      state.list.push(action.payload);
-    },
-    [newChart.rejected]: (state, action) => {
-      state.status = 'failed';
-    },
-  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(newChart.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(newChart.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.list.push(action.payload);
+      })
+      .addCase(newChart.rejected, (state, action) => {
+        state.status = 'failed';
+      })
+  }
 });
 
 export default chartSlice.reducer;
