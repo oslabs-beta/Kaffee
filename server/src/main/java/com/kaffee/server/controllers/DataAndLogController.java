@@ -85,8 +85,7 @@ public class DataAndLogController {
   private ResponseEntity<String> addData(@RequestBody String body)
       throws IOException {
     // declare filename and path
-    String filename = "history/" + LocalDate.now().toString()
-        + "_log.json";
+    String filename = "history/" + LocalDate.now().toString() + "_log.json";
     JSONObject data = new JSONObject(body);
     // get the metric name from request body
     String metricName = data.keys().next();
@@ -179,8 +178,25 @@ public class DataAndLogController {
    * untestable. A work around is create a file through some public method,
    * and then verify the newly created file passes any tests.
    *
-   * @return A dummy string.
+   * @return the filename with correctly formatted date.
    */
-  public static String generateFileName() {
-    return "filename";
+  public String generateFileName() {
+    String datePrefix = this.formatDate();
+    String fileSuffix = "_log.json";
+
+    return datePrefix + fileSuffix;
   }
+
+  /**
+   * Generate the string of today's date for use with generateFileName.
+   *
+   * @return String of today's date formatted as 'YYYY-MM-DD'
+   */
+  public static String formatDate() {
+    return LocalDate.now().toString();
+  }
+
+  private Path getFileLocation(final String directory, final String filename) {
+    return Paths.get(this.directoryLocation, filename);
+  }
+}

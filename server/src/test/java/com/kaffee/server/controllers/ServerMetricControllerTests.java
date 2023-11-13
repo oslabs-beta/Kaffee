@@ -19,6 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaffee.server.ServerApplication;
 
 public class ServerMetricControllerTests {
@@ -72,16 +74,17 @@ public class ServerMetricControllerTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasItem("bytes-in"))).andReturn();
 
-    // convert to Map object
-    String content = result.getResponse().getContentAsString();
-    Map<String, String> resultMap = new ObjectMapper().readValue(content,
-        new TypeReference<>() {
-        });
-
-    // do something with the resultMap?
+    /*
+     * // convert to Map object String content =
+     * result.getResponse().getContentAsString(); Map<String, String>
+     * resultMap = new ObjectMapper().readValue(content, new TypeReference<>()
+     * { });
+     *
+     * // do something with the resultMap?
+     */
   }
 
-  /**
+  /*
    * Verify that we can set the JMX port.
    *
    * @throws Exception

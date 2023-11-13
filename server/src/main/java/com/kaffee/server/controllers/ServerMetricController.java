@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kaffee.server.models.MetricSubscriptions;
 
-
 @Controller
 @RestController
 @RequestMapping("/")
@@ -39,7 +38,7 @@ import com.kaffee.server.models.MetricSubscriptions;
 public class ServerMetricController {
   private MetricSubscriptions ms;
   public Map<String, String> jmxServerMetrics;
-  public Set<String> subscribedMetrics;
+  public Set<String> subscribedMetrics = new Set();
 
   // Set defaults in the constructor
   public ServerMetricController(MetricSubscriptions ms) {
@@ -52,45 +51,50 @@ public class ServerMetricController {
     }
   }
 
-
-  //JMX settings receiver and setter
+  // JMX settings receiver and setter
   @GetMapping("/setJMX_PORT")
-  public void postJMXPort() throws IOException{
+  public void postJMXPort() throws IOException {
     System.out.println("Before: " + ms.getJmxPort());
     ms.setJmxPort();
     System.out.println("After: " + ms.getJmxPort());
   }
 
-  //KAFKA_URL settings receiver and setter
+  // KAFKA_URL settings receiver and setter
   @GetMapping("/setKAFKA_URL")
-  public void postKafkaUrl() throws IOException{
+  public void postKafkaUrl() throws IOException {
     System.out.println("Before (Kafka_url): " + ms.getKafkaUrl());
     ms.setKafkaUrl();
     System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
   }
 
-  //KAKFKA_PORT receiver and setter
+  // KAKFKA_PORT receiver and setter
   @GetMapping("/setKAFKA_PORT")
-  public void postKafkaPort() throws IOException{
+  public void postKafkaPort() throws IOException {
     System.out.println(("Before: " + ms.getKafkaPort()));
     ms.setKafkaPort();
     System.out.println(("After: " + ms.getKafkaPort()));
   }
 
-
-
-  // the idea here was to programatically get all metrics within a given type. This should establish a good framework for how we might go through all metric types
-  // and therefore we can use it to search for everything with a given "topic" key
-  // this was adapted from here: http://www.dba-oracle.com/t_weblogic_list_mbeans_jmx.htm
-  private Map<String, String> getServerStrings() throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, IntrospectionException {
+  // the idea here was to programatically get all metrics within a given type.
+  // This should establish a good framework for how we might go through all
+  // metric types
+  // and therefore we can use it to search for everything with a given "topic"
+  // key
+  // this was adapted from here:
+  // http://www.dba-oracle.com/t_weblogic_list_mbeans_jmx.htm
+  private Map<String, String> getServerStrings()
+      throws IOException, MalformedObjectNameException,
+      InstanceNotFoundException, ReflectionException,
+      javax.management.IntrospectionException, IntrospectionException {
     // connect to the JMX port
     JMXConnector connector = ms.connectToJMX();
 
     // create a connector to the MBeans exposed at the port
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-    // create a set of the 
-    Set<ObjectName> metricSet = mbsc.queryNames(new ObjectName("kafka.server:type=BrokerTopicMetrics,*"), null);
+    // create a set of the
+    Set<ObjectName> metricSet = mbsc.queryNames(
+        new ObjectName("kafka.server:type=BrokerTopicMetrics,*"), null);
     Map<String, String> mapNamesToStrings = new HashMap<>();
 
     Iterator<ObjectName> it = metricSet.iterator();
@@ -107,15 +111,19 @@ public class ServerMetricController {
   }
 
   // This returns a list of metrics for a given attribute
-  private List<String> getMetricAttributes(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException {
+  private List<String> getMetricAttributes(String metric) throws IOException,
+      MalformedObjectNameException, InstanceNotFoundException,
+      ReflectionException, javax.management.IntrospectionException {
     JMXConnector connector = ms.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(String.format(metric)), null);
+    Set<ObjectName> attributeSet = mbsc
+        .queryNames(new ObjectName(String.format(metric)), null);
     List<String> metricAttributes = new ArrayList<String>();
 
     ObjectName metricName = (ObjectName) attributeSet.iterator().next();
-    MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
+    MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName)
+        .getAttributes();
     for (int i = 0; i < attributes.length; i++) {
       metricAttributes.add(attributes[i].getName());
     }
@@ -123,38 +131,53 @@ public class ServerMetricController {
     return metricAttributes;
   }
 
-  public Map<String, String> getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
-    // private JSONObject getFormattedMetrics(String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException,javax.management.IntrospectionException, MBeanException, AttributeNotFoundException {
+  public Map<String, String> getFormattedMetrics(String metric)
+      throws IOException, MalformedObjectNameException,
+      InstanceNotFoundException, ReflectionException,
+      javax.management.IntrospectionException, MBeanException,
+      AttributeNotFoundException {
+    // private JSONObject getFormattedMetrics(String metric) throws
+    // IOException, MalformedObjectNameException, InstanceNotFoundException,
+    // ReflectionException,javax.management.IntrospectionException,
+    // MBeanException, AttributeNotFoundException {
     JMXConnector connector = ms.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     // JSONObject metricsObject = new JSONObject();
     Map<String, String> metricsObject = new HashMap<String, String>();
- 
-    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(metric), null);
+
+    Set<ObjectName> attributeSet = mbsc.queryNames(new ObjectName(metric),
+        null);
 
     try {
       ObjectName metricName = (ObjectName) attributeSet.iterator().next();
-      MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName).getAttributes();
+      MBeanAttributeInfo[] attributes = mbsc.getMBeanInfo(metricName)
+          .getAttributes();
       for (int i = 0; i < attributes.length; i++) {
-        metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()).toString());
-        // metricsObject.put(attributes[i].getName(), mbsc.getAttribute(metricName, attributes[i].getName()));
+        metricsObject.put(attributes[i].getName(),
+            mbsc.getAttribute(metricName, attributes[i].getName()).toString());
+        // metricsObject.put(attributes[i].getName(),
+        // mbsc.getAttribute(metricName, attributes[i].getName()));
       }
     } catch (NoSuchElementException nsee) {
-      System.out.println("Error in ServerMetricController:getFormattedMetrics: " + nsee.toString());
+      System.out.println("Error in ServerMetricController:getFormattedMetrics: "
+          + nsee.toString());
     }
 
     return metricsObject;
   }
 
-
   @GetMapping("/available-server-metrics")
-  public Set<String> getServerMetrics() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
-      return jmxServerMetrics.keySet();
+  public Set<String> getServerMetrics() throws IOException,
+      MalformedObjectNameException, AttributeNotFoundException, MBeanException,
+      ReflectionException, InstanceNotFoundException, InterruptedException {
+    return jmxServerMetrics.keySet();
   }
 
-  private String[] metricsList(String metricString) throws IOException, InstanceNotFoundException, MalformedObjectNameException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+  private String[] metricsList(String metricString)
+      throws IOException, InstanceNotFoundException,
+      MalformedObjectNameException, ReflectionException, IntrospectionException,
+      javax.management.IntrospectionException {
 
     List<String> metricAttributesList = getMetricAttributes(metricString);
     int listSize = metricAttributesList.size();
@@ -166,8 +189,10 @@ public class ServerMetricController {
 
   // Server Metrics
   @GetMapping("/bytes")
-  public HashMap<String, AttributeList> getBytesInOut() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-    MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException, javax.management.IntrospectionException, IntrospectionException {
+  public HashMap<String, AttributeList> getBytesInOut() throws IOException,
+      MalformedObjectNameException, AttributeNotFoundException, MBeanException,
+      ReflectionException, InstanceNotFoundException, InterruptedException,
+      javax.management.IntrospectionException, IntrospectionException {
     HashMap<String, AttributeList> bytesHash = new HashMap<>();
 
     JMXConnector connector = ms.connectToJMX();
@@ -179,19 +204,23 @@ public class ServerMetricController {
     ObjectName bytesInMetric = new ObjectName(bytesInString);
     ObjectName bytesOutMetric = new ObjectName(bytesOutString);
 
-
-    AttributeList bytesIn = mbsc.getAttributes(bytesInMetric, metricsList(bytesInString));
-    AttributeList bytesOut = mbsc.getAttributes(bytesOutMetric, metricsList(bytesOutString));
+    AttributeList bytesIn = mbsc.getAttributes(bytesInMetric,
+        metricsList(bytesInString));
+    AttributeList bytesOut = mbsc.getAttributes(bytesOutMetric,
+        metricsList(bytesOutString));
 
     connector.close();
-    bytesHash.put("bytes-in",bytesIn);
+    bytesHash.put("bytes-in", bytesIn);
     bytesHash.put("bytes-out", bytesOut);
 
     return bytesHash;
   }
 
   @GetMapping("/metric-attributes/{metric}")
-  public List<String> metricAttributes(@PathVariable("metric")String metric) throws IOException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+  public List<String> metricAttributes(@PathVariable("metric") String metric)
+      throws IOException, MalformedObjectNameException,
+      InstanceNotFoundException, ReflectionException, IntrospectionException,
+      javax.management.IntrospectionException {
     List<String> metrics = new ArrayList<String>();
     try {
       String metricString = this.jmxServerMetrics.get(metric);
@@ -205,21 +234,28 @@ public class ServerMetricController {
   }
 
   @GetMapping("/metrics/{metric}")
-  public String formattedMetrics(@PathVariable("metric")String metric) throws IOException, MalformedObjectNameException, MBeanException, AttributeNotFoundException, InstanceNotFoundException, ReflectionException, IntrospectionException, javax.management.IntrospectionException {
+  public String formattedMetrics(@PathVariable("metric") String metric)
+      throws IOException, MalformedObjectNameException, MBeanException,
+      AttributeNotFoundException, InstanceNotFoundException,
+      ReflectionException, IntrospectionException,
+      javax.management.IntrospectionException {
     String metricString = this.jmxServerMetrics.get(metric);
     System.out.println(metricString);
     return getFormattedMetrics(metricString).toString();
   }
 
   @GetMapping("/under-replicated-partitions")
-  public Integer getUnderReplicatedPartitions() throws IOException, MalformedObjectNameException, AttributeNotFoundException,
-      MBeanException, ReflectionException, InstanceNotFoundException, InterruptedException {
+  public Integer getUnderReplicatedPartitions() throws IOException,
+      MalformedObjectNameException, AttributeNotFoundException, MBeanException,
+      ReflectionException, InstanceNotFoundException, InterruptedException {
     JMXConnector connector = ms.connectToJMX();
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
-    ObjectName underReplicatedPartitionMetric = new ObjectName(jmxServerMetrics.get("under-replicated-partitions"));
+    ObjectName underReplicatedPartitionMetric = new ObjectName(
+        jmxServerMetrics.get("under-replicated-partitions"));
 
-    Integer underReplicatedPartitions = (Integer) mbsc.getAttribute(underReplicatedPartitionMetric, "Value");
+    Integer underReplicatedPartitions = (Integer) mbsc
+        .getAttribute(underReplicatedPartitionMetric, "Value");
 
     connector.close();
     return underReplicatedPartitions;

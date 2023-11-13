@@ -21,9 +21,20 @@ import java.nio.file.Paths;
 @RequestMapping("/")
 public class KaffeeSettingsController {
   // Get Settings Route and Handler
+
+  /**
+   * Autowiring the ApplicationContext.
+   */
   @Autowired
   ApplicationContext context;
 
+  /**
+   * GET routing for getting the current settings.
+   *
+   * @return ResponseEntity with OK status and the contents of settings.json
+   *         stringified
+   * @throws IOException
+   */
   @GetMapping("/getSettings")
   private ResponseEntity<String> getSettings() throws IOException {
     // Declare path to settings.json
@@ -35,7 +46,11 @@ public class KaffeeSettingsController {
     return ResponseEntity.ok(stringified);
   }
 
-  // set Post route to /updateSettings
+  /**
+   * set Post route to /updateSettings.
+   *
+   * @return ResponseEntity with status OK and the string "Updated!"
+   */
   @PostMapping("/updateSettings")
   // declare argument using annotation @RequestBody to get body from request
   public ResponseEntity<String> updateSettings(@RequestBody String body)
@@ -60,7 +75,8 @@ public class KaffeeSettingsController {
     byte[] jsonToBytes = reString.getBytes();
     // overwrite old settings file with the updated settings file
     Files.write(Paths.get(resourceName), jsonToBytes);
-    ReadSettings.main(settingName);
+    ReadSettings rs = new ReadSettings();
+    rs.getSetting(settingName);
     // refresh Connection to use new Settings
     MetricSubscriptions ms = context.getBean("metricSubscriptions",
         MetricSubscriptions.class);
@@ -68,6 +84,11 @@ public class KaffeeSettingsController {
     // MetricSubscriptions newMs = ms.getBean("metricSubscriptions",
     // MetricSubscriptions.class);
     // newMs.reInitialize();
+
+    // this should really return the JSON of the updated file,
+    // which could aid in testing and also user feedback: e.g. if they
+    // click save and the settings reverted, this would indicated that
+    // there was an error.
     return ResponseEntity.ok("Updated!");
   }
 }

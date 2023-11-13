@@ -13,20 +13,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.kaffee.server.ServerApplication;
 
-@ContextConfiguration(classes = ServerApplication.class)
-@WebMvcTest(DataAndLogController.class)
+// @ContextConfiguration(classes = ServerApplication.class)
+@SpringBootTest(classes = DataAndLogController.class)
+// @WebMvcTest(DataAndLogController.class)
 public class DataAndLogControllerTests {
   /**
    * Autowiring MockMvc.
    */
-  @Autowired
-  private MockMvc mvc;
+  // @Autowired
+  // private MockMvc mvc;
 
   /**
    * Generating the MockBean for dataAndLog.
@@ -40,7 +42,8 @@ public class DataAndLogControllerTests {
   @Test
   @DisplayName("Check that new log files have the format YYYY-MM-DD_log.json")
   void validFileNameFormat() {
-    String filename = DataAndLogController.generateFileName();
+    String filename = dataAndLog.generateFileName();
+    System.out.println(filename);
 
     Pattern fnPattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}_log\\.json");
 
@@ -53,7 +56,8 @@ public class DataAndLogControllerTests {
   @Test
   @DisplayName("Check that new log files are created using the current date")
   void validFileNameDate() {
-    String filename = DataAndLogController.generateFileName();
+    DataAndLogController dal = new DataAndLogController();
+    String filename = dataAndLog.generateFileName();
 
     Date date = Calendar.getInstance().getTime();
     String formatString = "yyyy-mm-dd";

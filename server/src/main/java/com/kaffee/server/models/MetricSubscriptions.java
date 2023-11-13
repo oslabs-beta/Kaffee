@@ -28,6 +28,8 @@ public class MetricSubscriptions {
   private int kafkaPort;
   /** The url of the Kafka server. */
   private String kafkaUrl;
+  /** The ReadSetting class. */
+  private ReadSettings rs;
   /**
    * The resolved URL. This should be done within a private method and
    * resolved when we need to use it. This way we can change either kafkaPort
@@ -35,7 +37,7 @@ public class MetricSubscriptions {
    */
   private String resolvedUrl;
   /** The map of subscribed metrics. */
-  public Map<String, String> subscribedServerMetrics = new HashMap<>();
+  private Map<String, String> subscribedServerMetrics = new HashMap<>();
   /**
    * The map of server metrics. Perhaps this doesn't need to be saved at the
    * class level and can just be returned from the getServerMetricsStrings
@@ -55,6 +57,7 @@ public class MetricSubscriptions {
     this.setJmxPort();
     this.setKafkaUrl();
     // this.KAFKA_URL = "host.docker.internal";
+    this.rs = new ReadSettings();
 
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
     this.resolvedUrl = String.format(baseUrl, this.kafkaUrl, serverJmxPort);
@@ -172,6 +175,15 @@ public class MetricSubscriptions {
   }
 
   /**
+   * Get the list of subscribed metrics.
+   *
+   * @return the current list of metrics for reporting
+   */
+  public Map<String, String> getSubscriptions() {
+    return this.subscribedServerMetrics;
+  }
+
+  /**
    * Get the current value of the server's JMX port.
    *
    * @return the current server JMX port value.
@@ -190,7 +202,7 @@ public class MetricSubscriptions {
    */
   public void setJmxPort() throws IOException, IllegalArgumentException {
     Integer newPort = Integer
-        .parseInt(ReadSettings.main("JMX_PORT").toString());
+        .parseInt(this.rs.getSetting("JMX_PORT").toString());
 
     if (!this.isValidPort(newPort)) {
       throw new IllegalArgumentException("Invalid JMX Port value");
@@ -221,8 +233,8 @@ public class MetricSubscriptions {
    * @throws IllegalArgumentException
    */
   public void setKafkaUrl() throws IOException, IllegalArgumentException {
-    String url = ReadSettings.main("KAFKA_URL").toString();
-    String jmxPort = ReadSettings.main("JMX_PORT").toString();
+    String url = this.rs.getSetting("KAFKA_URL").toString();
+    String jmxPort = this.rs.getSetting("JMX_PORT").toString();
     String baseUrl = "service:jmx:rmi:///jndi/rmi://" + url + ":" + jmxPort
         + "/jmxrmi";
     // UrlValidator uv = new UrlValidator();
@@ -250,7 +262,8 @@ public class MetricSubscriptions {
    * @throws IllegalArgumentException
    */
   public void setKafkaPort() throws IOException, IllegalArgumentException {
-    Integer port = Integer.parseInt(ReadSettings.main("KAFKA_PORT").toString());
+    String portString = this.rs.getSetting("KAFKA_PORT").toString();
+    Integer port = Integer.parseInt(portString);
     if (!this.isValidPort(port)) {
       throw new IllegalArgumentException("Invalid Kafka Port value");
     }

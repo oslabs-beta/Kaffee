@@ -52,7 +52,7 @@ public class ScheduledMessagesController {
    */
   @Scheduled(fixedRate = 1000)
   public void sendMessage() throws Exception {
-    Map<String, String> metrics = ms.subscribedServerMetrics;
+    Map<String, String> metrics = ms.getSubscriptions();
 
     for (Map.Entry<String, String> metric : metrics.entrySet()) {
       if (metric != null) {
@@ -75,7 +75,7 @@ public class ScheduledMessagesController {
   public void sendSubscriptions() throws NullPointerException {
     try {
       simpMessagingTemplate.convertAndSend("/metric/subscriptions",
-          ms.subscribedServerMetrics);
+          ms.getSubscriptions());
     } catch (NullPointerException npe) {
       System.out.println("No subscibed metrics.");
     }
