@@ -1,7 +1,10 @@
 package com.kaffee.server.controllers;
 
 import org.json.JSONObject;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.kaffee.server.models.UserSettings;
 
@@ -17,7 +20,9 @@ import java.util.stream.Collectors;
 /**
  * Class to read settings from a settings.json file.
  */
-@ConfigurationProperties
+@Controller
+@RestController
+@RequestMapping("/")
 public class SettingsController {
   /** The UserSettings record. */
   private UserSettings us;
@@ -29,7 +34,7 @@ public class SettingsController {
 
   // private String final DEFAULT_PATH =
   // "src/main/java/com/kaffee/server/settings.json";
-  private static final String DEFAULT_PATH = "/sr/resources/settings.json";
+  private static final String DEFAULT_PATH = "src/main/resources/settings.json";
 
   /**
    * Constructor for SettingsController, using the default file path.
@@ -71,12 +76,14 @@ public class SettingsController {
       throws IllegalArgumentException, IOException {
     JSONObject settingsJson = this.getSettingsJson();
 
-    Integer jmxPort = (int) settingsJson.get("JMX_PORT");
+    Integer jmxPort = this.convertObjToInteger(settingsJson.get("JMX_PORT"));
     String kafkaUrl = settingsJson.get("KAFKA_URL").toString();
-    Integer kafkaPort = (int) settingsJson.get("KAFKA_PORT");
-    Integer metricCount = (int) settingsJson.get("metric-count");
-    Integer consumers = (int) settingsJson.get("consumers");
-    Integer producers = (int) settingsJson.get("producers");
+    Integer kafkaPort = this
+        .convertObjToInteger(settingsJson.get("KAFKA_PORT"));
+    Integer metricCount = this
+        .convertObjToInteger(settingsJson.get("metric-count"));
+    Integer consumers = this.convertObjToInteger(settingsJson.get("consumers"));
+    Integer producers = this.convertObjToInteger(settingsJson.get("producers"));
 
     String logFilePath = settingsJson.get("log-filepath").toString();
 
@@ -91,6 +98,10 @@ public class SettingsController {
    */
   public UserSettings getUserSettings() {
     return this.us;
+  }
+
+  private Integer convertObjToInteger(final Object obj) {
+    return Integer.parseInt(obj.toString());
   }
 
   /**
@@ -108,19 +119,19 @@ public class SettingsController {
     try {
       switch (setting) {
       case "metric-count":
-        this.us.setMetricCount((int) value);
+        this.us.setMetricCount(this.convertObjToInteger(value));
         break;
       case "JMX_PORT":
-        this.us.setJmxPort((int) value);
+        this.us.setJmxPort(this.convertObjToInteger(value));
         break;
       case "KAFKA_PORT":
-        this.us.setKafkaPort((int) value);
+        this.us.setKafkaPort(this.convertObjToInteger(value));
         break;
       case "consumers":
-        this.us.setConsumers((int) value);
+        this.us.setConsumers(this.convertObjToInteger(value));
         break;
       case "producers":
-        this.us.setProducers((int) value);
+        this.us.setProducers(this.convertObjToInteger(value));
         break;
       case "KAFKA_URL":
         this.us.setKafkaUrl(value.toString());

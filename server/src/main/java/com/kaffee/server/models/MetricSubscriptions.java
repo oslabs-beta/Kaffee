@@ -10,8 +10,6 @@ import javax.management.remote.JMXServiceURL;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.kaffee.server.controllers.SettingsController;
-
 /**
  * Subscription to valid server metrics.
  *
@@ -20,10 +18,6 @@ import com.kaffee.server.controllers.SettingsController;
  */
 @ConfigurationProperties
 public class MetricSubscriptions {
-
-  /** The SettingsController class. */
-  private SettingsController sc;
-
   /** The map of subscribed metrics. */
   private Map<String, String> subscribedServerMetrics = new HashMap<>();
   /**
@@ -39,20 +33,15 @@ public class MetricSubscriptions {
    * Sets JMX Port, Kafka URL, and then resolved them into a valid JMX
    * endpoint.
    *
-   * @param sc
    * @throws IOException
    */
-  public MetricSubscriptions(final SettingsController sc) throws IOException {
-    this.sc = sc;
-
+  public MetricSubscriptions() throws IOException {
     this.serverMetrics = getServerMetricsStrings();
   }
 
-  private String getResolvedUrl() {
-    UserSettings currentSettings = this.sc.getUserSettings();
-
-    String kafkaUrl = currentSettings.getKafkaUrl();
-    String jmxPort = currentSettings.getJmxPort().toString();
+  private String getResolvedUrl(final UserSettings us) {
+    String kafkaUrl = us.getKafkaUrl();
+    String jmxPort = us.getJmxPort().toString();
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
 
     return String.format(baseUrl, kafkaUrl, jmxPort);
@@ -128,11 +117,12 @@ public class MetricSubscriptions {
    * resolve this outside of construction so we can re-resolve the service URL
    * when changing parts of the resolved url.
    *
+   * @param us
    * @return JMXConnectorFactory connection
    * @throws IOException
    */
-  public JMXConnector connectToJMX() throws IOException {
-    String resolvedUrl = this.getResolvedUrl();
+  public JMXConnector connectToJMX(final UserSettings us) throws IOException {
+    String resolvedUrl = this.getResolvedUrl(us);
     JMXServiceURL url = new JMXServiceURL(resolvedUrl);
     return JMXConnectorFactory.connect(url);
   }

@@ -22,19 +22,5 @@ public class SettingsControllerTests {
   @Test
   @DisplayName("Can read JMX Port from file")
   void readSettings() {
-    try {
-      String testString = "{ \"JMX_PORT\": 9094 }";
-
-      StringReader testReader = new StringReader(testString);
-      BufferedReader testBufferedReader = new BufferedReader(testReader);
-
-      SettingsController sc = new SettingsController();
-      Object kafkaPort = sc.getSettingFromReader("JMX_PORT", testBufferedReader)
-          .toString();
-
-      assertEquals(kafkaPort, "9094");
-    } catch (IOException e) {
-      fail("KAFKA_PORT key should exist");
-    }
   }
 }

@@ -4,6 +4,7 @@ import java.lang.Integer;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaffee.server.models.MetricSubscriptions;
+import com.kaffee.server.models.UserSettings;
 
 @Controller
 @RestController
@@ -37,45 +39,21 @@ import com.kaffee.server.models.MetricSubscriptions;
 
 public class ServerMetricController {
   private MetricSubscriptions ms;
-  private SettingsController sc;
+  private UserSettings us;
   private Map<String, String> jmxServerMetrics;
-  private Set<String> subscribedMetrics = new Set<String>();
+  private Set<String> subscribedMetrics;
 
   // Set defaults in the constructor
   public ServerMetricController(final MetricSubscriptions ms,
-      final SettingsController sc) {
-    this.ms = ms;
-    this.sc = sc;
+      final UserSettings us) {
     try {
-      jmxServerMetrics = ms.getServerMetricsStrings();
-
+      this.ms = ms;
+      this.us = us;
+      this.jmxServerMetrics = ms.getServerMetricsStrings();
+      this.subscribedMetrics = Collections.emptySet();
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
-  }
-
-  // JMX settings receiver and setter
-  @GetMapping("/setJMX_PORT")
-  public void postJMXPort() throws IOException {
-    System.out.println("Before: " + ms.getJmxPort());
-    ms.setJmxPort();
-    System.out.println("After: " + ms.getJmxPort());
-  }
-
-  // KAFKA_URL settings receiver and setter
-  @GetMapping("/setKAFKA_URL")
-  public void postKafkaUrl() throws IOException {
-    System.out.println("Before (Kafka_url): " + ms.getKafkaUrl());
-    ms.setKafkaUrl();
-    System.out.println("After (Kafka_url): " + ms.getKafkaUrl());
-  }
-
-  // KAKFKA_PORT receiver and setter
-  @GetMapping("/setKAFKA_PORT")
-  public void postKafkaPort() throws IOException {
-    System.out.println(("Before: " + ms.getKafkaPort()));
-    ms.setKafkaPort();
-    System.out.println(("After: " + ms.getKafkaPort()));
   }
 
   // the idea here was to programatically get all metrics within a given type.
@@ -90,7 +68,7 @@ public class ServerMetricController {
       InstanceNotFoundException, ReflectionException,
       javax.management.IntrospectionException, IntrospectionException {
     // connect to the JMX port
-    JMXConnector connector = ms.connectToJMX();
+    JMXConnector connector = ms.connectToJMX(this.us);
 
     // create a connector to the MBeans exposed at the port
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
@@ -114,10 +92,11 @@ public class ServerMetricController {
   }
 
   // This returns a list of metrics for a given attribute
-  private List<String> getMetricAttributes(String metric) throws IOException,
-      MalformedObjectNameException, InstanceNotFoundException,
-      ReflectionException, javax.management.IntrospectionException {
-    JMXConnector connector = ms.connectToJMX();
+  private List<String> getMetricAttributes(final String metric)
+      throws IOException, MalformedObjectNameException,
+      InstanceNotFoundException, ReflectionException,
+      javax.management.IntrospectionException {
+    JMXConnector connector = ms.connectToJMX(this.us);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     Set<ObjectName> attributeSet = mbsc
@@ -134,7 +113,7 @@ public class ServerMetricController {
     return metricAttributes;
   }
 
-  public Map<String, String> getFormattedMetrics(String metric)
+  public Map<String, String> getFormattedMetrics(final String metric)
       throws IOException, MalformedObjectNameException,
       InstanceNotFoundException, ReflectionException,
       javax.management.IntrospectionException, MBeanException,
@@ -143,7 +122,7 @@ public class ServerMetricController {
     // IOException, MalformedObjectNameException, InstanceNotFoundException,
     // ReflectionException,javax.management.IntrospectionException,
     // MBeanException, AttributeNotFoundException {
-    JMXConnector connector = ms.connectToJMX();
+    JMXConnector connector = ms.connectToJMX(this.us);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     // JSONObject metricsObject = new JSONObject();
@@ -198,7 +177,7 @@ public class ServerMetricController {
       javax.management.IntrospectionException, IntrospectionException {
     HashMap<String, AttributeList> bytesHash = new HashMap<>();
 
-    JMXConnector connector = ms.connectToJMX();
+    JMXConnector connector = ms.connectToJMX(this.us);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     String bytesInString = this.jmxServerMetrics.get("bytes-in");
@@ -251,7 +230,7 @@ public class ServerMetricController {
   public Integer getUnderReplicatedPartitions() throws IOException,
       MalformedObjectNameException, AttributeNotFoundException, MBeanException,
       ReflectionException, InstanceNotFoundException, InterruptedException {
-    JMXConnector connector = ms.connectToJMX();
+    JMXConnector connector = ms.connectToJMX(this.us);
     MBeanServerConnection mbsc = connector.getMBeanServerConnection();
 
     ObjectName underReplicatedPartitionMetric = new ObjectName(

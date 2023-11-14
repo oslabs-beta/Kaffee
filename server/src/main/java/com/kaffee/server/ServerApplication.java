@@ -2,6 +2,7 @@ package com.kaffee.server;
 
 import java.io.IOException;
 
+import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import com.kaffee.server.controllers.SettingsController;
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
+import com.kaffee.server.models.UserSettings;
 
 /**
  * Configuration of the entrypoint for the server.
@@ -42,13 +44,13 @@ public class ServerApplication {
   }
 
   /**
-   * Create the Bean for SettingsController.
+   * Create the Bean for UserSettings.
    *
-   * @return new SettingsContoller
+   * @return new UserSettings
    */
   @Bean
-  public SettingsController settingsController() throws IOException {
-    return new SettingsController();
+  public UserSettings userSettings() throws IOException {
+    return new SettingsController().getUserSettingsFromFile();
   }
 
   /**
