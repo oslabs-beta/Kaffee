@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,10 +54,16 @@ public class KaffeeSettingsController {
      * stringified = new String( Files.readAllBytes(Paths.get(resourceName)));
      */
 
-    JSONObject currentSettings = this.sc.getUserSettingsFormttedJson();
-    String stringified = currentSettings.toString();
-    // Return ResponseEntity with status 200 & body containing settings.json
-    return ResponseEntity.ok(stringified);
+    try {
+      JSONObject currentSettings = this.sc.getUserSettingsFormttedJson();
+      String stringified = currentSettings.toString();
+      // Return ResponseEntity with status 200 & body containing settings.json
+      UserSettings us = UserSettings.getInstance(0, "", 0, 0, 0, 0, "");
+      System.out.println(us.getKafkaPort());
+      return ResponseEntity.ok(stringified);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
   }
 
   /**

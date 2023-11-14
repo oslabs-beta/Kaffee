@@ -95,8 +95,8 @@ public class UserSettings {
       throws IllegalArgumentException {
     if (!isValidPort(jmxPort)) {
       String errorMessage = """
-          Ports must be between %f and %f, and not include
-          the following reserved ports: %f
+          Ports must be between %d and %d, and not include
+          the following reserved ports: %s
           """;
       throw new IllegalArgumentException(String.format(errorMessage, MIN_PORT,
           MAX_PORT, RESERVED_PORTS.toString()));
@@ -124,8 +124,8 @@ public class UserSettings {
       throws IllegalArgumentException {
     if (!isValidPort(kafkaPort)) {
       String errorMessage = """
-          Ports must be between %f and %f, and not include
-          the following reserved ports: %f
+          Ports must be between %d and %d, and not include
+          the following reserved ports: %s
           """;
       throw new IllegalArgumentException(String.format(errorMessage, MIN_PORT,
           MAX_PORT, RESERVED_PORTS.toString()));
@@ -179,10 +179,10 @@ public class UserSettings {
       throws IllegalArgumentException {
     if (!isValidAgentCount(consumers)) {
       throw new IllegalArgumentException(String
-          .format("Consumers must be between 1 and %f", MAX_AGENTS.toString()));
+          .format("Consumers must be between 1 and %d", MAX_AGENTS.toString()));
+    } else {
+      this.consumers = consumers;
     }
-
-    this.consumers = consumers;
   }
 
   /**
@@ -204,7 +204,7 @@ public class UserSettings {
       throws IllegalArgumentException {
     if (!isValidAgentCount(producers)) {
       throw new IllegalArgumentException(String
-          .format("Producers must be between 1 and %f", MAX_AGENTS.toString()));
+          .format("Producers must be between 1 and %d", MAX_AGENTS.toString()));
     }
 
     this.producers = producers;
