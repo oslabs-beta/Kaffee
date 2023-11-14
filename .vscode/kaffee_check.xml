@@ -97,6 +97,7 @@
   <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
   <!--   <property name="fileExtensions" value="java"/> -->
   <!-- </module> -->
+  <module name="SuppressWangingsFilter"/>
   
   <module name="TreeWalker">
     <!-- Enable warnings suppression -->
@@ -204,7 +205,7 @@
                 default="checkstyle-xpath-suppressions.xml" />
       <property name="optional" value="true"/>
     </module>
-
+    <module name="SuppressWarningsHolder"/>
   </module>
 
 </module>

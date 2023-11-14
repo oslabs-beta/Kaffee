@@ -34,6 +34,9 @@ public class UserSettings {
   /** The string representation of where to save log files. */
   private String logFilePath;
 
+  /** The singleton of this UserSettings. */
+  private static UserSettings us = null;
+
   /**
    * Default UserSettings record constructor with verification.
    *
@@ -45,7 +48,7 @@ public class UserSettings {
    * @param producers   The number of consumers to use in testing
    * @param logFilePath The location for the log file
    */
-  public UserSettings(final Integer jmxPort, final String kafkaUrl,
+  private UserSettings(final Integer jmxPort, final String kafkaUrl,
       final Integer kafkaPort, final Integer metricCount,
       final Integer consumers, final Integer producers,
       final String logFilePath) throws IllegalArgumentException {
@@ -56,6 +59,30 @@ public class UserSettings {
     this.setConsumers(consumers);
     this.setProducers(producers);
     this.setLogFilePath(logFilePath);
+  }
+
+  /**
+   * Return the synchronized UserSettings, instantiating if uninstantiated.
+   *
+   * @param jmxPort     The exposed JMX port
+   * @param kafkaUrl    The URL of the Kafka broker
+   * @param kafkaPort   The port of the Kafka broker
+   * @param metricCount The number of metric points to display on charts
+   * @param consumers   The number of consumers to use in testing
+   * @param producers   The number of consumers to use in testing
+   * @param logFilePath The location for the log file
+   *
+   * @return current UserSettings instance
+   */
+  public static synchronized UserSettings getInstance(final Integer jmxPort,
+      final String kafkaUrl, final Integer kafkaPort, final Integer metricCount,
+      final Integer consumers, final Integer producers,
+      final String logFilePath) {
+    if (us == null) {
+      us = new UserSettings(jmxPort, kafkaUrl, kafkaPort, metricCount,
+          consumers, producers, logFilePath);
+    }
+    return us;
   }
 
   /**
@@ -104,7 +131,7 @@ public class UserSettings {
           MAX_PORT, RESERVED_PORTS.toString()));
     }
 
-    this.jmxPort = kafkaPort;
+    this.kafkaPort = kafkaPort;
   }
 
   /**

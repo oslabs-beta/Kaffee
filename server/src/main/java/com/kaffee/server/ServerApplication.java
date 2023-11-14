@@ -2,7 +2,6 @@ package com.kaffee.server;
 
 import java.io.IOException;
 
-import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -61,7 +60,7 @@ public class ServerApplication {
    */
   @Bean
   public MetricSubscriptions metricSubscriptions() throws IOException {
-    return new MetricSubscriptions();
+    return MetricSubscriptions.getInstance();
   }
 
 }

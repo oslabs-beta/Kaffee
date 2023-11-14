@@ -27,6 +27,9 @@ public class MetricSubscriptions {
    */
   private Map<String, String> serverMetrics;
 
+  /** MetricSubscriptions instance. */
+  private static MetricSubscriptions ms;
+
   /**
    * Constructor for MetricSubscriptions.
    *
@@ -35,8 +38,22 @@ public class MetricSubscriptions {
    *
    * @throws IOException
    */
-  public MetricSubscriptions() throws IOException {
+  private MetricSubscriptions() throws IOException {
     this.serverMetrics = getServerMetricsStrings();
+  }
+
+  /**
+   * Return the instance of MetricSubscriptions, instantiating if needed.
+   *
+   * @return the current MetricSubscriptions instance
+   */
+  public static synchronized MetricSubscriptions getInstance()
+      throws IOException {
+    if (ms == null) {
+      ms = new MetricSubscriptions();
+    }
+
+    return ms;
   }
 
   private String getResolvedUrl(final UserSettings us) {
@@ -53,6 +70,7 @@ public class MetricSubscriptions {
    * @return Map of the server metrics with a user-friendly name mapped to the
    *         corresponding JMX endpoint
    */
+  @SuppressWarnings("checkstyle:LineLength")
   public Map<String, String> getServerMetricsStrings() {
     return new HashMap<String, String>() {
       {
@@ -110,6 +128,7 @@ public class MetricSubscriptions {
         // Generation");
       }
     };
+    // CHECKSTYLE: ON
   }
 
   /**

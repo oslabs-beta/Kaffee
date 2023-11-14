@@ -53,8 +53,8 @@ public class KaffeeSettingsController {
      * stringified = new String( Files.readAllBytes(Paths.get(resourceName)));
      */
 
-    UserSettings us = this.sc.getUserSettings();
-    String stringified = us.convertToJson().toString();
+    JSONObject currentSettings = this.sc.getUserSettingsFormttedJson();
+    String stringified = currentSettings.toString();
     // Return ResponseEntity with status 200 & body containing settings.json
     return ResponseEntity.ok(stringified);
   }
@@ -73,10 +73,11 @@ public class KaffeeSettingsController {
     JSONObject reqBody = new JSONObject(body);
     // Get settingName and newValue from reqbody as String
     String settingName = reqBody.getString("settingName");
-    String newValue = reqBody.getString("newValue");
+    Object newValue = reqBody.get("newValue");
 
     UserSettings newSettings = this.sc.saveUserSettings(settingName, newValue);
 
     return ResponseEntity.ok(newSettings.convertToJson().toString());
   }
+
 }

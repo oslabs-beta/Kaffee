@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -87,8 +89,9 @@ public class SettingsController {
 
     String logFilePath = settingsJson.get("log-filepath").toString();
 
-    return new UserSettings(jmxPort, kafkaUrl, kafkaPort, metricCount,
-        consumers, producers, logFilePath);
+    UserSettings loadedSettings = UserSettings.getInstance(jmxPort, kafkaUrl,
+        kafkaPort, metricCount, consumers, producers, logFilePath);
+    return loadedSettings;
   }
 
   /**
@@ -98,6 +101,17 @@ public class SettingsController {
    */
   public UserSettings getUserSettings() {
     return this.us;
+  }
+
+  /**
+   * Format the UserSettings object to the JSON format we expect for storage.
+   *
+   * @return UserSettings converted to JSON and keys switched to match
+   *         settings.json
+   */
+  public JSONObject getUserSettingsFormttedJson() {
+    JSONObject currentSettings = this.us.convertToJson();
+    return this.convertJavaKeyToJSON(currentSettings);
   }
 
   private Integer convertObjToInteger(final Object obj) {
@@ -146,7 +160,9 @@ public class SettingsController {
       // save user settings
       BufferedWriter writer = new BufferedWriter(
           new FileWriter(this.fileLocation));
-      String newSettingsStringified = this.us.convertToJson().toString();
+      JSONObject convertedObject = this
+          .convertJavaKeyToJSON(this.us.convertToJson());
+      String newSettingsStringified = convertedObject.toString();
       writer.write(newSettingsStringified);
       writer.close();
     } catch (Exception e) {
@@ -197,5 +213,35 @@ public class SettingsController {
   public Object getSettingFromFile(final String key) throws IOException {
     JSONObject settings = this.getSettingsJson();
     return settings.get(key);
+  }
+
+  /**
+   * Method for remapping UserSettings properties to JSON keys. We have to do
+   * this because some of the JSON keys are not valid Java variable names.
+   *
+   * @param userSettings UserSettings object converted to JSONObject
+   * @return JSONObject with keys re-assigned.
+   */
+  private JSONObject convertJavaKeyToJSON(final JSONObject userSettings) {
+    JSONObject returnObject = userSettings;
+
+    Map<String, String> keyMapping = new HashMap<String, String>() {
+      {
+        put("metricCount", "metric-count");
+        put("kafkaPort", "KAFKA_PORT");
+        put("jmxPort", "JMX_PORT");
+        put("kafkaUrl", "KAFKA_URL");
+        put("logFilePath", "log-filepath");
+      }
+    };
+
+    for (Map.Entry<String, String> entry : keyMapping.entrySet()) {
+      String currentKey = entry.getKey();
+      Object keyValue = returnObject.get(currentKey);
+      returnObject.put(entry.getValue(), keyValue);
+      returnObject.remove(currentKey);
+    }
+
+    return returnObject;
   }
 }
