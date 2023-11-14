@@ -1,7 +1,6 @@
 package com.kaffee.server.controllers;
 
-import com.kaffee.server.UserSettings.ReadSettings;
-import com.kaffee.server.models.MetricSubscriptions;
+import com.kaffee.server.models.UserSettings;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.json.JSONObject;
@@ -14,13 +13,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/")
 public class KaffeeSettingsController {
   // Get Settings Route and Handler
+
+  /** The SettingsContoller class. */
+  private final SettingsController sc;
+
+  /**
+   * Create KaffeeSettingsController with a connection to UserSettings.
+   *
+   * @param sc
+   */
+  public KaffeeSettingsController(final SettingsController sc) {
+    this.sc = sc;
+  }
 
   /**
    * Autowiring the ApplicationContext.
@@ -37,11 +46,15 @@ public class KaffeeSettingsController {
    */
   @GetMapping("/getSettings")
   private ResponseEntity<String> getSettings() throws IOException {
-    // Declare path to settings.json
-    String resourceName = "src/main/java/com/kaffee/server/settings.json";
-    // Read all bytes as bytes[], then stringify using new String();
-    String stringified = new String(
-        Files.readAllBytes(Paths.get(resourceName)));
+    /*
+     * The following is the old method // Declare path to settings.json String
+     * resourceName = "src/main/java/com/kaffee/server/settings.json"; // Read
+     * all bytes as bytes[], then stringify using new String(); String
+     * stringified = new String( Files.readAllBytes(Paths.get(resourceName)));
+     */
+
+    UserSettings us = this.sc.getUserSettings();
+    String stringified = us.convertToJson().toString();
     // Return ResponseEntity with status 200 & body containing settings.json
     return ResponseEntity.ok(stringified);
   }
@@ -49,46 +62,21 @@ public class KaffeeSettingsController {
   /**
    * set Post route to /updateSettings.
    *
+   * @param body The ResponseBody string
    * @return ResponseEntity with status OK and the string "Updated!"
    */
   @PostMapping("/updateSettings")
   // declare argument using annotation @RequestBody to get body from request
-  public ResponseEntity<String> updateSettings(@RequestBody String body)
+  public ResponseEntity<String> updateSettings(@RequestBody final String body)
       throws IOException {
     // Convert body to JSON
     JSONObject reqBody = new JSONObject(body);
     // Get settingName and newValue from reqbody as String
     String settingName = reqBody.getString("settingName");
     String newValue = reqBody.getString("newValue");
-    // declare path to settings.json
-    String resourceName = "src/main/java/com/kaffee/server/settings.json";
-    // Read all bytes as bytes[], then stringify using new String()
-    String stringified = new String(
-        Files.readAllBytes(Paths.get(resourceName)));
-    // Convert Stringified JSON to JSONObject using new JSONObject()
-    JSONObject json = new JSONObject(stringified);
-    // Update requested setting using .put()
-    json.put(settingName, newValue);
-    // convert updated settings json to string
-    String reString = json.toString();
-    // convert stringified settings json to an array of bytes (byte[])
-    byte[] jsonToBytes = reString.getBytes();
-    // overwrite old settings file with the updated settings file
-    Files.write(Paths.get(resourceName), jsonToBytes);
-    ReadSettings rs = new ReadSettings();
-    rs.getSetting(settingName);
-    // refresh Connection to use new Settings
-    MetricSubscriptions ms = context.getBean("metricSubscriptions",
-        MetricSubscriptions.class);
-    ms.reInitialize();
-    // MetricSubscriptions newMs = ms.getBean("metricSubscriptions",
-    // MetricSubscriptions.class);
-    // newMs.reInitialize();
 
-    // this should really return the JSON of the updated file,
-    // which could aid in testing and also user feedback: e.g. if they
-    // click save and the settings reverted, this would indicated that
-    // there was an error.
-    return ResponseEntity.ok("Updated!");
+    UserSettings newSettings = this.sc.saveUserSettings(settingName, newValue);
+
+    return ResponseEntity.ok(newSettings.convertToJson().toString());
   }
 }

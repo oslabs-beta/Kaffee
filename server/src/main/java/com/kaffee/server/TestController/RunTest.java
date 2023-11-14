@@ -17,18 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
 
 import com.kaffee.server.controllers.ServerMetricController;
-import com.kaffee.server.UserSettings.ReadSettings;
+import com.kaffee.server.controllers.SettingsController;
+import com.kaffee.server.models.UserSettings;
 
 @RestController
 @RequestMapping("/test")
 public class RunTest {
   public static boolean run = false;
   private final ServerMetricController smc;
-  private final ReadSettings rs;
+  private final SettingsController sc;
 
-  public RunTest(final ServerMetricController smc, final ReadSettings rs) {
+  public RunTest(final ServerMetricController smc,
+      final SettingsController sc) {
     this.smc = smc;
-    this.rs = rs;
+    this.sc = sc;
   }
 
   @GetMapping("/runTest")
@@ -37,10 +39,9 @@ public class RunTest {
       ReflectionException, InstanceNotFoundException, IntrospectionException,
       InterruptedException, javax.management.IntrospectionException {
     run = true;
-    int producers = java.lang.Integer
-        .parseInt(this.rs.getSetting("producers").toString());
-    int consumers = java.lang.Integer
-        .parseInt(this.rs.getSetting("consumers").toString());
+    UserSettings currSettings = this.sc.getUserSettings();
+    int producers = currSettings.getProducers();
+    int consumers = currSettings.getConsumers();
 
     for (int i = 0; i < producers; i++) {
       String testNum = Integer.toString(i);

@@ -1,17 +1,30 @@
 package com.kaffee.server.TestController;
 
-import com.kaffee.server.UserSettings.ReadSettings;
-
 import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import com.kaffee.server.controllers.SettingsController;
+import com.kaffee.server.models.UserSettings;
+
 /**
  * Configuration of the Kafka Consumer.
  */
 public class KafkaConsumerConfig {
+  /** SettingsController link. */
+  private SettingsController sc;
+
+  /**
+   * Constructor for KafkaConsumerConfig.
+   *
+   * @param sc
+   */
+  public KafkaConsumerConfig(final SettingsController sc) {
+    this.sc = sc;
+  }
+
   /**
    * get the Kafka Consumer Properties.
    *
@@ -20,16 +33,16 @@ public class KafkaConsumerConfig {
    *         _GROUP_ID_CONFIG
    * @throws IOException
    */
-  public static Properties getConsumerProp() throws IOException {
-    ReadSettings rs = new ReadSettings();
+  public Properties getConsumerProp() throws IOException {
+    UserSettings currentSettings = this.sc.getUserSettings();
 
-    String url = rs.getSetting("KAFKA_URL").toString();
-    String port = rs.getSetting("KAFKA_PORT").toString();
+    String url = currentSettings.getKafkaUrl();
+    String port = currentSettings.getKafkaPort().toString();
     Properties property = new Properties();
     String socket = url + ":" + port;
-    property.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, socket); // Kafka
-                                                                   // broker
-                                                                   // addresses
+
+    // Kafka broker addresses
+    property.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, socket);
     property.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
         StringDeserializer.class.getName());
     property.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,

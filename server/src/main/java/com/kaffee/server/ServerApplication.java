@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import com.kaffee.server.controllers.SettingsController;
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
 
@@ -41,6 +42,16 @@ public class ServerApplication {
   }
 
   /**
+   * Create the Bean for SettingsController.
+   *
+   * @return new SettingsContoller
+   */
+  @Bean
+  public SettingsController settingsController() throws IOException {
+    return new SettingsController();
+  }
+
+  /**
    * Create the Bean for MetricSubscriptions.
    *
    * @return new MetricSubscriptions
@@ -50,4 +61,5 @@ public class ServerApplication {
   public MetricSubscriptions metricSubscriptions() throws IOException {
     return new MetricSubscriptions();
   }
+
 }

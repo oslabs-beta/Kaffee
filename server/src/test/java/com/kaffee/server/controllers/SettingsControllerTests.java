@@ -1,4 +1,4 @@
-package com.kaffee.server.UserSettings;
+package com.kaffee.server.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -9,11 +9,13 @@ import java.io.StringReader;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Tests for the ReadSettings class.
+ * Tests for the SettingsController class.
  */
-public class ReadSettingsTest {
+@ContextConfiguration(classes = SettingsController.class)
+public class SettingsControllerTests {
   /**
    * Test for locating and reading from file.
    */
@@ -25,7 +27,9 @@ public class ReadSettingsTest {
 
       StringReader testReader = new StringReader(testString);
       BufferedReader testBufferedReader = new BufferedReader(testReader);
-      Object kafkaPort = ReadSettings.getSetting("JMX_PORT", testBufferedReader)
+
+      SettingsController sc = new SettingsController();
+      Object kafkaPort = sc.getSettingFromReader("JMX_PORT", testBufferedReader)
           .toString();
 
       assertEquals(kafkaPort, "9094");

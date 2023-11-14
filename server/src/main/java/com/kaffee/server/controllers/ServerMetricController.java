@@ -37,12 +37,15 @@ import com.kaffee.server.models.MetricSubscriptions;
 
 public class ServerMetricController {
   private MetricSubscriptions ms;
-  public Map<String, String> jmxServerMetrics;
-  public Set<String> subscribedMetrics = new Set();
+  private SettingsController sc;
+  private Map<String, String> jmxServerMetrics;
+  private Set<String> subscribedMetrics = new Set<String>();
 
   // Set defaults in the constructor
-  public ServerMetricController(MetricSubscriptions ms) {
+  public ServerMetricController(final MetricSubscriptions ms,
+      final SettingsController sc) {
     this.ms = ms;
+    this.sc = sc;
     try {
       jmxServerMetrics = ms.getServerMetricsStrings();
 
