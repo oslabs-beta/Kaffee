@@ -12,7 +12,7 @@ import Settings from './containers/Settings.jsx';
 import ErrorPage from './containers/ErrorPage.jsx';
 import About from './containers/About.jsx';
 
-export const MainRoot = () => {
+const MainRoot = () => {
   return (
     <React.StrictMode>
       <Provider store={store}>
