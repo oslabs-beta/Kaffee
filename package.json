@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
+    "@testing-library/user-event": "^14.5.1",
     "csv-parser": "^3.0.0",
     "font-awesome": "^4.7.0",
     "node-fetch": "^3.3.2",

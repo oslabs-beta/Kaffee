@@ -5,7 +5,7 @@ import About from '../containers/About.jsx';
 
 const aboutPage = render(<About />);
 
-test('has link to github profile', () => {
+test('has link to github repo', () => {
   const link = aboutPage.getByTestId('github-link');
   expect(link.href).toContain('https://github.com/oslabs-beta/Kaffee');
 });

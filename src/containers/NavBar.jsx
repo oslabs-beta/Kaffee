@@ -20,7 +20,7 @@ export async function loader() {
       // @ts-ignore
       {
         cause: err,
-      }
+      },
     );
   }
 }
@@ -128,7 +128,7 @@ export default function NavBar() {
           <NavLink to="/about">
             <button>About</button>
           </NavLink>
-          <button onClick={startProducers}>
+          <button data-testid="startStopProducers" onClick={startProducers}>
             {run ? 'Stop' : 'Start'} Test Producers
           </button>
         </nav>
