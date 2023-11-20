@@ -16,7 +16,7 @@ import { loader } from '../containers/NavBar';
 // loader = vi.fn().mockImplementation(() => [{ 'bytes-in': 'Server Bytes In' }]);
 
 // Define handlers that catch the corresponding requests and returns the mock data.
-export const handlers = [
+const handlers = [
   http.get('http://localhost:8080/available-server-metrics', () => {
     return HttpResponse.json([{ 'bytes-in': 'Server Bytes In' }], {
       status: 200,
