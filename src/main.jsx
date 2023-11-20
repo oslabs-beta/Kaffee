@@ -2,12 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/style.css';
 
 import App from './App.jsx';
@@ -17,22 +12,22 @@ import Settings from './containers/Settings.jsx';
 import ErrorPage from './containers/ErrorPage.jsx';
 import About from './containers/About.jsx';
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
-      <Route index element={<Main />} />
-      <Route path="history" element={<History />} />
-      <Route path="settings" element={<Settings />} />
-      <Route path="about" element={<About />} />
-      <Route path="*" element={<ErrorPage />} />
-    </Route>
-  )
-);
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+            <Route index element={<Main />} />
+            <Route path="history" element={<History />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="about" element={<About />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
