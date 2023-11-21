@@ -1,10 +1,30 @@
 import { render, fireEvent } from '@testing-library/react';
-import { it, expect } from 'vitest';
+import { it, expect, beforeAll, afterAll } from 'vitest';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom/server';
+import { setupServer } from 'msw/node';
+import { HttpResponse, http } from 'msw';
 
 import Settings from '../containers/Settings';
 import store from '../redux/store';
+
+const handlers = [
+  http.get('http://localhost:8080/getSettings', () => {
+    return HttpResponse.json({
+      status: 200,
+    });
+  }),
+];
+
+const server = setupServer(...handlers);
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' });
+});
+
+afterAll(() => {
+  server.close;
+});
 
 it('tests if parameters and input fields exist and if right data can be entered', () => {
   const settings = render(
