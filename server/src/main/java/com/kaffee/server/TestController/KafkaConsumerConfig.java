@@ -14,7 +14,9 @@ import com.kaffee.server.models.UserSettings;
  */
 public class KafkaConsumerConfig {
   /** SettingsController link. */
-  private SettingsController sc;
+  private static SettingsController sc;
+
+  private static KafkaConsumerConfig kcc = null;
 
   /**
    * Constructor for KafkaConsumerConfig.
@@ -25,6 +27,14 @@ public class KafkaConsumerConfig {
     this.sc = sc;
   }
 
+  public static KafkaConsumerConfig getInstance() {
+    if (kcc == null) {
+      kcc = new KafkaConsumerConfig(sc);
+    }
+
+    return kcc;
+  }
+
   /**
    * get the Kafka Consumer Properties.
    *
@@ -33,7 +43,7 @@ public class KafkaConsumerConfig {
    *         _GROUP_ID_CONFIG
    * @throws IOException
    */
-  public Properties getConsumerProp() throws IOException {
+  public Properties getConsumerProperties() throws IOException {
     UserSettings currentSettings = this.sc.getUserSettings();
 
     String url = currentSettings.getKafkaUrl();

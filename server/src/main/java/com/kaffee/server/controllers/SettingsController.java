@@ -1,8 +1,12 @@
 package com.kaffee.server.controllers;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -109,7 +113,7 @@ public class SettingsController {
    * @return UserSettings converted to JSON and keys switched to match
    *         settings.json
    */
-  public JSONObject getUserSettingsFormttedJson() {
+  public JSONObject getUserSettingsFormattedJson() {
     JSONObject currentSettings = this.us.convertToJson();
     return this.convertJavaKeyToJSON(currentSettings);
   }
@@ -128,7 +132,7 @@ public class SettingsController {
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public UserSettings saveUserSettings(final String setting, final Object value)
+  public UserSettings saveUserSetting(final String setting, final Object value)
       throws IllegalArgumentException, IOException {
     try {
       switch (setting) {
@@ -243,5 +247,52 @@ public class SettingsController {
     }
 
     return returnObject;
+  }
+
+  /**
+   * GET routing for getting the current settings.
+   *
+   * @return ResponseEntity with OK status and the contents of settings.json
+   *         stringified
+   * @throws IOException
+   */
+  @GetMapping("/getSettings")
+  private ResponseEntity<String> getSettings() throws IOException {
+    /*
+     * The following is the old method // Declare path to settings.json String
+     * resourceName = "src/main/java/com/kaffee/server/settings.json"; // Read
+     * all bytes as bytes[], then stringify using new String(); String
+     * stringified = new String( Files.readAllBytes(Paths.get(resourceName)));
+     */
+
+    try {
+      JSONObject currentSettings = this.getUserSettingsFormattedJson();
+      String stringified = currentSettings.toString();
+      // Return ResponseEntity with status 200 & body containing settings.json
+      return ResponseEntity.ok(stringified);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+    }
+  }
+
+  /**
+   * set Post route to /updateSettings.
+   *
+   * @param body The ResponseBody string
+   * @return ResponseEntity with status OK and the string "Updated!"
+   */
+  @PostMapping("/updateSettings")
+  // declare argument using annotation @RequestBody to get body from request
+  public ResponseEntity<String> updateSettings(@RequestBody final String body)
+      throws IOException {
+    // Convert body to JSON
+    JSONObject reqBody = new JSONObject(body);
+    // Get settingName and newValue from reqbody as String
+    String settingName = reqBody.getString("settingName");
+    Object newValue = reqBody.get("newValue");
+
+    UserSettings newSettings = this.saveUserSetting(settingName, newValue);
+
+    return ResponseEntity.ok(newSettings.convertToJson().toString());
   }
 }

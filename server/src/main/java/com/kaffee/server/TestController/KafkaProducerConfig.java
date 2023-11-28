@@ -11,7 +11,9 @@ import java.util.Properties;
 
 public class KafkaProducerConfig {
   /** SettingsController link. */
-  private SettingsController sc;
+  private static SettingsController sc;
+
+  private static KafkaProducerConfig kpc = null;
 
   /**
    * Constructor for KafkaConsumerConfig.
@@ -20,6 +22,14 @@ public class KafkaProducerConfig {
    */
   public KafkaProducerConfig(final SettingsController sc) {
     this.sc = sc;
+  }
+
+  public static KafkaProducerConfig getInstance() {
+    if (kpc == null) {
+      kpc = new KafkaProducerConfig(sc);
+    }
+
+    return kpc;
   }
 
   /**

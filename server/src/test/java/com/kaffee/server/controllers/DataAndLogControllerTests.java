@@ -33,8 +33,8 @@ public class DataAndLogControllerTests {
   /**
    * Generating the MockBean for dataAndLog.
    */
-  @MockBean
-  private DataAndLogController dataAndLog;
+  // @MockBean
+  private DataAndLogController dataAndLog = new DataAndLogController();
 
   /**
    * Test that filenames have the format YYYY-MM-DD_log.json.
@@ -56,13 +56,13 @@ public class DataAndLogControllerTests {
   @Test
   @DisplayName("Check that new log files are created using the current date")
   void validFileNameDate() {
-    DataAndLogController dal = new DataAndLogController();
     String filename = dataAndLog.generateFileName();
 
     Date date = Calendar.getInstance().getTime();
-    String formatString = "yyyy-mm-dd";
+    String formatString = "yyyy-MM-dd";
     DateFormat dateFormat = new SimpleDateFormat(formatString);
     String strDate = dateFormat.format(date);
+    System.out.println(strDate);
 
     assertEquals(filename.substring(0, formatString.length()), strDate);
   }

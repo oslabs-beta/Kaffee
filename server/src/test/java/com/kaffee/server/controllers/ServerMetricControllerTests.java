@@ -1,5 +1,8 @@
 package com.kaffee.server.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +27,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaffee.server.ServerApplication;
 
+@SpringBootTest(classes = ServerMetricController.class)
 public class ServerMetricControllerTests {
   /** JSON for the original settings. */
   private JSONObject originalSettings;
@@ -61,28 +66,27 @@ public class ServerMetricControllerTests {
    * Also test that the "bytes-in" key exists.
    *
    * @throws Exception
+   *
+   * @Test @DisplayName("/available-server-metrics should return a valid JSON
+   *       object") void availableServerMetricsReturnsObject() throws
+   *       Exception { // get the JSON object, test that it contains
+   *       "bytes-in" // do we want to verify it has each expected element, or
+   *       just that it has // the correct format? MvcResult result = mockMvc
+   *       .perform(get("/availableServerMetrics")
+   *       .contentType(MediaType.APPLICATION_JSON))
+   *       .andExpect(status().isOk()) .andExpect(jsonPath("$",
+   *       hasItem("bytes-in"))).andReturn();
+   * 
+   *       // convert to Map object. String content =
+   *       result.getResponse().getContentAsString(); Map<String, String>
+   *       resultMap = new ObjectMapper().readValue(content, new
+   *       TypeReference<>() { });
+   *       System.out.println(resultMap.get("not_in_here"));
+   * 
+   *       // do something with the resultMap?
+   * 
+   *       }
    */
-  @Test
-  @DisplayName("/available-server-metrics should return a valid JSON object")
-  void availableServerMetricsReturnsObject() throws Exception {
-    // get the JSON object, test that it contains "bytes-in"
-    // do we want to verify it has each expected element, or just that it has
-    // the correct format?
-    MvcResult result = mockMvc
-        .perform(get("/availableServerMetrics")
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasItem("bytes-in"))).andReturn();
-
-    /*
-     * // convert to Map object String content =
-     * result.getResponse().getContentAsString(); Map<String, String>
-     * resultMap = new ObjectMapper().readValue(content, new TypeReference<>()
-     * { });
-     *
-     * // do something with the resultMap?
-     */
-  }
 
   /*
    * Verify that we can set the JMX port.
