@@ -383,3 +383,8 @@ header nav a.active button {
   border: var(--border);
   z-index: 1;
 }
+
+#link {
+  text-decoration: underline !important;
+  color: blueviolet;
+}
