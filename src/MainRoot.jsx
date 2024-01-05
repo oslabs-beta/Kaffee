@@ -11,6 +11,7 @@ import History from './containers/History.jsx';
 import Settings from './containers/Settings.jsx';
 import ErrorPage from './containers/ErrorPage.jsx';
 import About from './containers/About.jsx';
+import Feedback from './containers/Feedback.jsx';
 
 const MainRoot = () => {
   return (
@@ -22,6 +23,7 @@ const MainRoot = () => {
               <Route index element={<Main />} />
               <Route path="history" element={<History />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="feedback" element={<Feedback />} />
               <Route path="about" element={<About />} />
               <Route path="*" element={<ErrorPage />} />
             </Route>
