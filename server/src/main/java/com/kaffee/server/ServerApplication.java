@@ -2,8 +2,13 @@ package com.kaffee.server;
 
 import java.io.IOException;
 
+import javax.swing.JFrame;
+import javax.swing.plaf.BorderUIResource;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +27,6 @@ import com.kaffee.server.models.UserSettings;
 @ComponentScan
 @Import({ WebSocketConfig.class })
 public class ServerApplication {
-
-  /**
-   * Main method to run the web server.
-   *
-   * @param args arguments to run the server
-   */
-  public static void main(final String[] args) {
-    SpringApplication.run(ServerApplication.class, args);
-  }
 
   /**
    * Create the Bean for MessageData.
@@ -61,6 +57,17 @@ public class ServerApplication {
   @Bean
   public MetricSubscriptions metricSubscriptions() throws IOException {
     return MetricSubscriptions.getInstance();
+  }
+
+  /**
+   * Main method to run the web server.
+   *
+   * @param args arguments to run the server
+   */
+  public static void main(final String[] args) {
+    SpringApplication.run(ServerApplication.class, args);
+    // new SpringApplicationBuilder(ServerApplication.class).headless(false)
+    // .run(args);
   }
 
 }
