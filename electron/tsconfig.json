@@ -1,9 +1,14 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
+        "target": "ES5",
         "module": "CommonJS",
         "sourceMap": true,
         "strict": true,
-        
+        "outDir": "../build",
+        "rootDir": "../",
+        "noEmitOnError": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ]
     }
 }

@@ -1,21 +1,57 @@
-import { spawn } from 'child_process';
-import { app, BrowserWindow } from 'electron/main';
-import * as path from 'path';
+/*
+ * Following the guide found at: https://medium.com/@sgstephans/creating-a-java-electron-react-typescript-desktop-app-414e7edceed2
+ */
 
-const createWindow = () => {
+import { app, BrowserWindow } from 'electron';
+import * as path from 'path';
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer';
+
+function createWindow() {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, electron, 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
-  win.loadFile('index.html');
-};
+  if (app.isPackaged) {
+    win.loadURL(`file://${__dirname}/../index.html`);
+  } else {
+    win.loadURL('http://localhost:5173/');
+
+    win.webContents.openDevTools();
+
+    // Hot Reloading on 'node_modules/.bin/electronPath'
+    // I would love to use ES6 import notation, but the module is giving me fits
+    const reload = require('electron-reload');
+    reload(__dirname, {
+      electron: path.join(
+        __dirname,
+        '..',
+        '..',
+        'node_modules',
+        '.bin',
+        'electron',
+      ),
+      forceHardReset: true,
+      hardResetMethod: 'exit',
+    });
+  }
+}
 
 app.whenReady().then(() => {
-  startServer();
+  // DevTools
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => {
+      console.log(`Added Extension: ${name}`);
+    })
+    .catch((err) => {
+      console.log('An error occurred: ', err);
+    });
+
   createWindow();
 
   app.on('activate', () => {
@@ -23,23 +59,10 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
 });
-
-function startServer() {
-  // let server = `${path.join(app.getAppPath(), 'server/target/server-1.1.1-SNAPSHOT.jar')}`;
-  const server = `${path.join(app.getAppPath(), 'server/mvn spring-boot:run')}`;
-  console.log(`Launching server with jar ${server}...`);
-  // const serverProcess = spawn('java', ['-jar', server]);
-  const serverProcess = spawn(server);
-  if (serverProcess.pid) {
-    console.log('Server PID: ' + serverProcess.pid);
-  } else {
-    console.log('Failed to launch server process');
-  }
-}

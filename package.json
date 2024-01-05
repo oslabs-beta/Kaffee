@@ -1,9 +1,12 @@
 {
   "name": "kaffee-revamp",
   "private": true,
+  "author": "Duke Ahn, Vitaly Blotski, Clay Hilgert, Darren Pavel",
+  "description": "A Kafka broker monitor",
   "version": "1.2.0",
   "type": "module",
-  "main": "electron/main.js",
+  "homepage": ".",
+  "main": "build/electron/main.js",
   "scripts": {
     "dev": "cd server && mvn spring-boot:run & cd .. && vite",
     "start": "electron-forge start",
@@ -11,7 +14,26 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "postinstall": "electron-builder install-app-devs",
+    "electron:dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://127.0.0.1:3000 && tsc -p electron -w\" \"wait-on http://127.0.0.1:3000 && tsc -p electron && electron .\"",
+    "electron:build": "yarn build && tsc -p electron && electron-builder"
+  },
+  "build": {
+    "extends": null,
+    "files": [
+      "**/*",
+      "build/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "."
+      }
+    ]
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
@@ -46,14 +68,18 @@
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.1",
+    "@types/electron-devtools-installer": "^2.2.5",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.16",
     "babel-loader": "^9.1.3",
     "chart.js": "^4.3.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "electron": "^28.1.1",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
@@ -78,6 +104,7 @@
     "tailwindcss": "^3.3.5",
     "vite": "^4.4.5",
     "vitest": "^0.34.6",
-    "vitest-fetch-mock": "^0.2.2"
+    "vitest-fetch-mock": "^0.2.2",
+    "wait-on": "^7.2.0"
   }
 }
