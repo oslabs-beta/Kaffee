@@ -98,6 +98,7 @@ export default function NavBar() {
           <NavLink to="/settings">
             <button>Settings</button>
           </NavLink>
+
           {location.pathname === '/' ? (
             <div id="metric-picker">
               <div>
@@ -125,6 +126,9 @@ export default function NavBar() {
           )}
         </nav>
         <nav className="right">
+          <NavLink to="/feedback">
+            <button>Feedback</button>
+          </NavLink>
           <NavLink to="/about">
             <button>About</button>
           </NavLink>
