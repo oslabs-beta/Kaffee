@@ -7,8 +7,12 @@ import * as path from 'path';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 
-function createWindow() {
+/**
+ * Create the window for loading the electron app.
+ */
+function createWindow(): void {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -42,6 +46,32 @@ function createWindow() {
   }
 }
 
+/**
+ * Start the server from the compiled jar or using the command line if in dev mode.
+ *
+ * @return pid if process starts, 0 otherwise
+ */
+function startServer(): Number {
+  let child: ChildProcessWithoutNullStreams | null = null;
+
+  if (app.isPackaged) {
+    const jarPath = path.join(
+      process.resourcesPath,
+      'server',
+      'target',
+      'server-1.1.1-SNAPSHOT.jar',
+    );
+    child = spawn('java', ['-jar', jarPath]);
+  } else {
+    child = spawn('mvn', ['-f server/pom.xml', 'spring-boot:run']);
+  }
+
+  return child?.pid || 0;
+}
+
+/**
+ * Loads the app when the electron's whenReady promise is fulfilled.
+ */
 app.whenReady().then(() => {
   // DevTools
   installExtension(REACT_DEVELOPER_TOOLS)
@@ -52,6 +82,8 @@ app.whenReady().then(() => {
       console.log('An error occurred: ', err);
     });
 
+  const pid = startServer();
+  console.log(pid);
   createWindow();
 
   app.on('activate', () => {
@@ -61,6 +93,8 @@ app.whenReady().then(() => {
   });
 
   app.on('window-all-closed', () => {
+    if (pid !== -1) {
+    }
     if (process.platform !== 'darwin') {
       app.quit();
     }
