@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import com.kaffee.server.controllers.SettingsController;
+import com.kaffee.server.models.ApiError;
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
 import com.kaffee.server.models.UserSettings;

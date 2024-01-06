@@ -3,14 +3,25 @@ package com.kaffee.server.controllers;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.kafka.common.requests.ApiError;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
+import javax.management.IntrospectionException;
+
+import org.apache.commons.beanutils.ConversionException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
+import com.kaffee.server.models.ApiError;
 
 /**
  * Sending regularly scheduled messages over the established WebSocket.
@@ -47,6 +58,11 @@ public class ScheduledMessagesController {
   @Autowired
   private MessageData messageData;
 
+  @Bean
+  private ApiError apiError() {
+    return new ApiError();
+  }
+
   /**
    * Send broker messages to "/metric/<metric_name>". This needs improved
    * error handling to return a better response to the front end.
@@ -54,7 +70,10 @@ public class ScheduledMessagesController {
    * @throws Exception
    */
   @Scheduled(fixedRate = 1000)
-  public void sendMessage() throws Exception {
+  public void sendMessage()
+      throws IOException, ConversionException, MalformedObjectNameException,
+      InstanceNotFoundException, ReflectionException, MBeanException,
+      AttributeNotFoundException, IntrospectionException {
     Map<String, String> metrics = ms.getSubscriptions();
 
     for (Map.Entry<String, String> metric : metrics.entrySet()) {
@@ -66,10 +85,11 @@ public class ScheduledMessagesController {
         simpMessagingTemplate.convertAndSend(outputPath, message);
         message = null;
       } catch (IOException ioException) {
-        System.out.println(
-            "Failed to connect to server. Is the Kafka broker running?");
-        simpMessagingTemplate.convertAndSend(outputPath,
-            "Error fetching metrics.");
+        System.out
+            .println("Failed to connect to Kafka broker. Check settings.");
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+            "Failed to connect to broker.", ioException);
+        simpMessagingTemplate.convertAndSend(outputPath, apiError);
       }
     }
   }

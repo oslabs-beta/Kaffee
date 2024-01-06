@@ -44,7 +44,7 @@ export default function (props) {
   const [dataToSend, setDataToSend] = useState([]);
   const [labelsToSend, setLabelsToSend] = useState([]);
 
-  const [status, setStatus] = useState('loading');
+  const [status, setStatus] = useState('Loading Chart');
 
   // this is the number of data points to display per map
   const metricCount = useSelector((state) => state.charts.metricCount);
@@ -103,6 +103,11 @@ export default function (props) {
     let colorInd = 0;
 
     const body = JSON.parse(message.body);
+
+    if (body.statusCode) {
+      setStatus(body.message);
+      return;
+    }
 
     // if the chart doesn't have a starting time,
     // set the time to the first time seen
@@ -231,8 +236,8 @@ export default function (props) {
 
   return (
     <div className="chartCanvas">
-      {status === 'loading' ? (
-        <span>Loading Chart</span>
+      {status !== 'succeeded' ? (
+        <span>{status}</span>
       ) : (
         <Line
           datasetIdKey={props.metric}
