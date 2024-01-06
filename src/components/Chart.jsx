@@ -86,7 +86,7 @@ export default function (props) {
     // subscribe to the socket route for this particular metric
     let path = '/metric/' + props.metric;
     client.subscribe(path, (message) => {
-      addEvents(message);
+      handleMessages(message);
     });
 
     // send a message to app/subscribe across the socket
@@ -97,17 +97,29 @@ export default function (props) {
     });
   }, []);
 
-  function addEvents(message) {
+  /**
+   * Function to handle the return JSON from the STOMP packet.
+   * 
+   * @param {*} body 
+   */
+  function handleMessages(body) {
+    const body = JSON.parse(body.body);
+
+    // while this switch case currently only has 2 cases,
+    // I am stubbing this in so we can easily add better error handling
+    switch (body.statusCode) {
+      case 500:
+        setStatus("Could not connect to database, check settings and broker.")
+        break;
+      default:
+        addEvents(body);
+    }
+  }
+
+  function addEvents(body) {
     // this is used to make each line in the chart different
     // using the colors defined in ../utils.metricColors
     let colorInd = 0;
-
-    const body = JSON.parse(message.body);
-
-    if (body.statusCode) {
-      setStatus(body.message);
-      return;
-    }
 
     // if the chart doesn't have a starting time,
     // set the time to the first time seen
