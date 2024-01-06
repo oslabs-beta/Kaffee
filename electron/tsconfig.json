@@ -6,9 +6,6 @@
         "strict": true,
         "outDir": "../build",
         "rootDir": "../",
-        "noEmitOnError": true,
-        "typeRoots": [
-            "node_modules/@types"
-        ]
+        "noEmitOnError": true
     }
 }

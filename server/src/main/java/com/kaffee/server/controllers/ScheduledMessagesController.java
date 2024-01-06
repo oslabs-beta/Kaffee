@@ -1,7 +1,9 @@
 package com.kaffee.server.controllers;
 
+import java.io.IOException;
 import java.util.Map;
 
+import org.apache.kafka.common.requests.ApiError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -46,7 +48,8 @@ public class ScheduledMessagesController {
   private MessageData messageData;
 
   /**
-   * Send broker messages to "/metric/<metric_name>".
+   * Send broker messages to "/metric/<metric_name>". This needs improved
+   * error handling to return a better response to the front end.
    *
    * @throws Exception
    */
@@ -55,13 +58,18 @@ public class ScheduledMessagesController {
     Map<String, String> metrics = ms.getSubscriptions();
 
     for (Map.Entry<String, String> metric : metrics.entrySet()) {
-      if (metric != null) {
+      String outputPath = "/metric/" + metric.getKey();
+      try {
         Map<String, String> data = smc.getFormattedMetrics(metric.getValue());
 
         MessageData message = new MessageData(metric.getKey(), data);
-        String outputPath = "/metric/" + metric.getKey();
         simpMessagingTemplate.convertAndSend(outputPath, message);
         message = null;
+      } catch (IOException ioException) {
+        System.out.println(
+            "Failed to connect to server. Is the Kafka broker running?");
+        simpMessagingTemplate.convertAndSend(outputPath,
+            "Error fetching metrics.");
       }
     }
   }

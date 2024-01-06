@@ -54,17 +54,17 @@ function createWindow(): void {
 function startServer(): Number {
   let child: ChildProcessWithoutNullStreams | null = null;
 
-  if (app.isPackaged) {
-    const jarPath = path.join(
-      process.resourcesPath,
-      'server',
-      'target',
-      'server-1.1.1-SNAPSHOT.jar',
-    );
-    child = spawn('java', ['-jar', jarPath]);
-  } else {
-    child = spawn('mvn', ['-f server/pom.xml', 'spring-boot:run']);
-  }
+  // if (app.isPackaged) {
+  const jarPath = path.join(
+    process.resourcesPath,
+    'server',
+    'target',
+    'server-1.1.1-SNAPSHOT.jar',
+  );
+  child = spawn('java', ['-jar', jarPath]);
+  // } else {
+  //   child = spawn('mvn', ['-f server/pom.xml', 'spring-boot:run']);
+  // }
 
   return child?.pid || 0;
 }
@@ -75,10 +75,10 @@ function startServer(): Number {
 app.whenReady().then(() => {
   // DevTools
   installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => {
+    .then((name: string) => {
       console.log(`Added Extension: ${name}`);
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       console.log('An error occurred: ', err);
     });
 

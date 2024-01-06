@@ -17,23 +17,22 @@
     "make": "electron-forge make",
     "postinstall": "electron-builder install-app-devs",
     "electron:dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://127.0.0.1:3000 && tsc -p electron -w\" \"wait-on http://127.0.0.1:3000 && tsc -p electron && electron .\"",
-    "electron:build": "yarn build && tsc -p electron && electron-builder"
+    "electron:build": "npm run build && tsc -p electron && electron-builder -wl"
   },
   "build": {
+    "appId": "com.electron.kaffee",
+    "productName": "Kaffee",
     "extends": null,
     "files": [
       "**/*",
-      "build/**/*"
+      "build/**/*",
+      "!node_modules"
     ],
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "assets",
+      "output": "build"
     },
-    "extraResources": [
-      {
-        "from": "backend",
-        "to": "."
-      }
-    ]
+    "includeSubNodeModules": true
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
@@ -70,6 +69,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/electron-devtools-installer": "^2.2.5",
+    "@types/node": "^20.10.6",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.16",
     "babel-loader": "^9.1.3",
@@ -79,6 +79,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "electron": "^28.1.1",
+    "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^8.45.0",
@@ -86,7 +87,6 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "global-jsdom": "^9.1.0",
     "happy-dom": "^7.6.0",
-    "jsdom": "^22.1.0",
     "msw": "^2.0.8",
     "net": "^1.0.2",
     "nodemon": "^3.0.1",

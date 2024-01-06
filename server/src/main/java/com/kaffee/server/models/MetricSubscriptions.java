@@ -58,7 +58,7 @@ public class MetricSubscriptions {
 
   private String getResolvedUrl(final UserSettings us) {
     String kafkaUrl = us.getKafkaUrl();
-    String jmxPort = us.getJmxPort().toString();
+    Integer jmxPort = us.getJmxPort();
     String baseUrl = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi";
 
     return String.format(baseUrl, kafkaUrl, jmxPort);
