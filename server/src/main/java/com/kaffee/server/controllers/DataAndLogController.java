@@ -203,10 +203,6 @@ public class DataAndLogController {
     return Paths.get(this.directoryLocation, filename);
   }
 
-  private void saveData(JSONObject newData) {
-
-   }
-
   private File getCurrentFile() {
      String directory = this.getDirectory();
      String currentFileName = this.generateFileName();
@@ -233,11 +229,55 @@ public class DataAndLogController {
     }
   }
 
-  private JSONObject formatMetricDataForChart(JSONObject newDataSet) {
+  private JSONObject formatMetricDataForChart(MessageData newDataSet) {
     // data will come in formatted thusly:
+    /**
+     * {
+    "metric": "bytes-in",
+    "time": 1693251471538,
+    "snapshot": {
+      "RateUnit": "SECONDS",
+      "OneMinuteRate": "5.646250107634674E-43",
+      "EventType": "bytes",
+      "FifteenMinuteRate": "0.035843277946316754",
+      "Count": "32300",
+      "FiveMinuteRate": "1.0746448344638806E-7",
+      "MeanRate": "4.6865081791319945"
+    }
+  }
+     */
 
     // we need to return data formatted like this:
+    /**
+     *   {
+    "bytes-in": {
+      labels: [time1, time2, time3 ]
+      datasets: [
+        {
+          label: OneMinuteRate,
+          data[data1, data2, data3]
+        }
+      ]
+    }
+    "isr-shrinks": {
+      labels: [time1, time2, time3 ]
+      datasets: [
+        {
+          label: OneMinuteRate,
+          data[data1, data2, data3]
+        }
+      ]
+    }
+  }
+     */
+    JSONObject formattedData = new JSONObject();
+    JSONArray labels = new JSONArray();
 
+
+    formattedData.put(MessageData.metric, )
+  }
+
+  private JSONObject addDataToExisting(JSONObject existing, JSONObject newDataSet) {
     
   }
 }
