@@ -73,7 +73,7 @@ public class DataAndLogController {
       throws IOException {
     try {
       // find file with the requested name
-      Path filePath = Paths.get("history/", filename);
+      Path filePath = Paths.get(this.getDirectory(), filename);
       String stringifiedFile = Files.readString(filePath);
       return ResponseEntity.ok(stringifiedFile);
     } catch (Exception e) {
@@ -81,6 +81,9 @@ public class DataAndLogController {
     }
   }
 
+  // Ideally we shouldn't send data from the back to the front and back to the back unless the user has modified data somehow.
+  // This should be replaced with adding data as it's being read.
+  // NOTE: Should we log all data as it's read, or only data that we display?
   @PostMapping("/addData")
   private ResponseEntity<String> addData(@RequestBody String body)
       throws IOException {
@@ -198,5 +201,43 @@ public class DataAndLogController {
 
   private Path getFileLocation(final String directory, final String filename) {
     return Paths.get(this.directoryLocation, filename);
+  }
+
+  private void saveData(JSONObject newData) {
+
+   }
+
+  private File getCurrentFile() {
+     String directory = this.getDirectory();
+     String currentFileName = this.generateFileName();
+
+    Path currentFilePath = new Path(directory, currentFileName);
+    File currentFile = new File(currentFilePath);
+
+    return currentFile;
+  }
+
+  public void saveLogs(JSONObject newDataSet) {
+    File currentFile = getCurrentFile();
+
+    FileWriter writer = new FileWriter(currentFile);
+
+    if (currentFile.createNewFile()) {
+      // File is new, format and save data
+    } else {
+      // Data exists in file, read it in and reformat
+      InputStream stream = new FileInputStream(currentFile);
+      String jsonText = IOUtils.toString(stream, "UTF-8");
+      JSONObject currentData = new JSONOBject(jsonText);
+      // merge current data with newDataSet
+    }
+  }
+
+  private JSONObject formatMetricDataForChart(JSONObject newDataSet) {
+    // data will come in formatted thusly:
+
+    // we need to return data formatted like this:
+
+    
   }
 }
