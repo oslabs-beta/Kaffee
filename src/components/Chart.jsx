@@ -31,7 +31,7 @@ Chart.register(
 
 export default function (props) {
   let beginTime;
-  let lastSentTime;
+  // let lastSentTime;
 
   let chartRef = useRef(null);
   const updatingData = useRef(false);
@@ -41,8 +41,8 @@ export default function (props) {
   const [labels, setLabels] = useState([]);
 
   // data and labels to store in history
-  const [dataToSend, setDataToSend] = useState([]);
-  const [labelsToSend, setLabelsToSend] = useState([]);
+  // const [dataToSend, setDataToSend] = useState([]);
+  // const [labelsToSend, setLabelsToSend] = useState([]);
 
   const [status, setStatus] = useState('Loading Chart');
 
@@ -100,10 +100,10 @@ export default function (props) {
   /**
    * Function to handle the return JSON from the STOMP packet.
    * 
-   * @param {*} body 
+   * @param {*} message 
    */
-  function handleMessages(body) {
-    const body = JSON.parse(body.body);
+  function handleMessages(message) {
+    const body = JSON.parse(message.body);
 
     // while this switch case currently only has 2 cases,
     // I am stubbing this in so we can easily add better error handling
@@ -127,12 +127,12 @@ export default function (props) {
     // so that's why this is just a variable
     if (!beginTime) {
       beginTime = body.time;
-      lastSentTime = Date.now();
+      // lastSentTime = Date.now();
     }
     const offsetTime = body.time - beginTime;
     // Add the current time offset to the labels
     labels.push(offsetTime);
-    labelsToSend.push(body.time);
+    // labelsToSend.push(body.time);
 
     // loop through everything the server gives us
     // display only values that are numeric
@@ -146,7 +146,7 @@ export default function (props) {
 
       // a flag to see if this metric is already being tracked
       let inData = false;
-      let inDataToSend = false;
+      // let inDataToSend = false;
 
       // convert the Pascal cased metric name from Java to a more
       // user friendly variale. At this time, this function just adds
@@ -173,13 +173,13 @@ export default function (props) {
       }
 
       // look through the set of data to store in history
-      for (const set of dataToSend) {
-        if (!set.label || set.label === metricLabel) {
-          inDataToSend = true;
-          set.data.push(evalValue);
-          break;
-        }
-      }
+      // for (const set of dataToSend) {
+      //   if (!set.label || set.label === metricLabel) {
+      //     inDataToSend = true;
+      //     set.data.push(evalValue);
+      //     break;
+      //   }
+      // }
 
       // if the metric wasn't in the data object, let's add it
       if (!inData) {
@@ -194,13 +194,13 @@ export default function (props) {
       }
 
       // if it wasn't in the set of data to store, add it
-      if (!inDataToSend) {
-        const newMetric = {
-          data: [evalValue],
-          label: metricLabel,
-        };
-        dataToSend.push(newMetric);
-      }
+      // if (!inDataToSend) {
+      //   const newMetric = {
+      //     data: [evalValue],
+      //     label: metricLabel,
+      //   };
+      //   dataToSend.push(newMetric);
+      // }
     }
 
     // make sure the labels are the correct length
@@ -212,39 +212,39 @@ export default function (props) {
     setLabels([...labels]);
     setData([...data]);
 
-    setLabelsToSend([...labelsToSend]);
-    setDataToSend([...dataToSend]);
+    // setLabelsToSend([...labelsToSend]);
+    // setDataToSend([...dataToSend]);
 
-    if (Date.now() - lastSentTime > 1000) {
-      pushToLog();
-    }
+    // if (Date.now() - lastSentTime > 1000) {
+    //   pushToLog();
+    // }
   }
 
-  function pushToLog() {
-    const objToSend = {};
-    objToSend[props.metric] = {
-      labels: labelsToSend,
-      datasets: dataToSend,
-    };
-    lastSentTime = Date.now();
-    fetch('http://localhost:8080/addData', {
-      method: 'POST',
-      body: JSON.stringify(objToSend),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          setDataToSend(new Array);
-          setLabelsToSend(new Array);
-          labelsToSend.length = 0;
-          dataToSend.length = 0;
-          console.log(labelsToSend,dataToSend)
-        }
-      })
-      .catch((err) => {});
-  }
+  // function pushToLog() {
+  //   const objToSend = {};
+  //   objToSend[props.metric] = {
+  //     labels: labelsToSend,
+  //     datasets: dataToSend,
+  //   };
+  //   lastSentTime = Date.now();
+  //   fetch('http://localhost:8080/addData', {
+  //     method: 'POST',
+  //     body: JSON.stringify(objToSend),
+  //     headers: {
+  //       'Content-type': 'application/json; charset=UTF-8',
+  //     },
+  //   })
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setDataToSend(new Array);
+  //         setLabelsToSend(new Array);
+  //         labelsToSend.length = 0;
+  //         dataToSend.length = 0;
+  //         console.log(labelsToSend,dataToSend)
+  //       }
+  //     })
+  //     .catch((err) => {});
+  // }
 
   return (
     <div className="chartCanvas">

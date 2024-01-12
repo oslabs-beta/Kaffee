@@ -98,7 +98,7 @@ public class MessageData {
    *
    * @param time The current time in milliseconds.
    */
-  private void setTime(final Number time) {
+  private void setTime(final Long time) {
     this.time = time;
   }
 
@@ -112,7 +112,7 @@ public class MessageData {
    */
   private void setSnapshot(final Map<String, String> snapshot)
       throws IllegalArgumentException {
-    System.out.println(snapshot);
+    // System.out.println(snapshot);
     // Only letters, numbers, dashes and underscores allowed. I think this may
     // be unnecessary here, but is necessary in the metrics list.
     // Pattern uriSafe = Pattern.compile("^[a-zA-Z0-9-_]$");

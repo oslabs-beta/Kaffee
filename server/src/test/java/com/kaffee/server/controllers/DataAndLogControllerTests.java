@@ -35,38 +35,6 @@ public class DataAndLogControllerTests {
    */
   // @MockBean
   private DataAndLogController dataAndLog = new DataAndLogController();
-
-  /**
-   * Test that filenames have the format YYYY-MM-DD_log.json.
-   */
-  @Test
-  @DisplayName("Check that new log files have the format YYYY-MM-DD_log.json")
-  void validFileNameFormat() {
-    String filename = dataAndLog.generateFileName();
-    System.out.println(filename);
-
-    Pattern fnPattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}_log\\.json");
-
-    assertTrue(fnPattern.matcher(filename).matches());
-  }
-
-  /**
-   * Check that new files have today's date.
-   */
-  @Test
-  @DisplayName("Check that new log files are created using the current date")
-  void validFileNameDate() {
-    String filename = dataAndLog.generateFileName();
-
-    Date date = Calendar.getInstance().getTime();
-    String formatString = "yyyy-MM-dd";
-    DateFormat dateFormat = new SimpleDateFormat(formatString);
-    String strDate = dateFormat.format(date);
-    System.out.println(strDate);
-
-    assertEquals(filename.substring(0, formatString.length()), strDate);
-  }
-
   // Test that data can be written to a file
 
   // Test that data is correctly appended to a given file

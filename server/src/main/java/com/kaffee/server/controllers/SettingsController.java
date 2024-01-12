@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kaffee.server.models.FileHandler;
 import com.kaffee.server.models.UserSettings;
 
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/")
 public class SettingsController {
-  /** The UserSettings record. */
+  /** The UserSettings object. */
   private UserSettings us;
 
   /** Location to read the settings. */
@@ -155,6 +156,9 @@ public class SettingsController {
         this.us.setKafkaUrl(value.toString());
         break;
       case "log-filepath":
+        FileHandler fh = FileHandler.getInstance();
+        fh.setDirectory(value.toString());
+
         this.us.setLogFilePath(value.toString());
         break;
       default:

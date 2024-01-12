@@ -11,7 +11,6 @@ import javax.management.ReflectionException;
 import javax.management.IntrospectionException;
 
 import org.apache.commons.beanutils.ConversionException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
 import com.kaffee.server.models.ApiError;
+import com.kaffee.server.models.FileHandler;
 
 /**
  * Sending regularly scheduled messages over the established WebSocket.
@@ -82,6 +82,10 @@ public class ScheduledMessagesController {
         Map<String, String> data = smc.getFormattedMetrics(metric.getValue());
 
         MessageData message = new MessageData(metric.getKey(), data);
+
+        FileHandler fh = FileHandler.getInstance();
+        fh.saveToLog(message);
+
         simpMessagingTemplate.convertAndSend(outputPath, message);
         message = null;
       } catch (IOException ioException) {
