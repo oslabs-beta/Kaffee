@@ -1,6 +1,9 @@
 package com.kaffee.server.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.kaffee.server.models.MessageData;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +17,40 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 /**
  * Controller for logging the metric data read.
  */
 @RestController
 @RequestMapping("/")
-public class DataAndLogController {
+public class DataAndLogController implements AutoCloseable {
   /** String with path to log file location. */
   private String directoryLocation;
+
+  /** File that is currently being written. */
+  private File logFile;
+
+  /** Buffered writer for writing to logFile. */
+  private BufferedWriter fileWriter;
 
   /**
    * Create a DataAndLogController at the default directory. Default directory
    * is "history"
    */
-  public DataAndLogController() {
-    this.setDirectory("history");
+  public DataAndLogController() throws IOException {
+    new DataAndLogController("history");
   }
 
   /**
@@ -39,8 +58,19 @@ public class DataAndLogController {
    *
    * @param dirLocation The relative path of the logs directory
    */
-  public DataAndLogController(final String dirLocation) {
+  public DataAndLogController(final String dirLocation) throws IOException {
     this.setDirectory(dirLocation);
+
+    this.setCurrentFile();
+  }
+
+  @Override
+  public void close() {
+    try {
+      fileWriter.close();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -81,7 +111,8 @@ public class DataAndLogController {
     }
   }
 
-  // Ideally we shouldn't send data from the back to the front and back to the back unless the user has modified data somehow.
+  // Ideally we shouldn't send data from the back to the front and back to the
+  // back unless the user has modified data somehow.
   // This should be replaced with adding data as it's being read.
   // NOTE: Should we log all data as it's read, or only data that we display?
   @PostMapping("/addData")
@@ -176,14 +207,11 @@ public class DataAndLogController {
   }
 
   /**
-   * Generate filename function. Created so that DataAndLogControllerTest can
-   * compile. In reality filename generation should be private, and
-   * untestable. A work around is create a file through some public method,
-   * and then verify the newly created file passes any tests.
+   * Generate filename for saving file.
    *
    * @return the filename with correctly formatted date.
    */
-  public String generateFileName() {
+  private String generateFileName() {
     String datePrefix = this.formatDate();
     String fileSuffix = "_log.json";
 
@@ -195,89 +223,177 @@ public class DataAndLogController {
    *
    * @return String of today's date formatted as 'YYYY-MM-DD'
    */
-  public static String formatDate() {
+  private String formatDate() {
     return LocalDate.now().toString();
   }
 
-  private Path getFileLocation(final String directory, final String filename) {
-    return Paths.get(this.directoryLocation, filename);
+  /**
+   * Set the current logFile and fileWriter, closing the old writer if it was
+   * set and exists. This should handle cases where the program runs over
+   * multiple days.
+   */
+  private void setCurrentFile() throws IOException {
+    String directory = this.directoryLocation;
+    String currentFileName = this.generateFileName();
+
+    String currentFilePath = directory + currentFileName;
+    this.logFile = new File(currentFilePath);
+
+    if (this.fileWriter != null) {
+      try {
+        this.fileWriter.close();
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    try {
+      this.fileWriter = new BufferedWriter(new FileWriter(this.logFile, true));
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
   }
 
-  private File getCurrentFile() {
-     String directory = this.getDirectory();
-     String currentFileName = this.generateFileName();
+  private Boolean checkDate() throws FileNameException {
+    String today = this.formatDate();
 
-    Path currentFilePath = new Path(directory, currentFileName);
-    File currentFile = new File(currentFilePath);
+    Pattern datePattern = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2})");
+    Matcher matcher = datePattern.matcher(this.logFile.toString());
 
-    return currentFile;
+    if (!matcher.matches()) {
+      throw new FileNameException(
+          "File name does not contain correctly formatted date.");
+    }
+    String logDate = matcher.group(1);
+
+    return today.equals(logDate);
   }
 
-  public void saveLogs(JSONObject newDataSet) {
-    File currentFile = getCurrentFile();
+  /**
+   * Write to data to current log file.
+   *
+   * @param metricData
+   */
+  public void saveToLog(final MessageData metricData)
+      throws FileNameException, IOException {
+    // If the log file hasn't been initialized, otherwise make sure the date
+    // is the same as current.
+    if (this.logFile == null || !this.checkDate()) {
+      this.setCurrentFile();
+    }
 
-    FileWriter writer = new FileWriter(currentFile);
+    this.fileWriter.append(this.formatMetricDataForLog(metricData));
+  }
 
-    if (currentFile.createNewFile()) {
-      // File is new, format and save data
+  private JSONObject readFromLog() throws FileNotFoundException, IOException {
+    JSONObject logData;
+
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(this.logFile));
+      String line = reader.readLine();
+      while (line != null) {
+
+        logData = this.formatLogDataForChart(line, logData);
+      }
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+    return logData;
+  }
+
+  /**
+   * Append data from a logfile line to existing JSON object, formatted for
+   * sending to the front end and display in Chart component.
+   *
+   * Each log file line is formatted like: "<TIMESTAMP>: <METRIC NAME>:
+   * <VALUES>"
+   *
+   * ChartJS will want a JSON object like: "{<METRIC NAME>: {"labels": {
+   * [<TIMESTAMPS>], "datasets": [<VALUES>] } }"
+   *
+   * @param logData
+   * @param existingData
+   * @return returns modified JSON object with new data added
+   */
+  private JSONObject formatLogDataForChart(final String logData,
+      final JSONObject existingData) throws ParseException {
+    // ChartJS does funky things when the timeline is out of order. I'm not
+    // sure if we need
+    // to handle potentially out of date timestamps.
+
+    Pattern logPattern = Pattern.compile(
+        "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}): ([a-z]*): (.*)$");
+    Matcher matcher = logPattern.matcher(logData);
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS");
+    Date parsedTime = dateFormat.parse(matcher.group(1));
+    Long time = parsedTime.getTime();
+
+    String metricName = matcher.group(2);
+
+    JSONObject values = new JSONObject(matcher.group(3));
+    JSONArray labels;
+    JSONArray datasets;
+
+    if (existingData.has(metricName)) {
+      JSONObject existingMetric = existingData.getJSONObject(metricName);
+      labels = existingMetric.getJSONArray("labels");
+      datasets = existingMetric.getJSONArray("datasets");
+
+      labels.put(time);
+      datasets.put(values);
     } else {
-      // Data exists in file, read it in and reformat
-      InputStream stream = new FileInputStream(currentFile);
-      String jsonText = IOUtils.toString(stream, "UTF-8");
-      JSONObject currentData = new JSONOBject(jsonText);
-      // merge current data with newDataSet
+      JSONObject chartJsonObject = new JSONObject();
+      chartJsonObject.put("labels", new JSONArray());
+      chartJsonObject.put("datasets", new JSONArray());
+      existingData.put(metricName, chartJsonObject);
     }
-  }
-
-  private JSONObject formatMetricDataForChart(MessageData newDataSet) {
-    // data will come in formatted thusly:
-    /**
-     * {
-    "metric": "bytes-in",
-    "time": 1693251471538,
-    "snapshot": {
-      "RateUnit": "SECONDS",
-      "OneMinuteRate": "5.646250107634674E-43",
-      "EventType": "bytes",
-      "FifteenMinuteRate": "0.035843277946316754",
-      "Count": "32300",
-      "FiveMinuteRate": "1.0746448344638806E-7",
-      "MeanRate": "4.6865081791319945"
-    }
-  }
-     */
+    // For readability, saved as: "<TIMESTAMP>: <METRIC NAME>: <VALUES>"
+    // "yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     // we need to return data formatted like this:
     /**
-     *   {
-    "bytes-in": {
-      labels: [time1, time2, time3 ]
-      datasets: [
-        {
-          label: OneMinuteRate,
-          data[data1, data2, data3]
-        }
-      ]
-    }
-    "isr-shrinks": {
-      labels: [time1, time2, time3 ]
-      datasets: [
-        {
-          label: OneMinuteRate,
-          data[data1, data2, data3]
-        }
-      ]
-    }
-  }
+     * { "bytes-in": { labels: [time1, time2, time3 ] datasets: [ { label:
+     * OneMinuteRate, data[data1, data2, data3] } ] } "isr-shrinks": { labels:
+     * [time1, time2, time3 ] datasets: [ { label: OneMinuteRate, data[data1,
+     * data2, data3] } ] } }
      */
-    JSONObject formattedData = new JSONObject();
-    JSONArray labels = new JSONArray();
-
-
-    formattedData.put(MessageData.metric, )
+    return existingData;
   }
 
-  private JSONObject addDataToExisting(JSONObject existing, JSONObject newDataSet) {
-    
+  /**
+   * Format MessageData object to string for writing to logFile.
+   *
+   * @param data Single metric read to be stored in the log.
+   * @return String formatted in the style "<TIMESTAMP>: <METRIC NAME>:
+   *         <VALUES>".
+   */
+  private String formatMetricDataForLog(final MessageData data) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS");
+    Date timestamp = new Date(data.getTime());
+    String time = dateFormat.format(timestamp);
+
+    String metricName = data.getMetric();
+
+    JSONObject jsonValues = new JSONObject(data.getSnapshot());
+    String values = jsonValues.toString();
+
+    return time + ": " + metricName + ": " + values;
+  }
+}
+
+
+class FileNameException extends Exception {
+  /**
+   * Exception to handle incorrectly formatted filename.
+   *
+   * @param errorMessage
+   */
+  FileNameException(final String errorMessage) {
+    super(errorMessage);
   }
 }

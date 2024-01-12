@@ -15,7 +15,7 @@ public class MessageData {
    * value in storing this in a timestamp and then converting the value to a
    * string before sending it in the JSON across the websocket
    */
-  private Number time;
+  private Long time;
   /**
    * A map of metrics attributes and their values.
    */
@@ -62,7 +62,7 @@ public class MessageData {
    *
    * @return the name of the metric
    */
-  final String getMetric() {
+  public final String getMetric() {
     return this.metric;
   }
 
@@ -71,7 +71,7 @@ public class MessageData {
    *
    * @return the timestamp of MessageData
    */
-  public Number getTime() {
+  public Long getTime() {
     return this.time;
   }
 
