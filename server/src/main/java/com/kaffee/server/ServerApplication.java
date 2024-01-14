@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 import com.kaffee.server.controllers.DataAndLogController;
 import com.kaffee.server.controllers.SettingsController;
+import com.kaffee.server.models.FileHandler;
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
 import com.kaffee.server.models.UserSettings;
@@ -53,6 +54,11 @@ public class ServerApplication {
   @Bean
   public MetricSubscriptions metricSubscriptions() throws IOException {
     return MetricSubscriptions.getInstance();
+  }
+
+  @Bean
+  public FileHandler fileHandler() throws IOException {
+    return FileHandler.getInstance();
   }
 
   /**

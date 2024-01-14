@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Deque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +35,12 @@ public final class FileHandler implements AutoCloseable {
 
   /** Buffered writer for writing to logFile. */
   private BufferedWriter bufferWriter;
+
+  /** FileWriter for handling file writing. */
+  private FileWriter fileWriter;
+
+  /** Queue for saving to file. */
+  private Deque<MessageData> listOfLogs;
 
   private FileHandler() throws IOException {
     this.setDirectory("history");
@@ -151,7 +158,9 @@ public final class FileHandler implements AutoCloseable {
     }
 
     try {
-      bufferWriter = new BufferedWriter(new FileWriter(this.logFile, true));
+      fileWriter = new FileWriter(this.logFile, true);
+      bufferWriter = new BufferedWriter(fileWriter);
+
     } catch (IOException ex) {
       ex.printStackTrace();
     }
@@ -170,9 +179,16 @@ public final class FileHandler implements AutoCloseable {
       this.setCurrentFile();
     }
 
-    bufferWriter.write(this.formatMetricDataForLog(metricData));
-    bufferWriter.newLine();
-    bufferWriter.flush();
+    WriteFile wf = WriteFile.getInstance(this.fileWriter);
+    wf.addToDeque(this.formatMetricDataForLog(metricData));
+
+    if (!wf.isAlive()) {
+      wf.start();
+    }
+
+    // String dataToLog = this.formatMetricDataForLog(metricData);
+    // Runnable writeFile = new WriteFile(this.fileWriter, dataToLog);
+    // writeFile.run();
   }
 
   /**
@@ -274,5 +290,42 @@ public final class FileHandler implements AutoCloseable {
     String values = jsonValues.toString();
 
     return time + ": " + metricName + ": " + values;
+  }
+}
+
+
+class WriteFile extends Thread {
+  private static WriteFile wf;
+  private BufferedWriter bw;
+  private Deque<String> stringifiedLogs = new Deque<String>();
+
+  private WriteFile(final FileWriter fileWriter) {
+    bw = new BufferedWriter(fileWriter);
+  }
+
+  public static WriteFile getInstance(final FileWriter fileWriter) {
+    if (wf == null) {
+      wf = new WriteFile(fileWriter);
+    }
+
+    return wf;
+  }
+
+  public void run() {
+    try {
+      String log = stringifiedLogs.poll();
+      while (log != null) {
+        bw.write(log);
+        bw.newLine();
+        bw.flush();
+      }
+      bw.close();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public void addToDeque(final String log) {
+    stringifiedLogs.push(log);
   }
 }

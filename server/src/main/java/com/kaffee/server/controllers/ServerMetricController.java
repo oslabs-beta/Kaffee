@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kaffee.server.models.FileHandler;
 import com.kaffee.server.models.MetricSubscriptions;
 import com.kaffee.server.models.UserSettings;
 
