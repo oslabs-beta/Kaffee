@@ -85,9 +85,10 @@ public class DataAndLogController {
     try {
       // find file with the requested name
       Path filePath = Paths.get(fh.getDirectory(), filename);
-      String stringifiedFile = Files.readString(filePath);
+      System.out.println(filePath.toString());
 
-      JSONObject fileContents = fh.readFromLog(stringifiedFile);
+      JSONObject fileContents = fh.readFromLog(filePath.toString());
+      // String fileContents = "ok";
       return ResponseEntity.ok(fileContents.toString());
     } catch (Exception e) {
       return ResponseEntity.status(500).body("File not found: " + e);

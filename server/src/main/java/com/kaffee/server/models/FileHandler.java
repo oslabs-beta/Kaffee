@@ -243,6 +243,8 @@ public final class FileHandler implements AutoCloseable {
         "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}): ([a-z]*): (.*)$",
         Pattern.CASE_INSENSITIVE);
     Matcher matcher = logPattern.matcher(logData);
+    System.out.println(logData);
+    matcher.find();
 
     SimpleDateFormat dateFormat = new SimpleDateFormat(
         "yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -320,6 +322,7 @@ class WriteFile extends Thread {
         bw.write(log);
         bw.newLine();
         bw.flush();
+        log = stringifiedLogs.poll();
       }
       bw.close();
     } catch (IOException ex) {
