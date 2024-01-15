@@ -4,5 +4,9 @@ services:
   Kaffee:
     image: teamkaffee/kaffee:latest
     ports:
-      - '8080:8080'
-      - '3030:3030'
+      - '5173:5173'
+    volumes:
+      - db_data
+volumes:
+  db_data:
+    driver: local
