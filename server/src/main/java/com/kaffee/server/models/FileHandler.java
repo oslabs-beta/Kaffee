@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayDeque;
 import java.util.Date;
 import java.util.Deque;
 import java.util.regex.Matcher;
@@ -297,10 +298,11 @@ public final class FileHandler implements AutoCloseable {
 class WriteFile extends Thread {
   private static WriteFile wf;
   private BufferedWriter bw;
-  private Deque<String> stringifiedLogs = new Deque<String>();
+  private Deque<String> stringifiedLogs;
 
   private WriteFile(final FileWriter fileWriter) {
     bw = new BufferedWriter(fileWriter);
+    stringifiedLogs = new ArrayDeque<>();
   }
 
   public static WriteFile getInstance(final FileWriter fileWriter) {

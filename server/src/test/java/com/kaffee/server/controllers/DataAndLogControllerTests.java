@@ -34,7 +34,7 @@ public class DataAndLogControllerTests {
    * Generating the MockBean for dataAndLog.
    */
   // @MockBean
-  private DataAndLogController dataAndLog = new DataAndLogController();
+
   // Test that data can be written to a file
 
   // Test that data is correctly appended to a given file

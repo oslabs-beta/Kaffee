@@ -1,1 +1,1 @@
-{"metric-count":40,"consumers":1,"JMX_PORT":9999,"log-filepath":"Desktop","producers":1,"KAFKA_URL":"Test","KAFKA_PORT":9994}
+{"metric-count":40,"consumers":1,"JMX_PORT":9999,"log-filepath":"Desktop","producers":1,"KAFKA_URL":"localhost","KAFKA_PORT":9094}

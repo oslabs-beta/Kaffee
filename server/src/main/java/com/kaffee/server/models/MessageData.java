@@ -50,7 +50,7 @@ public class MessageData {
    * @param time     The time in milliseconds.
    * @param snapshot The map of metric attributes and their values.
    */
-  public MessageData(final String metric, final Number time,
+  public MessageData(final String metric, final Long time,
       final Map<String, String> snapshot) {
     this.setMetric(metric);
     this.setSnapshot(snapshot);
