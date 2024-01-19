@@ -56,6 +56,12 @@ public class ServerApplication {
     return MetricSubscriptions.getInstance();
   }
 
+  /**
+   * Create the Bean for fileHandler.
+   *
+   * @return FileHandler instance.
+   * @throws IOException
+   */
   @Bean
   public FileHandler fileHandler() throws IOException {
     return FileHandler.getInstance();

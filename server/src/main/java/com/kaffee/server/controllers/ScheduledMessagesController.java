@@ -1,5 +1,6 @@
 package com.kaffee.server.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public class ScheduledMessagesController {
   private final MetricSubscriptions ms;
   /** The ServerMetricController class. */
   private final ServerMetricController smc;
+  /** The FileHandler class. */
+  private final FileHandler fh;
 
   /**
    * Create a ScheduledMessageController with connections to
@@ -39,11 +42,13 @@ public class ScheduledMessagesController {
    *
    * @param ms  The MessageSubscriptions class
    * @param smc The ServerMetricController class
+   * @param fh The FileHandler class instance
    */
   public ScheduledMessagesController(final MetricSubscriptions ms,
-      final ServerMetricController smc) {
+      final ServerMetricController smc, final FileHandler fh) {
     this.ms = ms;
     this.smc = smc;
+    this.fh = fh;
   }
 
   /**
@@ -51,17 +56,6 @@ public class ScheduledMessagesController {
    */
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
-
-  /**
-   * Wiring the MessageData for use in sending messages.
-   */
-  @Autowired
-  private MessageData messageData;
-
-  @Bean
-  private ApiError apiError() {
-    return new ApiError();
-  }
 
   /**
    * Send broker messages to "/metric/<metric_name>". This needs improved
@@ -83,7 +77,6 @@ public class ScheduledMessagesController {
 
         MessageData message = new MessageData(metric.getKey(), data);
 
-        FileHandler fh = FileHandler.getInstance();
         fh.saveToLog(message);
 
         simpMessagingTemplate.convertAndSend(outputPath, message);
