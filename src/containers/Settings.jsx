@@ -11,6 +11,7 @@ export async function loader() {
     throw new Error('Error fetching settings', { cause: error });
   }
 }
+
 const handleDirectorySelector = async () => {
   const directory = await getDirectory();
   if (!directory) {
@@ -30,6 +31,7 @@ const handleDirectorySelector = async () => {
   // const field = document.querySelector('#log-filepath');
   // field.value = directory;
 };
+
 const Settings = () => {
   const [kafka, setKafka] = useState();
   const [JMX, setJMX] = useState();
@@ -38,7 +40,7 @@ const Settings = () => {
   const [kInput, setkInput] = useState('');
   const [jInput, setjInput] = useState('');
   const [fInput, setfInput] = useState('');
-  const [metricTimeout, setMetricTimeout] = useState(null);
+  const [settingTimeout, setSettingTimeout] = useState({});
 
   const [producers, setProducers] = useState();
   const [consumers, setConsumers] = useState();
@@ -114,57 +116,59 @@ const Settings = () => {
   // };
 
   function setInput(e) {
-    if (e.target.value < 1) {
-      e.target.value = 1;
+    if (e.target.id == "metric-count") {
+      if (e.target.value < 1) {
+        e.target.value = 1;
+      }
+      dispatch(changeMetricCount(e.target.value * 10));
     }
-    dispatch(changeMetricCount(e.target.value * 10));
 
-    if (metricTimeout) {
-      clearTimeout(metricTimeout);
+    if (settingTimeout[e.target.id]) {
+      clearTimeout(settingTimeout[e.target.id]);
     }
-    setMetricTimeout(
-      setTimeout(() => updateSettings(e.target.id, e.target.value), 500)
-    );
+    const currentTimeouts = Object.assign({}, settingTimeout);
+    currentTimeouts[e.target.id] = setTimeout(() => updateSettings(e.target.id, e.target.value), 500);
+    setSettingTimeout(currentTimeouts);
   }
 
   return (
     <div className="settings-container">
       <div className="setting">
-        <label htmlFor="kafka-port">Kafka Port </label>
+        <label htmlFor="KAFKA_PORT">Kafka Port </label>
         <input
-          id="kafka-port"
+          id="KAFKA_PORT"
           type="number"
           name="kafka-port-num"
           defaultValue={kInput}
           placeholder={kafka}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_PORT', kInput)}
-          onChange={(e) => setkInput(e.target.value)}
+          onChange={(e) => setInput(e)}
         />
       </div>
 
       <div className="setting">
-        <label htmlFor="kafkaURL">Kafka URL</label>
+        <label htmlFor="KAFKA_URL">Kafka URL</label>
         <input
-          id="kafkaURL"
+          id="KAFKA_URL"
           type="text"
           name="kafkaURL"
           defaultValue={kURLInput}
           placeholder={kafkaURL}
           onKeyDown={(e) => handleEnterPress(e, 'KAFKA_URL', kURLInput)}
-          onChange={(e) => setkURLInput(e.target.value)}
+          onChange={(e) => setInput(e)}
         />
       </div>
 
       <div className="setting">
-        <label htmlFor="JMX-port">JMX Port </label>
+        <label htmlFor="JMX_PORT">JMX Port </label>
         <input
-          id="JMX-port"
+          id="JMX_PORT"
           type="number"
           name="JMX-port-num"
           defaultValue={jInput}
           placeholder={JMX}
           onKeyDown={(e) => handleEnterPress(e, 'JMX_PORT', jInput)}
-          onChange={(e) => setjInput(e.target.value)}
+          onChange={(e) => setInput(e)}
         />
       </div>
 
@@ -202,7 +206,7 @@ const Settings = () => {
         </div>
       </div>
 
-<hr />
+      <hr />
 
       <div className="setting">
         <label htmlFor="producers"># Test Producers</label>
@@ -213,7 +217,7 @@ const Settings = () => {
           defaultValue={pInput}
           placeholder={producers}
           onKeyDown={(e) => handleEnterPress(e, 'producers', pInput)}
-          onChange={(e) => setPInput(e.target.value)}
+          onChange={(e) => setInput(e)}
         />
       </div>
 
@@ -226,7 +230,7 @@ const Settings = () => {
           defaultValue={cInput}
           placeholder={consumers}
           onKeyDown={(e) => handleEnterPress(e, 'consumers', cInput)}
-          onChange={(e) => setCInput(e.target.value)}
+          onChange={(e) => setInput(e)}
         />
       </div>
     </div>
