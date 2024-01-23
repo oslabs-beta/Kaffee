@@ -22,11 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public final class FileHandler implements AutoCloseable {
-  /** FileHandler instance. */
+  /** FileHandler instance for singleton implementation. */
   private static FileHandler fh;
-
-  /** Thread. */
-  private static Thread thread;
 
   /** String with path to log file location. */
   private String directoryLocation;
@@ -34,14 +31,11 @@ public final class FileHandler implements AutoCloseable {
   /** File that is currently being written. */
   private File logFile;
 
+  /** Current date to speed up checking if date has rolled over. */
+  private LocalDate currDate;
+
   /** Buffered writer for writing to logFile. */
   private BufferedWriter bufferWriter;
-
-  /** FileWriter for handling file writing. */
-  private FileWriter fileWriter;
-
-  /** Queue for saving to file. */
-  private Deque<MessageData> listOfLogs;
 
   private FileHandler() throws IOException {
     this.setDirectory("history");
@@ -64,10 +58,14 @@ public final class FileHandler implements AutoCloseable {
   }
 
   @Override
-  public void close() {
+  public void close() throws IOException {
     try {
-      bufferWriter.close();
-    } catch (IOException ex) {
+      if (bufferWriter != null) {
+        bufferWriter.close();
+      }
+    } catch (
+
+    IOException ex) {
       ex.printStackTrace();
     }
   }
@@ -99,8 +97,12 @@ public final class FileHandler implements AutoCloseable {
    *
    * @return the filename with correctly formatted date.
    */
-  public String generateFileName() {
-    String datePrefix = this.formatDate();
+  private String generateFileName() {
+    if (currDate == null) {
+      this.setCurrentDate();
+    }
+
+    String datePrefix = this.formatDate(currDate);
     String fileSuffix = "_log.json";
 
     return datePrefix + fileSuffix;
@@ -108,11 +110,12 @@ public final class FileHandler implements AutoCloseable {
 
   /**
    * Generate the string of today's date for use with generateFileName.
+   * This is a separate method in case we wish to modify the formatted version (like for a locale).
    *
    * @return String of today's date formatted as 'YYYY-MM-DD'
    */
-  private String formatDate() {
-    return LocalDate.now().toString();
+  private String formatDate(final LocalDate date) {
+    return date.toString();
   }
 
   /**
@@ -121,22 +124,9 @@ public final class FileHandler implements AutoCloseable {
    * @return whether the date matches the date of the open file.
    */
   private Boolean checkDate() throws IllegalStateException {
-    String today = this.formatDate();
+    LocalDate today = LocalDate.now();
 
-    try {
-      Pattern datePattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2})_log.json");
-      String logpath = this.logFile.toString();
-      Matcher matcher = datePattern.matcher(logpath);
-      matcher.find();
-
-      String logDate = matcher.group(1);
-
-      return today.equals(logDate);
-    } catch (IllegalStateException ex) {
-      ex.printStackTrace();
-    }
-
-    return false;
+    return today == currDate;
   }
 
   /**
@@ -145,6 +135,7 @@ public final class FileHandler implements AutoCloseable {
   * multiple days.
   */
   private void setCurrentFile() throws IOException {
+    this.setCurrentDate();
     String currentFileName = this.generateFileName();
 
     Path filePath = Paths.get(directoryLocation, currentFileName);
@@ -159,12 +150,16 @@ public final class FileHandler implements AutoCloseable {
     }
 
     try {
-      fileWriter = new FileWriter(this.logFile, true);
+      FileWriter fileWriter = new FileWriter(this.logFile, true);
       bufferWriter = new BufferedWriter(fileWriter);
 
     } catch (IOException ex) {
       ex.printStackTrace();
     }
+  }
+
+  private void setCurrentDate() {
+    currDate = LocalDate.now();
   }
 
   /**
@@ -180,14 +175,18 @@ public final class FileHandler implements AutoCloseable {
       this.setCurrentFile();
     }
 
-    WriteFile wf = WriteFile.getInstance(this.fileWriter);
-    wf.addToDeque(this.formatMetricDataForLog(metricData));
+    // WriteFile wf = WriteFile.getInstance(this.fileWriter);
+    // wf.addToDeque(this.formatMetricDataForLog(metricData));
 
-    if (!wf.isAlive()) {
-      wf.start();
-    }
+    // if (!wf.isAlive()) {
+    //   wf.start();
+    // }
 
-    // String dataToLog = this.formatMetricDataForLog(metricData);
+    String dataToLog = this.formatMetricDataForLog(metricData);
+    bufferWriter.write(dataToLog);
+    bufferWriter.newLine();
+    bufferWriter.flush();
+
     // Runnable writeFile = new WriteFile(this.fileWriter, dataToLog);
     // writeFile.run();
   }
@@ -293,44 +292,5 @@ public final class FileHandler implements AutoCloseable {
     String values = jsonValues.toString();
 
     return time + ": " + metricName + ": " + values;
-  }
-}
-
-
-class WriteFile extends Thread {
-  private static WriteFile wf;
-  private BufferedWriter bw;
-  private Deque<String> stringifiedLogs;
-
-  private WriteFile(final FileWriter fileWriter) {
-    bw = new BufferedWriter(fileWriter);
-    stringifiedLogs = new ArrayDeque<>();
-  }
-
-  public static WriteFile getInstance(final FileWriter fileWriter) {
-    if (wf == null) {
-      wf = new WriteFile(fileWriter);
-    }
-
-    return wf;
-  }
-
-  public void run() {
-    try {
-      String log = stringifiedLogs.poll();
-      while (log != null) {
-        bw.write(log);
-        bw.newLine();
-        bw.flush();
-        log = stringifiedLogs.poll();
-      }
-      bw.close();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
-  }
-
-  public void addToDeque(final String log) {
-    stringifiedLogs.push(log);
   }
 }

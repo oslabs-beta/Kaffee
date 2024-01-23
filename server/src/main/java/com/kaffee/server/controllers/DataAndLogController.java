@@ -45,12 +45,8 @@ public class DataAndLogController {
   /**
    * Create a DataAndLogController.
    */
-  public DataAndLogController() throws IOException {
-    try {
-      fh = FileHandler.getInstance();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
+  public DataAndLogController(final FileHandler fh) throws IOException {
+    this.fh = fh;
   }
 
   /**

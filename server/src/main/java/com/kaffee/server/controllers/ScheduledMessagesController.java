@@ -67,7 +67,7 @@ public class ScheduledMessagesController {
   public void sendMessage()
       throws IOException, ConversionException, MalformedObjectNameException,
       InstanceNotFoundException, ReflectionException, MBeanException,
-      AttributeNotFoundException, IntrospectionException {
+      AttributeNotFoundException, IntrospectionException, InterruptedException {
     Map<String, String> metrics = ms.getSubscriptions();
 
     for (Map.Entry<String, String> metric : metrics.entrySet()) {
@@ -87,6 +87,8 @@ public class ScheduledMessagesController {
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
             "Failed to connect to broker.", ioException);
         simpMessagingTemplate.convertAndSend(outputPath, apiError);
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
     }
   }
