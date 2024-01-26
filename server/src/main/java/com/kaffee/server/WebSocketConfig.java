@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.handler.ExceptionWebSocketHandlerDecorator;
 
 /**
  * Configures the WebSocket connection.
@@ -43,5 +44,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // this is endpoint for websocket connections
     registry.addEndpoint("/socket").setAllowedOrigins("*");
     registry.addEndpoint("/socket").setAllowedOrigins().withSockJS();
+
   }
 }

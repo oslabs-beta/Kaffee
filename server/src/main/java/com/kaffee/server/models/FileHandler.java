@@ -12,16 +12,17 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayDeque;
 import java.util.Date;
-import java.util.Deque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.Scheduled;
 
-public final class FileHandler implements AutoCloseable {
+public final class FileHandler {
   /** FileHandler instance for singleton implementation. */
   private static FileHandler fh;
 
@@ -37,10 +38,14 @@ public final class FileHandler implements AutoCloseable {
   /** Buffered writer for writing to logFile. */
   private BufferedWriter bufferWriter;
 
+  /** The queue of logs to write to the logFile. */
+  private final BlockingQueue<MessageData> logQueue = new LinkedBlockingQueue<>();
+
   private FileHandler() throws IOException {
     this.setDirectory("history");
 
     this.setCurrentFile();
+    this.startLoggingThread();
   }
 
   /**
@@ -57,17 +62,9 @@ public final class FileHandler implements AutoCloseable {
     return fh;
   }
 
-  @Override
-  public void close() throws IOException {
-    try {
-      if (bufferWriter != null) {
-        bufferWriter.close();
-      }
-    } catch (
-
-    IOException ex) {
-      ex.printStackTrace();
-    }
+  public void close() {
+    MessageData terminationSignal = MessageData.createTerminationSignal();
+    logQueue.add(terminationSignal);
   }
 
   /**
@@ -78,7 +75,7 @@ public final class FileHandler implements AutoCloseable {
   public void setDirectory(final String dirLocation) {
     // Previous to this implementation, we used
     // "/Users/lapduke/Desktop/Kaffee1.1/Kaffee/history"
-    Path path = Paths.get(System.getProperty("user.dir"));
+    Path path = Paths.get(System.getProperty("user.dir"), "resources");
 
     directoryLocation = path.resolve(dirLocation).toString();
   }
@@ -110,8 +107,10 @@ public final class FileHandler implements AutoCloseable {
 
   /**
    * Generate the string of today's date for use with generateFileName.
-   * This is a separate method in case we wish to modify the formatted version (like for a locale).
+   * This is a separate method in case we wish to modify the
+   * formatted version (like for a locale).
    *
+   * @param date The LocalDate object to format
    * @return String of today's date formatted as 'YYYY-MM-DD'
    */
   private String formatDate(final LocalDate date) {
@@ -135,12 +134,6 @@ public final class FileHandler implements AutoCloseable {
   * multiple days.
   */
   private void setCurrentFile() throws IOException {
-    this.setCurrentDate();
-    String currentFileName = this.generateFileName();
-
-    Path filePath = Paths.get(directoryLocation, currentFileName);
-    this.logFile = new File(filePath.toString());
-
     if (bufferWriter != null) {
       try {
         bufferWriter.close();
@@ -148,6 +141,13 @@ public final class FileHandler implements AutoCloseable {
         ex.printStackTrace();
       }
     }
+
+    this.setCurrentDate();
+
+    String currentFileName = this.generateFileName();
+
+    Path filePath = Paths.get(directoryLocation, currentFileName);
+    this.logFile = new File(filePath.toString());
 
     try {
       FileWriter fileWriter = new FileWriter(this.logFile, true);
@@ -162,33 +162,54 @@ public final class FileHandler implements AutoCloseable {
     currDate = LocalDate.now();
   }
 
+  @Scheduled(cron = "0 0 0 * * ?")
+  private void changeFileAtDayStart() throws IOException {
+    try {
+      this.setCurrentFile();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
   /**
-  * Write to data to current log file.
+  * Add Message data to the queue to log.
   *
   * @param metricData
   */
-  public synchronized void saveToLog(final MessageData metricData)
-      throws IOException {
-    // If the log file hasn't been initialized, otherwise make sure the date
-    // is the same as current.
-    if (logFile == null || !this.checkDate()) {
-      this.setCurrentFile();
-    }
+  public synchronized void saveToLog(final MessageData metricData) {
+    this.logQueue.add(metricData);
+    // System.out.println("Function called.");
+  }
 
-    // WriteFile wf = WriteFile.getInstance(this.fileWriter);
-    // wf.addToDeque(this.formatMetricDataForLog(metricData));
+  /**
+   * Begin the thread that will pull items from the logQueue and log them.
+   */
+  public void startLoggingThread() {
+    Thread loggingThread = new Thread(() -> {
+      try {
+        while (true) {
+          //   // Take is a blocking dequeue operation.
+          MessageData logEntry = this.logQueue.take();
 
-    // if (!wf.isAlive()) {
-    //   wf.start();
-    // }
+          if (logEntry == null || logEntry.isTerminationSignal()) {
+            // Terminate if the termination signal is added to the queue.
+            break;
+          }
 
-    String dataToLog = this.formatMetricDataForLog(metricData);
-    bufferWriter.write(dataToLog);
-    bufferWriter.newLine();
-    bufferWriter.flush();
+          String dataToLog = this.formatMetricDataForLog(logEntry);
+          System.out.println(dataToLog);
+          bufferWriter.write(dataToLog);
+          bufferWriter.newLine();
+          bufferWriter.flush();
+        }
+      } catch (InterruptedException | IOException ex) {
+        ex.printStackTrace();
+      }
+    });
 
-    // Runnable writeFile = new WriteFile(this.fileWriter, dataToLog);
-    // writeFile.run();
+    // Mark the thread as a daemon so it won't prevent application shutdown
+    loggingThread.setDaemon(true);
+    loggingThread.start();
   }
 
   /**

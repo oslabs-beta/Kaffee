@@ -1,7 +1,7 @@
 package com.kaffee.server.controllers;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.AttributeNotFoundException;
@@ -13,14 +13,15 @@ import javax.management.IntrospectionException;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.kaffee.server.models.MessageData;
 import com.kaffee.server.models.MetricSubscriptions;
+
 import com.kaffee.server.models.ApiError;
 import com.kaffee.server.models.FileHandler;
 
@@ -33,8 +34,6 @@ public class ScheduledMessagesController {
   private final MetricSubscriptions ms;
   /** The ServerMetricController class. */
   private final ServerMetricController smc;
-  /** The FileHandler class. */
-  private final FileHandler fh;
 
   /**
    * Create a ScheduledMessageController with connections to
@@ -45,10 +44,11 @@ public class ScheduledMessagesController {
    * @param fh The FileHandler class instance
    */
   public ScheduledMessagesController(final MetricSubscriptions ms,
-      final ServerMetricController smc, final FileHandler fh) {
+      final ServerMetricController smc, final FileHandler fh)
+      throws IOException {
     this.ms = ms;
     this.smc = smc;
-    this.fh = fh;
+    this.fh = FileHandler.getInstance();
   }
 
   /**
@@ -56,6 +56,10 @@ public class ScheduledMessagesController {
    */
   @Autowired
   private SimpMessagingTemplate simpMessagingTemplate;
+
+  /** The FileHandler class. */
+  @Autowired
+  private FileHandler fh;
 
   /**
    * Send broker messages to "/metric/<metric_name>". This needs improved
@@ -77,10 +81,9 @@ public class ScheduledMessagesController {
 
         MessageData message = new MessageData(metric.getKey(), data);
 
-        fh.saveToLog(message);
-
         simpMessagingTemplate.convertAndSend(outputPath, message);
-        message = null;
+
+        this.fh.saveToLog(message);
       } catch (IOException ioException) {
         System.out
             .println("Failed to connect to Kafka broker. Check settings.");
@@ -98,11 +101,11 @@ public class ScheduledMessagesController {
    *
    * @throws NullPointerException
    */
-  @Scheduled(fixedRate = 5000)
+  // @Scheduled(fixedRate = 5000)
   public void sendSubscriptions() throws NullPointerException {
     try {
-      simpMessagingTemplate.convertAndSend("/metric/subscriptions",
-          ms.getSubscriptions());
+      // simpMessagingTemplate.convertAndSend("/metric/subscriptions",
+      //     ms.getSubscriptions());
     } catch (NullPointerException npe) {
       System.out.println("No subscibed metrics.");
     }

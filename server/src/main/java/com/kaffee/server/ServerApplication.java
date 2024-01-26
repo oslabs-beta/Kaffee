@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import com.kaffee.server.controllers.DataAndLogController;
 import com.kaffee.server.controllers.SettingsController;
 import com.kaffee.server.models.FileHandler;
 import com.kaffee.server.models.MessageData;
@@ -72,22 +71,8 @@ public class ServerApplication {
    *
    * @param args arguments to run the server
    */
-  public static void main(final String[] args) throws IOException {
-    FileHandler fh = null;
-    try {
-      fh = FileHandler.getInstance();
-      SpringApplication.run(ServerApplication.class, args);
-    } catch (IOException ioex) {
-      ioex.printStackTrace();
-    } finally {
-      try {
-        if (fh != null) {
-          fh.close();
-        }
-      } catch (IOException ioex) {
-        ioex.printStackTrace();
-      }
-    }
+  public static void main(final String[] args) {
+    SpringApplication.run(ServerApplication.class, args);
   }
 
 }

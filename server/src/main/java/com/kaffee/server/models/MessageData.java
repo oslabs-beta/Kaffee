@@ -21,6 +21,9 @@ public class MessageData {
    */
   private Map<String, String> snapshot;
 
+  /** Flag for terminating adding data to the log. */
+  private boolean isTerminationSignal = false;
+
   /**
    * Creates an empty MessageData with no assigned values.
    *
@@ -127,5 +130,35 @@ public class MessageData {
     // }
 
     this.snapshot = snapshot;
+  }
+
+  /**
+   * Create a termination signal object for use in the logging queue.
+   *
+   * @return The MessageData object with isTerminationSignal set.
+  */
+  public static MessageData createTerminationSignal() {
+    MessageData terminationSignal = new MessageData();
+    terminationSignal.setTerminationSignal(true);
+    return terminationSignal;
+  }
+
+  /**
+   * Return value of whether a MessageData object is a termination signal.
+   *
+   * @return Boolean value of termination signal.
+   */
+  public boolean isTerminationSignal() {
+    return this.isTerminationSignal;
+  }
+
+  /**
+   * Setter for the termination signal.
+   *
+   * @param terminationSignal Boolean whether this MessageData should
+   *   terminate logging.
+   */
+  public void setTerminationSignal(boolean terminationSignal) {
+    this.isTerminationSignal = terminationSignal;
   }
 }
